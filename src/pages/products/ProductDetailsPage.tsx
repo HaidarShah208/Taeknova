@@ -21,12 +21,10 @@ import { ROUTES } from '@constants/routes';
 import { addItem } from '@features/cart/cartSlice';
 import {
   useGetProductBySlugQuery,
-  useGetProductReviewsQuery,
   useGetRelatedProductsQuery,
 } from '@features/products/productsApi';
 import { selectIsInWishlist, toggleWishlist } from '@features/wishlist/wishlistSlice';
 import { cn } from '@lib/cn';
-import { formatRelativeTime } from '@lib/formatters';
 import { uniqueBy } from '@utils/misc';
 
 const VALUE_PROPS = [
@@ -38,7 +36,6 @@ export default function ProductDetailsPage() {
   const { slug = '' } = useParams<{ slug: string }>();
   const dispatch = useAppDispatch();
   const { data: product, isLoading, isError, refetch } = useGetProductBySlugQuery(slug);
-  const { data: reviews } = useGetProductReviewsQuery(slug);
   const { data: related } = useGetRelatedProductsQuery({ slug, limit: 4 });
   const isWishlisted = useAppSelector(selectIsInWishlist(product?.id ?? ''));
 
