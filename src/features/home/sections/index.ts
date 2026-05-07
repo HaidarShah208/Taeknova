@@ -1,0 +1,14 @@
+export { HeroSection } from './HeroSection';
+export { TrustBarSection } from './TrustBarSection';
+export { CategoriesSection } from './CategoriesSection';
+export { CustomUniformsSection } from './CustomUniformsSection';
+export { FeaturedProductsSection } from './FeaturedProductsSection';
+export { WhyChooseUsSection } from './WhyChooseUsSection';
+export { ProcessSection } from './ProcessSection';
+export { NewArrivalsSection } from './NewArrivalsSection';
+export { TeamShowcaseSection } from './TeamShowcaseSection';
+export { PromoBannerSection } from './PromoBannerSection';
+export { TestimonialsSection } from './TestimonialsSection';
+export { FaqSection } from './FaqSection';
+export { SocialGallerySection } from './SocialGallerySection';
+export { NewsletterSection } from './NewsletterSection';
