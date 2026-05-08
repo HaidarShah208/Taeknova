@@ -23,7 +23,7 @@ export function AuthLayout() {
           <p className="text-sm font-semibold uppercase tracking-[0.18em] text-background/70">
             {APP_TAGLINE}
           </p>
-          <h1 className="font-display text-4xl font-bold leading-tight">
+          <h1 className="font-display text-white text-4xl font-bold leading-tight">
             Performance uniforms, engineered for every team.
           </h1>
           <p className="text-sm leading-relaxed text-background/80">

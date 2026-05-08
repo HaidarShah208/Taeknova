@@ -57,11 +57,7 @@ export const FOOTER_NAV: NavGroup[] = [
   },
 ];
 
-export const DASHBOARD_NAV: NavItem[] = [
-  { label: 'Overview', to: ROUTES.dashboard },
-  { label: 'Orders', to: ROUTES.dashboardOrders },
-  { label: 'Addresses', to: ROUTES.dashboardAddresses },
-];
+ 
 
 export const ADMIN_NAV: NavItem[] = [
   { label: 'Dashboard', to: ROUTES.adminDashboard },

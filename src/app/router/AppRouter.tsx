@@ -4,7 +4,7 @@ import { Navigate, Route, Routes } from 'react-router-dom';
 import { ROUTES } from '@constants/routes';
 import { AdminLayout } from '@layouts/AdminLayout';
 import { AuthLayout } from '@layouts/AuthLayout';
-import { DashboardLayout } from '@layouts/DashboardLayout';
+import { ProfileLayout } from '@/layouts/ProfileLayout';
 import { MainLayout } from '@layouts/MainLayout';
 
 import { GuestRoute } from './GuestRoute';
@@ -98,7 +98,7 @@ export function AppRouter() {
         <Route
           element={
             <ProtectedRoute>
-              <DashboardLayout />
+              <ProfileLayout />
             </ProtectedRoute>
           }
         >
