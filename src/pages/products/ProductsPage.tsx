@@ -12,9 +12,8 @@ import { EmptyState } from '@components/ui/EmptyState';
 import { ErrorState } from '@components/ui/ErrorState';
 import { Pagination } from '@components/ui/Pagination';
 import { Select } from '@components/ui/Select';
-import { useGetCategoriesQuery } from '@features/categories/categoriesApi';
-import { useGetProductsQuery } from '@features/products/productsApi';
-import { useProductFiltersFromUrl } from '@features/products/hooks/useProductFiltersFromUrl';
+import { useGetCategoriesQuery } from '@redux/categories';
+import { useGetProductsQuery, useProductFiltersFromUrl } from '@redux/products';
 
 const SORT_OPTIONS = [
   { value: 'new', label: 'Newest' },

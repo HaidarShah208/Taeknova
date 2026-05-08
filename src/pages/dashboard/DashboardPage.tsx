@@ -1,14 +1,14 @@
 import { Heart, Package, ShoppingBag, Star } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 
-import { useAppSelector } from '@app/store';
+import { useAppSelector } from '@redux';
 import { PageMeta } from '@components/layout/PageMeta';
 import { Card, CardContent, CardHeader, CardTitle } from '@components/ui/Card';
 import { EmptyState } from '@components/ui/EmptyState';
 import { ROUTES } from '@constants/routes';
-import { selectCurrentUser } from '@features/auth/authSlice';
-import { selectCartCount } from '@features/cart/cartSlice';
-import { selectWishlistIds } from '@features/wishlist/wishlistSlice';
+import { selectCurrentUser } from '@redux/auth';
+import { selectCartCount } from '@redux/cart';
+import { selectWishlistIds } from '@redux/wishlist';
 
 const STATS = [
   { id: 'orders', label: 'Active orders', icon: Package, value: 0 },

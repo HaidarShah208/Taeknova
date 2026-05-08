@@ -2,7 +2,7 @@ import { Heart } from 'lucide-react';
 import { useMemo } from 'react';
 import { Link } from 'react-router-dom';
 
-import { useAppSelector } from '@app/store';
+import { useAppSelector } from '@redux';
 import { Breadcrumb } from '@components/shared/Breadcrumb';
 import { ProductGrid } from '@components/shared/ProductGrid';
 import { PageMeta } from '@components/layout/PageMeta';
@@ -11,8 +11,8 @@ import { Container } from '@components/ui/Container';
 import { EmptyState } from '@components/ui/EmptyState';
 import { Loader } from '@components/ui/Loader';
 import { ROUTES } from '@constants/routes';
-import { useGetProductsQuery } from '@features/products/productsApi';
-import { selectWishlistIds } from '@features/wishlist/wishlistSlice';
+import { useGetProductsQuery } from '@redux/products';
+import { selectWishlistIds } from '@redux/wishlist';
 import { cn } from '@lib/cn';
 
 export default function WishlistPage() {

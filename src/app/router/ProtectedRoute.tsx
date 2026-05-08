@@ -1,9 +1,9 @@
 import type { ReactNode } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 
-import { useAppSelector } from '@app/store';
+import { useAppSelector } from '@redux';
 import { ROUTES } from '@constants/routes';
-import { selectIsAuthenticated } from '@features/auth/authSlice';
+import { selectIsAuthenticated } from '@redux/auth';
 
 interface ProtectedRouteProps {
   children: ReactNode;

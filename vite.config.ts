@@ -9,6 +9,7 @@ export default defineConfig({
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),
       '@app': fileURLToPath(new URL('./src/app', import.meta.url)),
+      '@redux': fileURLToPath(new URL('./src/redux', import.meta.url)),
       '@features': fileURLToPath(new URL('./src/features', import.meta.url)),
       '@components': fileURLToPath(new URL('./src/components', import.meta.url)),
       '@layouts': fileURLToPath(new URL('./src/layouts', import.meta.url)),

@@ -46,7 +46,7 @@ export function ProductSlider({ products, className }: ProductSliderProps) {
     <div className={cn('relative', className)}>
       <div
         ref={trackRef}
-        className="scrollbar-none -mx-4 flex snap-x snap-mandatory gap-5 overflow-x-auto px-4 pb-2 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8"
+        className="scrollbar-none -mx-4 flex  snap-mandatory gap-5 overflow-x-auto px-4 pb-2 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8"
       >
         {products.map((product) => (
           <div

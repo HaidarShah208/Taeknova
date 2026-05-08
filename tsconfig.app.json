@@ -29,6 +29,8 @@
     "paths": {
       "@/*": ["src/*"],
       "@app/*": ["src/app/*"],
+      "@redux": ["src/redux/index.ts"],
+      "@redux/*": ["src/redux/*"],
       "@features/*": ["src/features/*"],
       "@components/*": ["src/components/*"],
       "@layouts/*": ["src/layouts/*"],

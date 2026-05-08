@@ -1,10 +1,10 @@
 import { configureStore, type Middleware } from '@reduxjs/toolkit';
 import { setupListeners } from '@reduxjs/toolkit/query';
 
-import { authReducer } from '@features/auth/authSlice';
-import { cartReducer } from '@features/cart/cartSlice';
-import { wishlistReducer } from '@features/wishlist/wishlistSlice';
-import { uiReducer } from '@features/ui/uiSlice';
+import { authReducer } from '@redux/auth';
+import { cartReducer } from '@redux/cart';
+import { wishlistReducer } from '@redux/wishlist';
+import { uiReducer } from '@redux/ui';
 import { baseApi } from '@services/baseApi';
 
 const apiMiddleware = baseApi.middleware as Middleware;

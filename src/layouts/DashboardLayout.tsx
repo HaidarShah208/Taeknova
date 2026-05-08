@@ -1,13 +1,13 @@
 import { LogOut } from 'lucide-react';
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 
-import { useAppDispatch, useAppSelector } from '@app/store';
+import { useAppDispatch, useAppSelector } from '@redux';
 import { Container } from '@components/ui/Container';
 import { Footer } from '@components/layout/Footer';
 import { Navbar } from '@components/layout/Navbar';
 import { DASHBOARD_NAV } from '@constants/navigation';
 import { ROUTES } from '@constants/routes';
-import { clearSession, selectCurrentUser } from '@features/auth/authSlice';
+import { clearSession, selectCurrentUser } from '@redux/auth';
 import { cn } from '@lib/cn';
 import { getInitials } from '@utils/misc';
 

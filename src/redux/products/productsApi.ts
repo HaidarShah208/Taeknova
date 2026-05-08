@@ -7,10 +7,7 @@ import { sleep } from '@utils/misc';
 
 const SIMULATED_DELAY = 250;
 
-const sortProducts = (
-  list: Product[],
-  sort: ProductFilters['sort'],
-): Product[] => {
+const sortProducts = (list: Product[], sort: ProductFilters['sort']): Product[] => {
   const cloned = [...list];
   switch (sort) {
     case 'price-asc':
@@ -33,7 +30,12 @@ const filterProducts = (filters: ProductFilters): Product[] => {
   const search = filters.search?.trim().toLowerCase() ?? '';
 
   return MOCK_PRODUCTS.filter((product) => {
-    if (search && !`${product.title} ${product.description} ${product.tags.join(' ')}`.toLowerCase().includes(search)) {
+    if (
+      search &&
+      !`${product.title} ${product.description} ${product.tags.join(' ')}`
+        .toLowerCase()
+        .includes(search)
+    ) {
       return false;
     }
     if (filters.categories?.length && !filters.categories.includes(product.categorySlug)) {
@@ -45,7 +47,10 @@ const filterProducts = (filters: ProductFilters): Product[] => {
     if (filters.sizes?.length && !product.variants.some((v) => filters.sizes?.includes(v.size))) {
       return false;
     }
-    if (filters.colors?.length && !product.variants.some((v) => filters.colors?.includes(v.color))) {
+    if (
+      filters.colors?.length &&
+      !product.variants.some((v) => filters.colors?.includes(v.color))
+    ) {
       return false;
     }
     return true;
@@ -97,10 +102,7 @@ export const productsApi = baseApi.injectEndpoints({
     getFeaturedProducts: builder.query<Product[], number | void>({
       queryFn: async (limit) => {
         await sleep(SIMULATED_DELAY);
-        const featured = MOCK_PRODUCTS.filter((p) => p.isBestseller || p.isNew).slice(
-          0,
-          limit ?? 8,
-        );
+        const featured = MOCK_PRODUCTS.filter((p) => p.isBestseller || p.isNew).slice(0, limit ?? 8);
         return { data: featured };
       },
       providesTags: [{ type: 'Product', id: 'FEATURED' }],

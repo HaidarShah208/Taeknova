@@ -1,13 +1,13 @@
 import { LogIn, Sparkles, UserPlus } from 'lucide-react';
 import { Link, NavLink } from 'react-router-dom';
 
-import { useAppDispatch, useAppSelector } from '@app/store';
+import { useAppDispatch, useAppSelector } from '@redux';
 import { buttonVariants } from '@components/ui/Button';
 import { Drawer } from '@components/ui/Drawer';
 import { PRIMARY_NAV } from '@constants/navigation';
 import { ROUTES } from '@constants/routes';
-import { selectIsAuthenticated } from '@features/auth/authSlice';
-import { selectMobileMenuOpen, setMobileMenuOpen } from '@features/ui/uiSlice';
+import { selectIsAuthenticated } from '@redux/auth';
+import { selectMobileMenuOpen, setMobileMenuOpen } from '@redux/ui';
 import { cn } from '@lib/cn';
 
 export function MobileMenu() {

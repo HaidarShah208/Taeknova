@@ -1,10 +1,10 @@
 import { useNavigate } from 'react-router-dom';
 
-import { useAppDispatch, useAppSelector } from '@app/store';
+import { useAppDispatch, useAppSelector } from '@redux';
 import { Drawer } from '@components/ui/Drawer';
 import { SearchBar } from '@components/shared/SearchBar';
 import { ROUTES } from '@constants/routes';
-import { selectSearchOpen, setSearchOpen } from '@features/ui/uiSlice';
+import { selectSearchOpen, setSearchOpen } from '@redux/ui';
 
 const SUGGESTIONS = ['Soccer kits', 'Basketball jersey', 'Custom team uniforms', 'Training shorts'];
 

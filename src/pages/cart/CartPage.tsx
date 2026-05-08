@@ -1,7 +1,7 @@
 import { ArrowRight, Trash2 } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 
-import { useAppDispatch, useAppSelector } from '@app/store';
+import { useAppDispatch, useAppSelector } from '@redux';
 import { Breadcrumb } from '@components/shared/Breadcrumb';
 import { QuantitySelector } from '@components/shared/QuantitySelector';
 import { PageMeta } from '@components/layout/PageMeta';
@@ -15,7 +15,7 @@ import {
   selectCartItems,
   selectCartSubtotal,
   updateQuantity,
-} from '@features/cart/cartSlice';
+} from '@redux/cart';
 import { cn } from '@lib/cn';
 import { formatPrice } from '@lib/formatters';
 

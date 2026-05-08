@@ -4,13 +4,13 @@ import { useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 
-import { useAppDispatch } from '@app/store';
+import { useAppDispatch } from '@redux';
 import { FormField } from '@components/forms/FormField';
 import { PageMeta } from '@components/layout/PageMeta';
 import { Button } from '@components/ui/Button';
 import { ROUTES } from '@constants/routes';
-import { setSession } from '@features/auth/authSlice';
-import { registerSchema, type RegisterFormValues } from '@features/auth/authValidation';
+import { setSession } from '@redux/auth';
+import { registerSchema, type RegisterFormValues } from '@redux/auth';
 
 export default function RegisterPage() {
   const dispatch = useAppDispatch();

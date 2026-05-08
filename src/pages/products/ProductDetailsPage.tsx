@@ -3,7 +3,7 @@ import { useMemo, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { toast } from 'sonner';
 
-import { useAppDispatch, useAppSelector } from '@app/store';
+import { useAppDispatch, useAppSelector } from '@redux';
 import { Breadcrumb } from '@components/shared/Breadcrumb';
 import { PriceTag } from '@components/shared/PriceTag';
 import { ProductGrid } from '@components/shared/ProductGrid';
@@ -18,12 +18,12 @@ import { ErrorState } from '@components/ui/ErrorState';
 import { Loader } from '@components/ui/Loader';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@components/ui/Tabs';
 import { ROUTES } from '@constants/routes';
-import { addItem } from '@features/cart/cartSlice';
+import { addItem } from '@redux/cart';
 import {
   useGetProductBySlugQuery,
   useGetRelatedProductsQuery,
-} from '@features/products/productsApi';
-import { selectIsInWishlist, toggleWishlist } from '@features/wishlist/wishlistSlice';
+} from '@redux/products';
+import { selectIsInWishlist, toggleWishlist } from '@redux/wishlist';
 import { cn } from '@lib/cn';
 import { uniqueBy } from '@utils/misc';
 

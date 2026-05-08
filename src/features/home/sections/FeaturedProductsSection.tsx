@@ -5,7 +5,7 @@ import { ProductSlider } from '@components/shared/ProductSlider';
 import { SectionWrapper } from '@components/shared/SectionWrapper';
 import { Loader } from '@components/ui/Loader';
 import { ROUTES } from '@constants/routes';
-import { useGetFeaturedProductsQuery } from '@features/products/productsApi';
+import { useGetFeaturedProductsQuery } from '@redux/products';
 
 export function FeaturedProductsSection() {
   const { data, isLoading } = useGetFeaturedProductsQuery(8);

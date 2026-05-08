@@ -1,51 +1,46 @@
-import { CreditCard, Headphones, Package, Sparkles, Truck } from 'lucide-react';
+import { BadgeCheck, CheckCheck, CircleCheckBig, ShieldCheck } from 'lucide-react';
 
 import { Container } from '@components/ui/Container';
 
 const TRUST_ITEMS = [
   {
-    icon: Truck,
-    title: 'Fast delivery',
-    description: 'Production in 14 days, shipped worldwide',
+    icon: CheckCheck,
+    title: '100% Satisfaction',
+    description: 'Guaranteed quality and finish',
   },
   {
-    icon: Sparkles,
-    title: 'Premium quality',
-    description: 'Performance fabric, championship-grade',
+    icon: BadgeCheck,
+    title: 'Certified Product',
+    description: 'Premium, tested performance gear',
   },
   {
-    icon: Package,
-    title: 'Custom designs',
-    description: 'Logos, colors, names & numbers',
+    icon: CircleCheckBig,
+    title: 'Trusted Brand',
+    description: 'Chosen by clubs and teams',
   },
   {
-    icon: CreditCard,
-    title: 'Secure payment',
-    description: '256-bit SSL encrypted checkout',
-  },
-  {
-    icon: Headphones,
-    title: 'Bulk orders',
-    description: 'Dedicated account managers for teams',
+    icon: ShieldCheck,
+    title: 'Secure Ordering',
+    description: 'Safe checkout and payment flow',
   },
 ];
 
 export function TrustBarSection() {
   return (
-    <section className="border-b border-border bg-background py-6 sm:py-8">
+    <section className="border-b border-border bg-background py-7 sm:py-10">
       <Container>
-        <ul className="grid grid-cols-2 gap-x-6 gap-y-5 sm:grid-cols-3 lg:grid-cols-5">
+        <ul className="grid grid-cols-2 gap-4 rounded-[1.75rem] border border-border/80 bg-card p-5 shadow-elevated sm:grid-cols-4 sm:gap-5 sm:p-7">
           {TRUST_ITEMS.map((item) => (
-            <li key={item.title} className="flex items-start gap-3">
+            <li key={item.title} className="flex flex-col items-center text-center">
               <span
-                className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary"
+                className="inline-flex h-20 w-20 items-center justify-center rounded-full border-[6px] border-primary/20 bg-primary/10 text-primary shadow-soft sm:h-24 sm:w-24"
                 aria-hidden="true"
               >
-                <item.icon className="h-5 w-5" />
+                <item.icon className="h-9 w-9 sm:h-10 sm:w-10" />
               </span>
-              <div className="min-w-0">
-                <p className="text-sm font-semibold text-foreground">{item.title}</p>
-                <p className="text-xs leading-relaxed text-muted-foreground">
+              <div className="mt-3 min-w-0">
+                <p className="text-sm font-bold tracking-tight text-foreground sm:text-base">{item.title}</p>
+                <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
                   {item.description}
                 </p>
               </div>

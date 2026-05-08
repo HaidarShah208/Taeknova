@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import { SectionWrapper } from '@components/shared/SectionWrapper';
 import { Skeleton } from '@components/ui/Skeleton';
 import { ROUTES } from '@constants/routes';
-import { useGetCategoriesQuery } from '@features/categories/categoriesApi';
+import { useGetCategoriesQuery } from '@redux/categories';
 import { cn } from '@lib/cn';
 
 export function CategoriesSection() {

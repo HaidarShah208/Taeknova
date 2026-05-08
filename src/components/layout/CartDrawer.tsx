@@ -1,7 +1,7 @@
 import { Trash2 } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 
-import { useAppDispatch, useAppSelector } from '@app/store';
+import { useAppDispatch, useAppSelector } from '@redux';
 import { buttonVariants } from '@components/ui/Button';
 import { Drawer } from '@components/ui/Drawer';
 import { EmptyState } from '@components/ui/EmptyState';
@@ -12,8 +12,8 @@ import {
   selectCartItems,
   selectCartSubtotal,
   updateQuantity,
-} from '@features/cart/cartSlice';
-import { selectCartDrawerOpen, setCartDrawerOpen } from '@features/ui/uiSlice';
+} from '@redux/cart';
+import { selectCartDrawerOpen, setCartDrawerOpen } from '@redux/ui';
 import { cn } from '@lib/cn';
 import { formatPrice } from '@lib/formatters';
 

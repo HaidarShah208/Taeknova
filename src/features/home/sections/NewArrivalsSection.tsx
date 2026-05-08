@@ -4,7 +4,7 @@ import { ProductGrid } from '@components/shared/ProductGrid';
 import { SectionWrapper } from '@components/shared/SectionWrapper';
 import { buttonVariants } from '@components/ui/Button';
 import { ROUTES } from '@constants/routes';
-import { useGetNewArrivalsQuery } from '@features/products/productsApi';
+import { useGetNewArrivalsQuery } from '@redux/products';
 import { cn } from '@lib/cn';
 
 export function NewArrivalsSection() {

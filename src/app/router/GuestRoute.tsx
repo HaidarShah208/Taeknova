@@ -1,9 +1,9 @@
 import type { ReactNode } from 'react';
 import { Navigate } from 'react-router-dom';
 
-import { useAppSelector } from '@app/store';
+import { useAppSelector } from '@redux';
 import { ROUTES } from '@constants/routes';
-import { selectIsAuthenticated } from '@features/auth/authSlice';
+import { selectIsAuthenticated } from '@redux/auth';
 
 interface GuestRouteProps {
   children: ReactNode;

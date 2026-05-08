@@ -1,7 +1,6 @@
 import { motion } from 'framer-motion';
 import {
   ArrowRight,
-  PlayCircle,
   Sparkles,
 } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
@@ -141,16 +140,7 @@ export function HeroSection() {
                 aria-hidden="true"
               />
             </Link>
-            <Link
-              to={ROUTES.categories}
-              className={cn(
-                buttonVariants({ variant: 'outline', size: 'lg' }),
-                'border-background/30 bg-transparent text-background hover:bg-background/10',
-              )}
-            >
-              <PlayCircle className="h-4 w-4" aria-hidden="true" />
-              Watch the story
-            </Link>
+       
           </div>
 
        

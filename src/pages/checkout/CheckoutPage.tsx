@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { z } from 'zod';
 
-import { useAppDispatch, useAppSelector } from '@app/store';
+import { useAppDispatch, useAppSelector } from '@redux';
 import { Breadcrumb } from '@components/shared/Breadcrumb';
 import { FormField } from '@components/forms/FormField';
 import { PageMeta } from '@components/layout/PageMeta';
@@ -18,7 +18,7 @@ import {
   clearCart,
   selectCartItems,
   selectCartSubtotal,
-} from '@features/cart/cartSlice';
+} from '@redux/cart';
 import { formatPrice } from '@lib/formatters';
 
 const checkoutSchema = z.object({

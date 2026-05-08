@@ -3,11 +3,11 @@ import { memo, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { toast } from 'sonner';
 
-import { useAppDispatch, useAppSelector } from '@app/store';
+import { useAppDispatch, useAppSelector } from '@redux';
 import { Badge } from '@components/ui/Badge';
 import { ROUTES } from '@constants/routes';
-import { addItem } from '@features/cart/cartSlice';
-import { selectIsInWishlist, toggleWishlist } from '@features/wishlist/wishlistSlice';
+import { addItem } from '@redux/cart';
+import { selectIsInWishlist, toggleWishlist } from '@redux/wishlist';
 import { cn } from '@lib/cn';
 import type { Product } from '@app-types/product';
 

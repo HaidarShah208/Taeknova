@@ -4,7 +4,7 @@ import { Provider as ReduxProvider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
 import { Toaster } from 'sonner';
 
-import { store } from '@app/store';
+import { store } from '@redux';
 
 interface AppProvidersProps {
   children: ReactNode;

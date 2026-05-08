@@ -8,7 +8,7 @@ import { ErrorState } from '@components/ui/ErrorState';
 import { SectionHeading } from '@components/ui/SectionHeading';
 import { Skeleton } from '@components/ui/Skeleton';
 import { ROUTES } from '@constants/routes';
-import { useGetCategoriesQuery } from '@features/categories/categoriesApi';
+import { useGetCategoriesQuery } from '@redux/categories';
 
 export default function CategoriesPage() {
   const { data, isLoading, isError, refetch } = useGetCategoriesQuery();

@@ -2,12 +2,12 @@ import { Heart, Menu, Search, ShoppingBag, User } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 
-import { useAppDispatch, useAppSelector } from '@app/store';
+import { useAppDispatch, useAppSelector } from '@redux';
 import { Container } from '@components/ui/Container';
 import { PRIMARY_NAV } from '@constants/navigation';
 import { ROUTES } from '@constants/routes';
-import { selectIsAuthenticated } from '@features/auth/authSlice';
-import { selectCartCount } from '@features/cart/cartSlice';
+import { selectIsAuthenticated } from '@redux/auth';
+import { selectCartCount } from '@redux/cart';
 import {
   selectCartDrawerOpen,
   selectMobileMenuOpen,
@@ -15,8 +15,8 @@ import {
   setCartDrawerOpen,
   setMobileMenuOpen,
   setSearchOpen,
-} from '@features/ui/uiSlice';
-import { selectWishlistIds } from '@features/wishlist/wishlistSlice';
+} from '@redux/ui';
+import { selectWishlistIds } from '@redux/wishlist';
 import { cn } from '@lib/cn';
 
 import { Logo } from './Logo';
@@ -49,16 +49,11 @@ export function Navbar() {
     <>
       <header
         className={cn(
-          'sticky top-0 z-40 w-full border-b border-transparent bg-gradient-to-r from-white via-[#eef2f9] to-[#0F1729]/45 transition-all duration-300',
+          'sticky top-0 z-40 w-full border-transparent bg-gradient-to-r from-white via-foreground/35 to-foreground/90 transition-all duration-300',
           scrolled &&
-            'border-border/60 bg-gradient-to-r from-white/35 via-[#f3f6fc]/30 to-[#0F1729]/40 shadow-soft backdrop-blur-xl supports-[backdrop-filter]:from-white/30 supports-[backdrop-filter]:via-[#eef2f9]/25 supports-[backdrop-filter]:to-[#0F1729]/35',
+            'border-border/60 bg-gradient-to-r from-white/40 via-foreground/20 to-foreground/70 shadow-soft backdrop-blur-xl supports-[backdrop-filter]:from-white/30 supports-[backdrop-filter]:via-foreground/15 supports-[backdrop-filter]:to-foreground/60',
         )}
       >
-        <div className="hidden items-center justify-center gap-3 border-b border-border/60 bg-white/65 py-2 text-xs font-medium text-foreground backdrop-blur sm:flex">
-          <span>Free shipping on orders over $150</span>
-          <span aria-hidden="true">•</span>
-          <span>Custom team uniforms in 14 days or less</span>
-        </div>
         <Container as="nav" aria-label="Primary" className="flex h-16 items-center gap-4 lg:h-20">
           <button
             type="button"
