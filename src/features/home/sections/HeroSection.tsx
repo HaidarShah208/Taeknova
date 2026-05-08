@@ -182,7 +182,7 @@ export function HeroSection() {
 
       <div
         ref={statsRef}
-        className="relative z-10 border-t border-background/10 bg-foreground/40 backdrop-blur"
+        className="relative z-10 border-background/10 bg-foreground/40 backdrop-blur"
       >
         <Container>
           <ul className="grid grid-cols-2 gap-y-6 py-6 sm:grid-cols-4 sm:py-8">

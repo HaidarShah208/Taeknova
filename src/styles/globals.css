@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -50,6 +51,7 @@
 
   body {
     @apply bg-background font-sans text-foreground antialiased;
+    font-family: 'Poppins', sans-serif;
     background-image:
       radial-gradient(1200px 520px at 0% -15%, rgb(59 130 246 / 0.10), transparent 60%),
       radial-gradient(900px 460px at 100% 5%, rgb(251 191 36 / 0.10), transparent 58%),

@@ -31,11 +31,11 @@ export function SectionHeading({
     >
       <div className={cn('flex max-w-2xl flex-col gap-2', align === 'center' && 'mx-auto')}>
         {eyebrow && (
-          <span className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">
+          <span className="text-sm font-bold uppercase tracking-[0.22em] text-foreground">
             {eyebrow}
           </span>
         )}
-        <Heading className="text-2xl font-bold leading-tight tracking-tight sm:text-3xl lg:text-4xl">
+        <Heading className="text-2xl font-extrabold leading-tight tracking-tight sm:text-3xl lg:text-5xl">
           {title}
         </Heading>
         {description && (

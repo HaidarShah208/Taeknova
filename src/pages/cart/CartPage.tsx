@@ -20,6 +20,12 @@ import { cn } from '@lib/cn';
 import { formatPrice } from '@lib/formatters';
 
 const SHIPPING_THRESHOLD = 150;
+const PKR_FORMAT = {
+  currency: 'PKR',
+  locale: 'en-PK',
+  minimumFractionDigits: 0,
+  maximumFractionDigits: 0,
+} as const;
 
 export default function CartPage() {
   const navigate = useNavigate();
@@ -83,7 +89,7 @@ export default function CartPage() {
                           </p>
                         </div>
                         <p className="text-base font-bold">
-                          {formatPrice(item.price * item.quantity)}
+                          {formatPrice(item.price * item.quantity, PKR_FORMAT)}
                         </p>
                       </div>
                       <div className="mt-auto flex flex-wrap items-center justify-between gap-3">
@@ -118,21 +124,20 @@ export default function CartPage() {
                 <dl className="space-y-3 text-sm">
                   <div className="flex items-center justify-between">
                     <dt className="text-muted-foreground">Subtotal</dt>
-                    <dd className="font-semibold">{formatPrice(subtotal)}</dd>
+                    <dd className="font-semibold">{formatPrice(subtotal, PKR_FORMAT)}</dd>
                   </div>
                   <div className="flex items-center justify-between">
-                    <dt className="text-muted-foreground">Shipping</dt>
+                    <dt className="text-muted-foreground">Delivery Charges</dt>
                     <dd className="font-semibold">
-                      {shipping === 0 ? 'Free' : formatPrice(shipping)}
+                      Free
                     </dd>
                   </div>
                   <div className="flex items-center justify-between">
-                    <dt className="text-muted-foreground">Estimated tax</dt>
-                    <dd className="font-semibold">{formatPrice(tax)}</dd>
+              
                   </div>
                   <div className="mt-4 flex items-center justify-between border-t border-border pt-4 text-base">
                     <dt className="font-semibold">Total</dt>
-                    <dd className="text-lg font-bold">{formatPrice(total)}</dd>
+                    <dd className="text-lg font-bold">{formatPrice(total, PKR_FORMAT)}</dd>
                   </div>
                 </dl>
                 <Button

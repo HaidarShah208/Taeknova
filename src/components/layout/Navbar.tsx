@@ -1,6 +1,6 @@
 import { Heart, Menu, Search, ShoppingBag, User } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import { Link, NavLink, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 import { useAppDispatch, useAppSelector } from '@redux';
 import { Container } from '@components/ui/Container';
@@ -28,6 +28,7 @@ const NAV_LINK_CLASS =
 export function Navbar() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const cartCount = useAppSelector(selectCartCount);
   const wishlistCount = useAppSelector(selectWishlistIds).length;
@@ -70,25 +71,25 @@ export function Navbar() {
           <ul className="ml-4 hidden items-center gap-6 lg:flex">
             {PRIMARY_NAV.map((item) => (
               <li key={item.to}>
-                <NavLink
+                <Link
                   to={item.to}
-                  end={item.to === ROUTES.home}
-                  className={({ isActive }) =>
-                    cn(NAV_LINK_CLASS, isActive && 'text-foreground')
-                  }
-                >
-                  {({ isActive }) => (
-                    <>
-                      {item.label}
-                      <span
-                        className={cn(
-                          'absolute -bottom-2 left-0 h-0.5 w-full origin-left scale-x-0 bg-primary transition-transform duration-200',
-                          isActive && 'scale-x-100',
-                        )}
-                      />
-                    </>
+                  className={cn(
+                    NAV_LINK_CLASS,
+                    (item.to === ROUTES.home
+                      ? location.pathname === ROUTES.home
+                      : location.pathname.startsWith(item.to)) && 'text-foreground',
                   )}
-                </NavLink>
+                >
+                  {item.label}
+                  <span
+                    className={cn(
+                      'absolute -bottom-2 left-0 h-0.5 w-full origin-left scale-x-0 bg-primary transition-transform duration-200',
+                      (item.to === ROUTES.home
+                        ? location.pathname === ROUTES.home
+                        : location.pathname.startsWith(item.to)) && 'scale-x-100',
+                    )}
+                  />
+                </Link>
               </li>
             ))}
           </ul>
