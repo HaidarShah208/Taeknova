@@ -13,6 +13,7 @@ export function FeaturedProductsSection() {
   return (
     <SectionWrapper
       tone="muted"
+      className="relative overflow-hidden bg-gradient-to-br from-[#393528]/38 via-[#2b2d2d]/28 to-[#101A2F]/42"
       eyebrow="Bestsellers"
       title="Crowd favorites this season"
       description="The pieces our most demanding teams reorder season after season."
@@ -26,6 +27,14 @@ export function FeaturedProductsSection() {
         </Link>
       }
     >
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute -left-14 top-10 h-40 w-40 rounded-full bg-[#393528]/20 blur-2xl animate-orb-float"
+      />
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute right-8 top-16 h-44 w-44 rounded-full bg-[#101A2F]/20 blur-3xl animate-orb-float-reverse"
+      />
       {isLoading ? (
         <div className="flex h-72 items-center justify-center">
           <Loader size="lg" />

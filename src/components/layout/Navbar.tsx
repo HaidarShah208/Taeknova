@@ -49,9 +49,9 @@ export function Navbar() {
     <>
       <header
         className={cn(
-          'sticky top-0 z-40 w-full border-b border-transparent bg-gradient-to-r from-white via-white to-[#0F1729]/20 transition-all duration-300',
+          'sticky top-0 z-40 w-full border-b border-transparent bg-gradient-to-r from-white via-[#eef2f9] to-[#0F1729]/45 transition-all duration-300',
           scrolled &&
-            'border-border/60 bg-gradient-to-r from-white/35 via-white/25 to-[#0F1729]/20 shadow-soft backdrop-blur-xl supports-[backdrop-filter]:from-white/25 supports-[backdrop-filter]:via-white/20 supports-[backdrop-filter]:to-[#0F1729]/15',
+            'border-border/60 bg-gradient-to-r from-white/35 via-[#f3f6fc]/30 to-[#0F1729]/40 shadow-soft backdrop-blur-xl supports-[backdrop-filter]:from-white/30 supports-[backdrop-filter]:via-[#eef2f9]/25 supports-[backdrop-filter]:to-[#0F1729]/35',
         )}
       >
         <div className="hidden items-center justify-center gap-3 border-b border-border/60 bg-white/65 py-2 text-xs font-medium text-foreground backdrop-blur sm:flex">

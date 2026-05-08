@@ -64,7 +64,7 @@ export function TeamShowcaseSection() {
   return (
     <SectionWrapper
       tone="default"
-      className="bg-gradient-to-br from-white via-white to-[#0F1729]/15"
+      className="bg-gradient-to-br from-white via-[#eef2f9] to-[#0F1729]/42"
       eyebrow="Worn by champions"
       title="Teams that win in Tikwando."
       description="A glimpse at programs, clubs, and pro outfits already running on Tikwando-built gear."

@@ -1,3 +1,4 @@
+import { Check } from 'lucide-react';
 import { useMemo } from 'react';
 
 import { Accordion, AccordionItem } from '@components/ui/Accordion';
@@ -11,15 +12,11 @@ const COLORS = [
   { name: 'Crimson', hex: '#dc2626' },
   { name: 'Cobalt', hex: '#2645f5' },
   { name: 'Emerald', hex: '#10b981' },
-  { name: 'Ivory', hex: '#f5f5dc' },
   { name: 'Slate', hex: '#64748b' },
 ];
-const PRICE_RANGES: { label: string; min?: number; max?: number }[] = [
-  { label: 'Under $50', max: 50 },
-  { label: '$50 – $100', min: 50, max: 100 },
-  { label: '$100 – $200', min: 100, max: 200 },
-  { label: 'Over $200', min: 200 },
-];
+const MIN_PRICE = 0;
+const MAX_PRICE = 500;
+const PRICE_STEP = 5;
 
 interface FilterSidebarProps {
   filters: ProductFilters;
@@ -39,6 +36,17 @@ export function FilterSidebar({
   categories,
   className,
 }: FilterSidebarProps) {
+  const priceMax = filters.priceMax ?? MAX_PRICE;
+
+  const updatePrice = (nextMax: number): void => {
+    const safeMax = Math.max(MIN_PRICE, Math.min(nextMax, MAX_PRICE));
+    onChange({
+      ...filters,
+      priceMin: undefined,
+      priceMax: safeMax === MAX_PRICE ? undefined : safeMax,
+    });
+  };
+
   const activeCount = useMemo(() => {
     let n = 0;
     if (filters.categories?.length) n += filters.categories.length;
@@ -98,34 +106,34 @@ export function FilterSidebar({
         </AccordionItem>
 
         <AccordionItem value="price" trigger="Price">
-          <ul className="flex flex-col gap-2">
-            {PRICE_RANGES.map((range) => {
-              const isActive =
-                filters.priceMin === range.min && filters.priceMax === range.max;
-              return (
-                <li key={range.label}>
-                  <button
-                    type="button"
-                    onClick={() =>
-                      onChange({
-                        ...filters,
-                        priceMin: isActive ? undefined : range.min,
-                        priceMax: isActive ? undefined : range.max,
-                      })
-                    }
-                    className={cn(
-                      'flex w-full items-center justify-between rounded-md px-2 py-1.5 text-sm transition-colors',
-                      isActive
-                        ? 'bg-primary/10 font-semibold text-primary'
-                        : 'text-foreground hover:bg-muted',
-                    )}
-                  >
-                    <span>{range.label}</span>
-                  </button>
-                </li>
-              );
-            })}
-          </ul>
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <div className="flex items-center justify-between text-xs font-medium text-muted-foreground">
+                <span>Max Price (PKR)</span>
+                <span className="rounded-full border border-border bg-background px-2 py-0.5 text-foreground">
+                  {priceMax}
+                </span>
+              </div>
+              <input
+                type="range"
+                min={MIN_PRICE}
+                max={MAX_PRICE}
+                step={PRICE_STEP}
+                value={priceMax}
+                onChange={(event) => updatePrice(Number(event.target.value))}
+                className="h-2 w-full cursor-pointer appearance-none rounded-full bg-primary/20 accent-primary"
+                aria-label="Maximum price range"
+              />
+              <div className="flex items-center justify-between text-[11px] text-muted-foreground">
+                <span>PKR {MIN_PRICE}</span>
+                <span>PKR {MAX_PRICE}</span>
+              </div>
+            </div>
+
+            <p className="text-xs text-muted-foreground">
+              Selected: Up to PKR {priceMax.toLocaleString()}
+            </p>
+          </div>
         </AccordionItem>
 
         <AccordionItem value="sizes" trigger="Sizes">
@@ -162,9 +170,11 @@ export function FilterSidebar({
                 <button
                   key={color.name}
                   type="button"
-                  onClick={() =>
-                    onChange({ ...filters, colors: toggleInArray(filters.colors, color.name) })
-                  }
+                  onClick={() => {
+                    const next =
+                      filters.colors?.[0] === color.name ? undefined : [color.name];
+                    onChange({ ...filters, colors: next });
+                  }}
                   aria-pressed={isActive}
                   aria-label={color.name}
                   title={color.name}
@@ -175,7 +185,9 @@ export function FilterSidebar({
                       : 'border-border hover:scale-105',
                   )}
                   style={{ backgroundColor: color.hex }}
-                />
+                >
+                  {isActive && <Check className="h-4 w-4 text-white drop-shadow" />}
+                </button>
               );
             })}
           </div>

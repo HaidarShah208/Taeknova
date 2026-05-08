@@ -14,6 +14,7 @@ export function CategoriesSection() {
   return (
     <SectionWrapper
       tone="default"
+      className="relative overflow-hidden bg-gradient-to-br from-[#393528]/38 via-[#2b2d2d]/28 to-[#101A2F]/42"
       eyebrow="Shop by sport"
       title="Find the kit built for your game"
       description="From soccer pitches to basketball courts, every Tikwando kit is engineered for the demands of your sport."
@@ -27,6 +28,14 @@ export function CategoriesSection() {
         </Link>
       }
     >
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute -left-20 top-8 h-48 w-48 rounded-full bg-white/10 blur-2xl animate-orb-float"
+      />
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute -right-16 bottom-8 h-56 w-56 rounded-full bg-blue-300/20 blur-3xl animate-orb-float-reverse"
+      />
       <div className="grid grid-cols-2 gap-4 sm:gap-5 lg:grid-cols-3 xl:grid-cols-6">
         {isLoading
           ? Array.from({ length: 6 }).map((_, idx) => (
