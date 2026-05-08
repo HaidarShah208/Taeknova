@@ -7,8 +7,8 @@ export default function AdminAnalyticsPage() {
       <PageMeta title="Admin Analytics" />
       <div className="space-y-4">
         <header>
-          <h1 className="text-2xl font-semibold text-white sm:text-3xl">Analytics</h1>
-          <p className="mt-1 text-sm text-slate-400">
+          <h1 className="text-2xl font-semibold text-slate-900 sm:text-3xl">Analytics</h1>
+          <p className="mt-1 text-sm text-slate-600">
             Revenue trend, conversion, and performance insights.
           </p>
         </header>

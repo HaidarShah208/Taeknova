@@ -109,14 +109,14 @@ export function ProductsManagement() {
                       setEditing(row);
                       setFormOpen(true);
                     }}
-                    className="rounded-md border border-white/10 p-1.5 text-slate-300 hover:bg-white/10"
+                    className="rounded-md border border-slate-300 p-1.5 text-slate-700 transition-colors hover:bg-slate-100"
                   >
                     <Pencil className="h-3.5 w-3.5" />
                   </button>
                   <button
                     type="button"
                     onClick={() => setDeletingId(row.id)}
-                    className="rounded-md border border-red-400/20 p-1.5 text-red-300 hover:bg-red-500/10"
+                    className="rounded-md border border-red-200 p-1.5 text-red-600 transition-colors hover:bg-red-50"
                   >
                     <Trash2 className="h-3.5 w-3.5" />
                   </button>

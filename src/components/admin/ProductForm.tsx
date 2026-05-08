@@ -46,27 +46,27 @@ export function ProductForm({
       }}
     >
       <label className="space-y-1 text-sm">
-        <span className="text-slate-300">Name</span>
+        <span className="text-slate-700">Name</span>
         <input
           value={values.name}
           onChange={(event) => setValues((prev) => ({ ...prev, name: event.target.value }))}
           required
-          className="h-10 w-full rounded-lg border border-white/10 bg-white/5 px-3 text-slate-100 outline-none focus:border-white/25"
+          className="h-10 w-full rounded-lg border border-slate-300 bg-white px-3 text-slate-900 outline-none focus:border-primary"
         />
       </label>
 
       <label className="space-y-1 text-sm">
-        <span className="text-slate-300">Category</span>
+        <span className="text-slate-700">Category</span>
         <input
           value={values.category}
           onChange={(event) => setValues((prev) => ({ ...prev, category: event.target.value }))}
           required
-          className="h-10 w-full rounded-lg border border-white/10 bg-white/5 px-3 text-slate-100 outline-none focus:border-white/25"
+          className="h-10 w-full rounded-lg border border-slate-300 bg-white px-3 text-slate-900 outline-none focus:border-primary"
         />
       </label>
 
       <label className="space-y-1 text-sm">
-        <span className="text-slate-300">Price (PKR)</span>
+        <span className="text-slate-700">Price (PKR)</span>
         <input
           type="number"
           min={0}
@@ -75,12 +75,12 @@ export function ProductForm({
             setValues((prev) => ({ ...prev, price: Number(event.target.value || 0) }))
           }
           required
-          className="h-10 w-full rounded-lg border border-white/10 bg-white/5 px-3 text-slate-100 outline-none focus:border-white/25"
+          className="h-10 w-full rounded-lg border border-slate-300 bg-white px-3 text-slate-900 outline-none focus:border-primary"
         />
       </label>
 
       <label className="space-y-1 text-sm">
-        <span className="text-slate-300">Stock</span>
+        <span className="text-slate-700">Stock</span>
         <input
           type="number"
           min={0}
@@ -89,23 +89,23 @@ export function ProductForm({
             setValues((prev) => ({ ...prev, stock: Number(event.target.value || 0) }))
           }
           required
-          className="h-10 w-full rounded-lg border border-white/10 bg-white/5 px-3 text-slate-100 outline-none focus:border-white/25"
+          className="h-10 w-full rounded-lg border border-slate-300 bg-white px-3 text-slate-900 outline-none focus:border-primary"
         />
       </label>
 
       <label className="space-y-1 text-sm sm:col-span-2">
-        <span className="text-slate-300">Status</span>
+        <span className="text-slate-700">Status</span>
         <select
           value={values.status}
           onChange={(event) =>
             setValues((prev) => ({ ...prev, status: event.target.value as ProductFormValues['status'] }))
           }
-          className="h-10 w-full rounded-lg border border-white/10 bg-white/5 px-3 text-slate-100 outline-none focus:border-white/25"
+          className="h-10 w-full rounded-lg border border-slate-300 bg-white px-3 text-slate-900 outline-none focus:border-primary"
         >
-          <option value="active" className="bg-[#12151c]">
+          <option value="active" className="bg-white text-slate-900">
             Active
           </option>
-          <option value="draft" className="bg-[#12151c]">
+          <option value="draft" className="bg-white text-slate-900">
             Draft
           </option>
         </select>

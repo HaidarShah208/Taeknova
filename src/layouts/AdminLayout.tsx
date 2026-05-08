@@ -18,16 +18,16 @@ export function AdminLayout() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0f1115] text-slate-100">
+    <div className="min-h-screen bg-slate-50 text-slate-900">
       <div className="grid min-h-screen lg:grid-cols-[260px_1fr]">
-        <aside className="border-r border-white/10 bg-[#12151c] p-5">
+        <aside className="border-r border-slate-200 bg-white p-5">
           <div className="mb-8 flex items-center gap-3">
             <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-accent text-accent-foreground">
               <ShieldCheck className="h-5 w-5" />
             </span>
             <div>
               <p className="text-sm font-semibold">Tikwando Admin</p>
-              <p className="text-xs text-slate-400">Control center</p>
+              <p className="text-xs text-slate-500">Control center</p>
             </div>
           </div>
 
@@ -39,8 +39,8 @@ export function AdminLayout() {
                     to={item.to}
                     className={({ isActive }) =>
                       cn(
-                        'block rounded-lg px-3 py-2.5 text-sm font-medium text-slate-300 transition-colors',
-                        isActive ? 'bg-primary text-white' : 'hover:bg-white/5 hover:text-white',
+                        'block rounded-lg px-3 py-2.5 text-sm font-medium text-slate-700 transition-colors',
+                        isActive ? 'bg-primary text-white' : 'hover:bg-slate-100 hover:text-slate-900',
                       )
                     }
                   >
@@ -51,13 +51,13 @@ export function AdminLayout() {
             </ul>
           </nav>
 
-          <div className="mt-8 rounded-xl border border-white/10 bg-white/5 p-3">
+          <div className="mt-8 rounded-xl border border-slate-200 bg-slate-50 p-3">
             <p className="text-sm font-semibold">{user ? `${user.firstName} ${user.lastName}` : 'Admin'}</p>
-            <p className="mt-0.5 text-xs text-slate-400">{user?.email ?? 'admin@tikwando.com'}</p>
+            <p className="mt-0.5 text-xs text-slate-500">{user?.email ?? 'admin@tikwando.com'}</p>
             <button
               type="button"
               onClick={handleLogout}
-              className="mt-3 inline-flex w-full items-center justify-center gap-2 rounded-lg border border-white/15 px-3 py-2 text-xs font-semibold text-slate-100 transition-colors hover:bg-white/10"
+              className="mt-3 inline-flex w-full items-center justify-center gap-2 rounded-lg border border-slate-300 px-3 py-2 text-xs font-semibold text-slate-700 transition-colors hover:bg-slate-100"
             >
               <LogOut className="h-3.5 w-3.5" />
               Sign out
@@ -65,7 +65,7 @@ export function AdminLayout() {
           </div>
         </aside>
 
-        <main className="bg-[#0b0d12] p-4 sm:p-6 lg:p-8">
+        <main className="bg-slate-50 p-4 sm:p-6 lg:p-8">
           <Outlet />
         </main>
       </div>

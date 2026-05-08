@@ -20,6 +20,7 @@ const WishlistPage = lazy(() => import('@pages/wishlist/WishlistPage'));
 const CheckoutPage = lazy(() => import('@pages/checkout/CheckoutPage'));
 const LoginPage = lazy(() => import('@pages/auth/login/LoginPage'));
 const RegisterPage = lazy(() => import('@pages/auth/register/RegisterPage'));
+const ProfilePage = lazy(() => import('@pages/profile/ProfilePage'));
 const ForgotPasswordPage = lazy(
   () => import('@pages/auth/forgot-password/ForgotPasswordPage'),
 );
@@ -101,7 +102,7 @@ export function AppRouter() {
             </ProtectedRoute>
           }
         >
- 
+          <Route path={ROUTES.dashboardProfile} element={<ProfilePage />} />
         </Route>
 
         <Route

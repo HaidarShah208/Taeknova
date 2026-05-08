@@ -61,7 +61,7 @@ export function MobileMenu() {
         <div className="mt-auto pt-6">
           {isAuthenticated ? (
             <Link
-              to={isAdmin ? ROUTES.adminDashboard : ROUTES.dashboard}
+              to={isAdmin ? ROUTES.adminDashboard : ROUTES.dashboardProfile}
               onClick={close}
               className={cn(buttonVariants({ fullWidth: true }))}
             >

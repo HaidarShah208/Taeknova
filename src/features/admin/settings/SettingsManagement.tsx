@@ -12,10 +12,10 @@ export function SettingsManagement() {
     <div className="space-y-6">
       <AdminCard title="Platform Settings" description="Core operational controls.">
         <div className="space-y-3">
-          <label className="flex items-center justify-between rounded-lg border border-white/10 bg-white/5 p-3">
+          <label className="flex items-center justify-between rounded-lg border border-slate-200 bg-slate-50 p-3">
             <div>
-              <p className="text-sm font-medium text-white">Maintenance Mode</p>
-              <p className="text-xs text-slate-400">Temporarily pause customer checkout.</p>
+              <p className="text-sm font-medium text-slate-900">Maintenance Mode</p>
+              <p className="text-xs text-slate-600">Temporarily pause customer checkout.</p>
             </div>
             <input
               type="checkbox"
@@ -24,10 +24,10 @@ export function SettingsManagement() {
               className="h-4 w-4 accent-accent"
             />
           </label>
-          <label className="flex items-center justify-between rounded-lg border border-white/10 bg-white/5 p-3">
+          <label className="flex items-center justify-between rounded-lg border border-slate-200 bg-slate-50 p-3">
             <div>
-              <p className="text-sm font-medium text-white">Auto-assign Orders</p>
-              <p className="text-xs text-slate-400">Route incoming orders to available managers.</p>
+              <p className="text-sm font-medium text-slate-900">Auto-assign Orders</p>
+              <p className="text-xs text-slate-600">Route incoming orders to available managers.</p>
             </div>
             <input
               type="checkbox"

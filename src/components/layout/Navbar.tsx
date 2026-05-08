@@ -125,7 +125,7 @@ export function Navbar() {
               type="button"
               onClick={() =>
                 isAuthenticated
-                  ? navigate(isAdmin ? ROUTES.adminDashboard : ROUTES.dashboard)
+                  ? navigate(isAdmin ? ROUTES.adminDashboard : ROUTES.dashboardProfile)
                   : navigate(ROUTES.login)
               }
               aria-label={isAuthenticated ? 'Account' : 'Sign in'}

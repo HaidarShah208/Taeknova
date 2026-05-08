@@ -8,8 +8,8 @@ export function DashboardOverview() {
   return (
     <div className="space-y-6">
       <header>
-        <h1 className="text-2xl font-semibold text-white sm:text-3xl">Admin Dashboard</h1>
-        <p className="mt-1 text-sm text-slate-400">
+        <h1 className="text-2xl font-semibold text-slate-900 sm:text-3xl">Admin Dashboard</h1>
+        <p className="mt-1 text-sm text-slate-600">
           Monitor ecommerce operations, stock, and team activity.
         </p>
       </header>
@@ -24,7 +24,7 @@ export function DashboardOverview() {
       <AnalyticsOverview />
 
       <AdminCard title="Operational Notes">
-        <ul className="space-y-2 text-sm text-slate-300">
+        <ul className="space-y-2 text-sm text-slate-700">
           <li>- Bulk uniform order queue peaks on weekends; keep fulfillment slots open.</li>
           <li>- Inventory threshold alert recommended for stock below 25 units.</li>
           <li>- Enable daily export of order events for audit traceability.</li>
