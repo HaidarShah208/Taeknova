@@ -44,7 +44,7 @@ export function PromoBannerSection() {
                 <BadgePercent className="h-3.5 w-3.5" aria-hidden="true" />
                 Season opener · Limited time
               </span>
-              <h2 className="mt-4 font-display text-3xl font-bold leading-tight tracking-tight sm:text-4xl lg:text-5xl">
+              <h2 className="mt-4 text-white font-display text-3xl font-bold leading-tight tracking-tight sm:text-4xl lg:text-5xl">
                 Bulk team orders save up to 25%.
               </h2>
               <p className="mt-4 max-w-xl text-sm text-primary-100 sm:text-base">
@@ -71,7 +71,7 @@ export function PromoBannerSection() {
                   to={`${ROUTES.products}?sort=new`}
                   className={cn(
                     buttonVariants({ size: 'lg' }),
-                    'group bg-background text-foreground hover:bg-background/90',
+                    'group bg-background text-gray-300 hover:bg-background/90',
                   )}
                 >
                   Start a custom order

@@ -5,35 +5,37 @@
 
 @layer base {
   :root {
-    /* Light premium palette */
-    --background: 0 0% 100%; /* white base */
-    --foreground: 222 47% 11%; /* deep text */
+    /* Modern taekwondo palette */
+    --background: 210 17% 98%; /* #F8F9FA */
+    --foreground: 215 28% 17%; /* #1F2937 */
 
-    --muted: 220 40% 97%;
-    --muted-foreground: 220 18% 42%;
+    --muted: 210 17% 95%;
+    --muted-foreground: 220 9% 46%; /* #6B7280 */
 
-    --card: 0 0% 100%;
-    --card-foreground: 222 47% 11%;
+    --card: 0 0% 100%; /* #FFFFFF */
+    --card-foreground: 215 28% 17%;
 
-    --border: 220 15% 86%;
-    --input: 220 20% 92%;
-    --ring: 217 91% 60%; /* Electric Blue #3B82F6 */
+    --border: 220 14% 90%;
+    --input: 220 14% 90%;
+    --ring: 221 83% 53%; /* #2563EB */
 
-    --primary: 217 91% 60%; /* Electric Blue */
+    --primary: 0 0% 7%; /* #111111 */
     --primary-foreground: 0 0% 100%;
 
-    --accent: 43 96% 56%; /* Gold */
-    --accent-foreground: 222 47% 11%;
+    --secondary: 221 83% 53%; /* #2563EB */
+    --secondary-foreground: 0 0% 100%;
 
-    --destructive: 0 84% 60%; /* Victory Red */
+    --accent: 355 78% 56%; /* #E63946 */
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 355 78% 56%;
     --destructive-foreground: 0 0% 100%;
 
     --success: 142 71% 45%;
     --success-foreground: 220 14% 96%;
 
-    --warning: 43 96% 56%;
-    /* Gold as premium warning/highlight */
-    --warning-foreground: 225 49% 8%;
+    --warning: 355 78% 56%;
+    --warning-foreground: 0 0% 100%;
 
     --radius: 0.75rem;
   }
@@ -53,9 +55,9 @@
     @apply bg-background font-sans text-foreground antialiased;
     font-family: 'Poppins', sans-serif;
     background-image:
-      radial-gradient(1200px 520px at 0% -15%, rgb(59 130 246 / 0.10), transparent 60%),
-      radial-gradient(900px 460px at 100% 5%, rgb(251 191 36 / 0.10), transparent 58%),
-      radial-gradient(1000px 480px at 50% 120%, rgb(37 99 235 / 0.08), transparent 60%);
+      radial-gradient(1200px 520px at 0% -15%, rgb(230 57 70 / 0.08), transparent 60%),
+      radial-gradient(900px 460px at 100% 5%, rgb(37 99 235 / 0.08), transparent 58%),
+      radial-gradient(1000px 480px at 50% 120%, rgb(17 17 17 / 0.05), transparent 60%);
     background-attachment: fixed;
     font-feature-settings:
       'rlig' 1,
