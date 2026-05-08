@@ -61,5 +61,14 @@ export const DASHBOARD_NAV: NavItem[] = [
   { label: 'Overview', to: ROUTES.dashboard },
   { label: 'Orders', to: ROUTES.dashboardOrders },
   { label: 'Addresses', to: ROUTES.dashboardAddresses },
-  { label: 'Profile', to: ROUTES.dashboardProfile },
+];
+
+export const ADMIN_NAV: NavItem[] = [
+  { label: 'Dashboard', to: ROUTES.adminDashboard },
+  { label: 'Analytics', to: ROUTES.adminAnalytics },
+  { label: 'Products', to: ROUTES.adminProducts },
+  { label: 'Orders', to: ROUTES.adminOrders },
+  { label: 'Inventory', to: ROUTES.adminInventory },
+  { label: 'Users', to: ROUTES.adminUsers },
+  { label: 'Settings', to: ROUTES.adminSettings },
 ];

@@ -1,5 +1,5 @@
 import { Heart, Package, ShoppingBag, Star } from 'lucide-react';
-import { Link, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 
 import { useAppSelector } from '@redux';
 import { PageMeta } from '@components/layout/PageMeta';
@@ -69,14 +69,7 @@ export default function DashboardPage() {
             icon={Package}
             title="No orders yet"
             description="When you place your first order, it will appear here."
-            action={
-              <Link
-                to={ROUTES.products}
-                className="text-sm font-semibold text-primary hover:underline"
-              >
-                Start shopping →
-              </Link>
-            }
+            
           />
         </CardContent>
       </Card>

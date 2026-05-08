@@ -16,6 +16,14 @@ export const ROUTES = {
   dashboardOrderDetails: (id = ':id') => `/dashboard/orders/${id}`,
   dashboardProfile: '/dashboard/profile',
   dashboardAddresses: '/dashboard/addresses',
+  adminRoot: '/admin',
+  adminDashboard: '/admin/dashboard',
+  adminAnalytics: '/admin/analytics',
+  adminProducts: '/admin/products',
+  adminOrders: '/admin/orders',
+  adminInventory: '/admin/inventory',
+  adminUsers: '/admin/users',
+  adminSettings: '/admin/settings',
   notFound: '*',
 } as const;
 

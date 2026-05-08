@@ -1,7 +1,8 @@
 import { lazy, Suspense } from 'react';
-import { Route, Routes } from 'react-router-dom';
+import { Navigate, Route, Routes } from 'react-router-dom';
 
 import { ROUTES } from '@constants/routes';
+import { AdminLayout } from '@layouts/AdminLayout';
 import { AuthLayout } from '@layouts/AuthLayout';
 import { DashboardLayout } from '@layouts/DashboardLayout';
 import { MainLayout } from '@layouts/MainLayout';
@@ -26,6 +27,17 @@ const ResetPasswordPage = lazy(
   () => import('@pages/auth/reset-password/ResetPasswordPage'),
 );
 const DashboardPage = lazy(() => import('@pages/dashboard/DashboardPage'));
+const DashboardOrdersPage = lazy(() => import('@pages/dashboard/orders/DashboardOrdersPage'));
+const DashboardAddressesPage = lazy(
+  () => import('@pages/dashboard/addresses/DashboardAddressesPage'),
+);
+const AdminDashboardPage = lazy(() => import('@pages/admin/dashboard/AdminDashboardPage'));
+const AdminAnalyticsPage = lazy(() => import('@pages/admin/analytics/AdminAnalyticsPage'));
+const AdminProductsPage = lazy(() => import('@pages/admin/products/AdminProductsPage'));
+const AdminOrdersPage = lazy(() => import('@pages/admin/orders/AdminOrdersPage'));
+const AdminInventoryPage = lazy(() => import('@pages/admin/inventory/AdminInventoryPage'));
+const AdminUsersPage = lazy(() => import('@pages/admin/users/AdminUsersPage'));
+const AdminSettingsPage = lazy(() => import('@pages/admin/settings/AdminSettingsPage'));
 const NotFoundPage = lazy(() => import('@pages/not-found/NotFoundPage'));
 
 export function AppRouter() {
@@ -93,9 +105,26 @@ export function AppRouter() {
           }
         >
           <Route path={ROUTES.dashboard} element={<DashboardPage />} />
-          <Route path={ROUTES.dashboardOrders} element={<DashboardPage />} />
-          <Route path={ROUTES.dashboardProfile} element={<DashboardPage />} />
-          <Route path={ROUTES.dashboardAddresses} element={<DashboardPage />} />
+          <Route path={ROUTES.dashboardOrders} element={<DashboardOrdersPage />} />
+          <Route path={ROUTES.dashboardAddresses} element={<DashboardAddressesPage />} />
+        </Route>
+
+        <Route
+          path={ROUTES.adminRoot}
+          element={
+            <ProtectedRoute>
+              <AdminLayout />
+            </ProtectedRoute>
+          }
+        >
+          <Route index element={<Navigate to="dashboard" replace />} />
+          <Route path="dashboard" element={<AdminDashboardPage />} />
+          <Route path="analytics" element={<AdminAnalyticsPage />} />
+          <Route path="products" element={<AdminProductsPage />} />
+          <Route path="orders" element={<AdminOrdersPage />} />
+          <Route path="inventory" element={<AdminInventoryPage />} />
+          <Route path="users" element={<AdminUsersPage />} />
+          <Route path="settings" element={<AdminSettingsPage />} />
         </Route>
 
         <Route path="*" element={<NotFoundPage />} />
