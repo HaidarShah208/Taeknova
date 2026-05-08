@@ -65,7 +65,7 @@ const buildProduct = (
     subtitle: 'Performance-grade team uniform',
     description:
       'Engineered with moisture-wicking, four-way stretch fabric for unrestricted movement on game day. Reinforced stitching, breathable mesh panels, and team-customizable trims.',
-    brand: 'Tikwando',
+    brand: 'Tiknova',
     categoryId: category.id,
     categorySlug: category.slug,
     price,
@@ -108,7 +108,7 @@ export const MOCK_REVIEWS: ProductReview[] = [
     author: 'Marcus T.',
     rating: 5,
     title: 'Premium feel, championship quality',
-    body: 'The fabric breathes incredibly well and the fit is dialed-in. Our entire squad upgraded to Tikwando.',
+    body: 'The fabric breathes incredibly well and the fit is dialed-in. Our entire squad upgraded to Tiknova.',
     createdAt: new Date(Date.now() - 4 * 86_400_000).toISOString(),
   },
   {

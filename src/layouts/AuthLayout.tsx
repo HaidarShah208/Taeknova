@@ -32,7 +32,7 @@ export function AuthLayout() {
           </p>
         </div>
         <div className="relative z-10 text-xs text-background/60">
-          © {new Date().getFullYear()} Tikwando — Built for performance.
+          © {new Date().getFullYear()} Tiknova — Built for performance.
         </div>
       </aside>
 

@@ -37,7 +37,7 @@ export default function LoginPage() {
         user: {
           id: 'user-1',
           email: values.email,
-          firstName: 'Tikwando',
+          firstName: 'Tiknova',
           lastName: 'Athlete',
           createdAt: new Date().toISOString(),
         },
@@ -100,7 +100,7 @@ export default function LoginPage() {
         </form>
 
         <p className="mt-8 text-center text-sm text-muted-foreground">
-          New to Tikwando?{' '}
+          New to Tiknova?{' '}
           <Link to={ROUTES.register} className="font-semibold text-primary hover:underline">
             Create an account
           </Link>

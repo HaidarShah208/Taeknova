@@ -56,7 +56,7 @@ export function WhyChooseUsSection() {
       tone="default"
       eyebrow="Why teams choose us"
       title="Built like premium gear should be."
-      description="Every Tikwando uniform combines elite-level fabric science with an obsession for detail — so your team looks pro and plays better."
+      description="Every Tiknova uniform combines elite-level fabric science with an obsession for detail — so your team looks pro and plays better."
       align="center"
     >
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">

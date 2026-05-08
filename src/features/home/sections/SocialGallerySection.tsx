@@ -47,7 +47,7 @@ const POSTS: SocialPost[] = [
   },
   {
     image: 'https://picsum.photos/seed/tikwando-ig-6/900/600',
-    caption: 'Game-winners wearing Tikwando',
+    caption: 'Game-winners wearing Tiknova',
     likes: 2014,
     comments: 56,
   },
@@ -62,7 +62,7 @@ export function SocialGallerySection() {
       tone="default"
       eyebrow="@tikwando"
       title="Tag us. We share the best."
-      description="A look at the teams, locker rooms, and tunnels where Tikwando shows up. Follow along — your kit might be next."
+      description="A look at the teams, locker rooms, and tunnels where Tiknova shows up. Follow along — your kit might be next."
       action={
         <a
           href="https://instagram.com/tikwando"

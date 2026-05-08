@@ -22,7 +22,7 @@ export function SearchOverlay() {
   };
 
   return (
-    <Drawer isOpen={isOpen} onClose={close} side="top" size="md" title="Search Tikwando">
+    <Drawer isOpen={isOpen} onClose={close} side="top" size="md" title="Search Tiknova">
       <div className="flex flex-col gap-6">
         <SearchBar
           autoFocus

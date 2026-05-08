@@ -48,7 +48,7 @@ export function NewsletterSection() {
               Newsletter
             </span>
             <h2 className="mt-4 text-white font-display text-3xl font-bold leading-tight tracking-tight sm:text-4xl">
-              Join the Tikwando insider list.
+              Join the Tiknova insider list.
             </h2>
             <p className="mt-3 max-w-md text-sm leading-relaxed text-background/75 sm:text-base">
               Be first in line for new drops, team-pricing previews, and limited-edition kits.
@@ -95,7 +95,7 @@ export function NewsletterSection() {
               Subscribe
             </Button>
             <p className="text-xs leading-relaxed text-background/60">
-              By subscribing, you agree to receive emails from Tikwando. Unsubscribe anytime.
+              By subscribing, you agree to receive emails from Tiknova. Unsubscribe anytime.
             </p>
           </form>
         </div>

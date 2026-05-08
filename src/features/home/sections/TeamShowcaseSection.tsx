@@ -66,8 +66,8 @@ export function TeamShowcaseSection() {
       tone="default"
       className="bg-gradient-to-br from-white via-[#eef2f9] to-[#0F1729]/42"
       eyebrow="Worn by champions"
-      title="Teams that win in Tikwando."
-      description="A glimpse at programs, clubs, and pro outfits already running on Tikwando-built gear."
+      title="Teams that win in Tiknova."
+      description="A glimpse at programs, clubs, and pro outfits already running on Tiknova-built gear."
       action={
         <Link
           to={ROUTES.categories}

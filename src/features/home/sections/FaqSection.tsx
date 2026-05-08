@@ -6,7 +6,7 @@ const FAQS = [
     id: 'lead-time',
     question: 'How long does a custom team order take?',
     answer:
-      'Standard production is 14 days from approved mockups, plus shipping. Rush options can compress that to 7 days for an additional fee — talk to your Tikwando stylist when you start an order.',
+      'Standard production is 14 days from approved mockups, plus shipping. Rush options can compress that to 7 days for an additional fee — talk to your Tiknova stylist when you start an order.',
   },
   {
     id: 'minimum',

@@ -19,7 +19,7 @@ const TESTIMONIALS: Testimonial[] = [
     title: 'Head Coach, FC United',
     rating: 5,
     body:
-      'Tikwando turned around custom kits for our entire club in under two weeks. The fabric is unmatched and the team has never looked sharper.',
+      'Tiknova turned around custom kits for our entire club in under two weeks. The fabric is unmatched and the team has never looked sharper.',
     avatar: 'https://i.pravatar.cc/120?img=47',
   },
   {
@@ -46,7 +46,7 @@ export function TestimonialsSection() {
       tone="muted"
       eyebrow="What teams say"
       title="Worn by champions, recommended by coaches."
-      description="A few words from teams who train, compete, and win in Tikwando."
+      description="A few words from teams who train, compete, and win in Tiknova."
       align="center"
     >
       <div className="grid gap-6 lg:grid-cols-3">

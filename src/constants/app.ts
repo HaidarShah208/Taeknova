@@ -1,7 +1,7 @@
-export const APP_NAME = 'Tikwando';
+export const APP_NAME = 'Tiknova';
 export const APP_TAGLINE = 'Premium Custom Uniforms';
 export const APP_DESCRIPTION =
-  'Tikwando crafts premium custom uniforms and team apparel engineered for performance, fit, and style.';
+  'Tiknova crafts premium custom uniforms and team apparel engineered for performance, fit, and style.';
 
 export const SUPPORT_EMAIL = 'support@tikwando.com';
 export const SUPPORT_PHONE = '+1 (800) 555-0140';

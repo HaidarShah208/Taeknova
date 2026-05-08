@@ -17,7 +17,7 @@ export default function CategoriesPage() {
     <>
       <PageMeta
         title="Shop by category"
-        description="Browse Tikwando uniforms by sport — from soccer kits to basketball jerseys."
+        description="Browse Tiknova uniforms by sport — from soccer kits to basketball jerseys."
       />
       <Container className="py-8 lg:py-12">
         <Breadcrumb items={[{ label: 'Categories' }]} />

@@ -35,7 +35,7 @@ export function CustomUniformsSection() {
     <SectionWrapper
       tone="muted"
       eyebrow="Custom uniforms"
-      title="Designed by you. Built by Tikwando."
+      title="Designed by you. Built by Tiknova."
       description="From local clubs to pro programs, we turn your concept into ready-to-play uniforms with white-glove customization end to end."
     >
       <div className="grid gap-10 lg:grid-cols-12 lg:gap-12">
@@ -49,7 +49,7 @@ export function CustomUniformsSection() {
           <div className="relative overflow-hidden rounded-3xl border border-border bg-card shadow-card">
             <img
               src="https://picsum.photos/seed/tikwando-custom/1100/900"
-              alt="Designer customizing a Tikwando uniform"
+              alt="Designer customizing a Tiknova uniform"
               loading="lazy"
               className="aspect-[5/4] w-full object-cover"
             />

@@ -38,7 +38,7 @@ export default function ProductsPage() {
     <>
       <PageMeta
         title="Shop premium uniforms"
-        description="Browse Tikwando's full collection of premium custom team uniforms."
+        description="Browse Tiknova's full collection of premium custom team uniforms."
       />
       <Container className="py-8 lg:py-12">
         <Breadcrumb items={[{ label: 'Shop', to: '/products' }]} />

@@ -123,7 +123,7 @@ export function HeroSection() {
           </h1>
           <p className="mt-6 max-w-xl text-base leading-relaxed text-background/80 sm:text-lg">
             Performance fabrics, custom team detailing, and championship-grade construction.
-            Tikwando crafts uniforms that work as hard as your team.
+            Tiknova crafts uniforms that work as hard as your team.
           </p>
 
           <div className="mt-8 flex flex-wrap items-center gap-3">
@@ -158,7 +158,7 @@ export function HeroSection() {
           <div className="relative overflow-hidden rounded-[2rem] border border-background/20 bg-background/5 backdrop-blur">
             <img
               src="https://picsum.photos/seed/tikwando-hero-card/900/1100"
-              alt="Athlete in custom Tikwando kit"
+              alt="Athlete in custom Tiknova kit"
               className="h-[34rem] w-full object-cover"
             />
             <div className="absolute right-4 top-4 inline-flex items-center gap-1.5 rounded-full bg-background/95 px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-foreground shadow-soft backdrop-blur">

@@ -1,6 +1,6 @@
-# Tikwando — Frontend
+# Tiknova — Frontend
 
-Production-grade, scalable frontend for the **Tikwando** premium uniforms ecommerce platform. Built with a modern, opinionated stack and feature-based architecture so it can grow into a full SaaS-level storefront.
+Production-grade, scalable frontend for the **Tiknova** premium uniforms ecommerce platform. Built with a modern, opinionated stack and feature-based architecture so it can grow into a full SaaS-level storefront.
 
 ## Tech Stack
 

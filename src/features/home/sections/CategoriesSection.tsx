@@ -17,7 +17,7 @@ export function CategoriesSection() {
       className="relative overflow-hidden bg-gradient-to-br from-[#393528]/38 via-[#2b2d2d]/28 to-[#101A2F]/42"
       eyebrow="Shop by sport"
       title="Find the kit built for your game"
-      description="From soccer pitches to basketball courts, every Tikwando kit is engineered for the demands of your sport."
+      description="From soccer pitches to basketball courts, every Tiknova kit is engineered for the demands of your sport."
       action={
         <Link
           to={ROUTES.categories}

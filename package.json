@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.1.0",
   "type": "module",
-  "description": "Tikwando — premium uniforms ecommerce frontend.",
+  "description": "Tiknova — premium uniforms ecommerce frontend.",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
