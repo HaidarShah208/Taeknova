@@ -55,7 +55,7 @@ export function WhyChooseUsSection() {
     <SectionWrapper
       tone="default"
       eyebrow="Why teams choose us"
-      title="Built like premium gear should be."
+      title="Designed for elite performance."
       description="Every Tiknova uniform combines elite-level fabric science with an obsession for detail — so your team looks pro and plays better."
       align="center"
     >

@@ -48,8 +48,8 @@ export function ProcessSection() {
     <SectionWrapper
       tone="muted"
       eyebrow="How it works"
-      title="From concept to game day in five steps."
-      description="A streamlined process designed around teams, coaches, and athletic directors — predictable, transparent, and fast."
+      title="Five Steps to Game Day"
+      description="A streamlined process for teams and coaches — simple, transparent, and fast."
       align="center"
     >
       <div className="relative grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-5">
@@ -67,7 +67,6 @@ export function ProcessSection() {
             className="relative"
           >
             <StepCard
-              index={idx + 1}
               icon={step.icon}
               title={step.title}
               description={step.description}

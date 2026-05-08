@@ -4,14 +4,13 @@ import type { ReactNode } from 'react';
 import { cn } from '@lib/cn';
 
 interface StepCardProps {
-  index: number;
   icon: LucideIcon;
   title: ReactNode;
   description?: ReactNode;
   className?: string;
 }
 
-export function StepCard({ index, icon: Icon, title, description, className }: StepCardProps) {
+export function StepCard({ icon: Icon, title, description, className }: StepCardProps) {
   return (
     <article
       className={cn(
@@ -23,15 +22,14 @@ export function StepCard({ index, icon: Icon, title, description, className }: S
         aria-hidden="true"
         className="absolute right-4 top-3 font-display text-2xl font-bold leading-none tracking-tight text-muted-foreground/20"
       >
-        {String(index).padStart(2, '0')}
       </span>
-      <span className="inline-flex h-14 w-14 items-center justify-center rounded-full border border-border/20 bg-background/40 text-foreground">
-        <Icon className="h-6 w-6" aria-hidden="true" />
+      <span className="inline-flex h-14 w-14 items-center justify-center rounded-full border bg-background/40 text-foreground">
+        <Icon className="h-8 w-8" aria-hidden="true" />
       </span>
       <div className="flex flex-col gap-1">
         <h3 className="text-lg font-semibold leading-tight tracking-tight">{title}</h3>
         {description && (
-          <p className="text-sm leading-relaxed text-muted-foreground">{description}</p>
+          <p className="text-xs pt-3 leading-relaxed text-muted-foreground">{description}</p>
         )}
       </div>
     </article>

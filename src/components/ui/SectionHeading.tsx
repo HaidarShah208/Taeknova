@@ -29,7 +29,7 @@ export function SectionHeading({
         className,
       )}
     >
-      <div className={cn('flex max-w-2xl flex-col gap-2', align === 'center' && 'mx-auto')}>
+      <div className={cn('flex max-w-3xl flex-col gap-2', align === 'center' && 'mx-auto')}>
         {eyebrow && (
           <span className="text-sm font-bold uppercase tracking-[0.22em] text-foreground">
             {eyebrow}
