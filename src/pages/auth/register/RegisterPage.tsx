@@ -36,6 +36,7 @@ export default function RegisterPage() {
           email: values.email,
           firstName: values.firstName,
           lastName: values.lastName,
+          role: 'user',
           createdAt: new Date().toISOString(),
         },
       }),

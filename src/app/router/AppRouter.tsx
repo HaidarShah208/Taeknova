@@ -26,11 +26,8 @@ const ForgotPasswordPage = lazy(
 const ResetPasswordPage = lazy(
   () => import('@pages/auth/reset-password/ResetPasswordPage'),
 );
-const DashboardPage = lazy(() => import('@pages/dashboard/DashboardPage'));
-const DashboardOrdersPage = lazy(() => import('@pages/dashboard/orders/DashboardOrdersPage'));
-const DashboardAddressesPage = lazy(
-  () => import('@pages/dashboard/addresses/DashboardAddressesPage'),
-);
+ 
+ 
 const AdminDashboardPage = lazy(() => import('@pages/admin/dashboard/AdminDashboardPage'));
 const AdminAnalyticsPage = lazy(() => import('@pages/admin/analytics/AdminAnalyticsPage'));
 const AdminProductsPage = lazy(() => import('@pages/admin/products/AdminProductsPage'));
@@ -104,9 +101,7 @@ export function AppRouter() {
             </ProtectedRoute>
           }
         >
-          <Route path={ROUTES.dashboard} element={<DashboardPage />} />
-          <Route path={ROUTES.dashboardOrders} element={<DashboardOrdersPage />} />
-          <Route path={ROUTES.dashboardAddresses} element={<DashboardAddressesPage />} />
+ 
         </Route>
 
         <Route

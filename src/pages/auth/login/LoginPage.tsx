@@ -30,6 +30,10 @@ export default function LoginPage() {
 
   const onSubmit = async (values: LoginFormValues) => {
     await new Promise((resolve) => setTimeout(resolve, 500));
+    const isAdmin = values.email.toLowerCase().includes('admin');
+    const fallbackRoute = isAdmin ? ROUTES.adminDashboard : ROUTES.dashboard;
+    const nextRoute = redirectTo === ROUTES.dashboard ? fallbackRoute : redirectTo;
+
     dispatch(
       setSession({
         token: 'mock-token-' + Date.now(),
@@ -39,12 +43,13 @@ export default function LoginPage() {
           email: values.email,
           firstName: 'Tiknova',
           lastName: 'Athlete',
+          role: isAdmin ? 'admin' : 'user',
           createdAt: new Date().toISOString(),
         },
       }),
     );
     toast.success('Welcome back!');
-    navigate(redirectTo, { replace: true });
+    navigate(nextRoute, { replace: true });
   };
 
   return (

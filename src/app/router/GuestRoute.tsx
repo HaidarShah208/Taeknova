@@ -3,7 +3,7 @@ import { Navigate } from 'react-router-dom';
 
 import { useAppSelector } from '@redux';
 import { ROUTES } from '@constants/routes';
-import { selectIsAuthenticated } from '@redux/auth';
+import { selectIsAdmin, selectIsAuthenticated } from '@redux/auth';
 
 interface GuestRouteProps {
   children: ReactNode;
@@ -11,6 +11,7 @@ interface GuestRouteProps {
 
 export function GuestRoute({ children }: GuestRouteProps) {
   const isAuthenticated = useAppSelector(selectIsAuthenticated);
-  if (isAuthenticated) return <Navigate to={ROUTES.dashboard} replace />;
+  const isAdmin = useAppSelector(selectIsAdmin);
+  if (isAuthenticated) return <Navigate to={isAdmin ? ROUTES.adminDashboard : ROUTES.dashboard} replace />;
   return <>{children}</>;
 }

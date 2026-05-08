@@ -6,7 +6,7 @@ import { buttonVariants } from '@components/ui/Button';
 import { Drawer } from '@components/ui/Drawer';
 import { PRIMARY_NAV } from '@constants/navigation';
 import { ROUTES } from '@constants/routes';
-import { selectIsAuthenticated } from '@redux/auth';
+import { selectIsAdmin, selectIsAuthenticated } from '@redux/auth';
 import { selectMobileMenuOpen, setMobileMenuOpen } from '@redux/ui';
 import { cn } from '@lib/cn';
 
@@ -14,6 +14,7 @@ export function MobileMenu() {
   const dispatch = useAppDispatch();
   const isOpen = useAppSelector(selectMobileMenuOpen);
   const isAuthenticated = useAppSelector(selectIsAuthenticated);
+  const isAdmin = useAppSelector(selectIsAdmin);
 
   const close = () => dispatch(setMobileMenuOpen(false));
 
@@ -60,7 +61,7 @@ export function MobileMenu() {
         <div className="mt-auto pt-6">
           {isAuthenticated ? (
             <Link
-              to={ROUTES.dashboard}
+              to={isAdmin ? ROUTES.adminDashboard : ROUTES.dashboard}
               onClick={close}
               className={cn(buttonVariants({ fullWidth: true }))}
             >

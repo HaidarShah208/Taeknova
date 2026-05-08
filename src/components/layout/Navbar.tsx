@@ -6,7 +6,7 @@ import { useAppDispatch, useAppSelector } from '@redux';
 import { Container } from '@components/ui/Container';
 import { PRIMARY_NAV } from '@constants/navigation';
 import { ROUTES } from '@constants/routes';
-import { selectIsAuthenticated } from '@redux/auth';
+import { selectIsAdmin, selectIsAuthenticated } from '@redux/auth';
 import { selectCartCount } from '@redux/cart';
 import {
   selectCartDrawerOpen,
@@ -33,6 +33,7 @@ export function Navbar() {
   const cartCount = useAppSelector(selectCartCount);
   const wishlistCount = useAppSelector(selectWishlistIds).length;
   const isAuthenticated = useAppSelector(selectIsAuthenticated);
+  const isAdmin = useAppSelector(selectIsAdmin);
   const isSearchOpen = useAppSelector(selectSearchOpen);
   const isCartDrawerOpen = useAppSelector(selectCartDrawerOpen);
   const isMobileMenuOpen = useAppSelector(selectMobileMenuOpen);
@@ -123,7 +124,9 @@ export function Navbar() {
             <button
               type="button"
               onClick={() =>
-                isAuthenticated ? navigate(ROUTES.dashboard) : navigate(ROUTES.login)
+                isAuthenticated
+                  ? navigate(isAdmin ? ROUTES.adminDashboard : ROUTES.dashboard)
+                  : navigate(ROUTES.login)
               }
               aria-label={isAuthenticated ? 'Account' : 'Sign in'}
               className="hidden h-10 w-10 items-center justify-center rounded-lg text-foreground transition-colors hover:bg-muted sm:inline-flex"
