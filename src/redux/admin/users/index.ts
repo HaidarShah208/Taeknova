@@ -1,6 +1,6 @@
 import { baseApi } from '@services/baseApi';
 import type { AdminCreateAdminBody, AdminUserRecord } from '@app-types/admin';
-import { unwrapBackendData } from '@redux/admin/apiEnvelope';
+import { unwrapBackendData } from '@services/apiEnvelope';
 
 export const adminUsersApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({

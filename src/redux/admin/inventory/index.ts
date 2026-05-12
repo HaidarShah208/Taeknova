@@ -4,7 +4,7 @@ import type {
   AdminUpdateStockBody,
   AdminUpdateStockResponse,
 } from '@app-types/admin';
-import { unwrapBackendData } from '@redux/admin/apiEnvelope';
+import { unwrapBackendData } from '@services/apiEnvelope';
 
 export const adminInventoryApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({

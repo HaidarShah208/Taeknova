@@ -1,7 +1,6 @@
 import { ArrowRight, Trash2 } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 
-import { useAppDispatch, useAppSelector } from '@redux';
 import { Breadcrumb } from '@components/shared/Breadcrumb';
 import { QuantitySelector } from '@components/shared/QuantitySelector';
 import { PageMeta } from '@components/layout/PageMeta';
@@ -10,12 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@components/ui/Card';
 import { Container } from '@components/ui/Container';
 import { EmptyState } from '@components/ui/EmptyState';
 import { ROUTES } from '@constants/routes';
-import {
-  removeItem,
-  selectCartItems,
-  selectCartSubtotal,
-  updateQuantity,
-} from '@redux/cart';
+import { useUnifiedCart } from '@hooks/commerce/useUnifiedCart';
 import { cn } from '@lib/cn';
 import { formatPrice } from '@lib/formatters';
 
@@ -29,13 +23,14 @@ const PKR_FORMAT = {
 
 export default function CartPage() {
   const navigate = useNavigate();
-  const dispatch = useAppDispatch();
-  const items = useAppSelector(selectCartItems);
-  const subtotal = useAppSelector(selectCartSubtotal);
+  const { items, subtotal, adjustQuantity, removeLine, apiMode, isAuthenticated, isFetching } =
+    useUnifiedCart();
 
   const shipping = subtotal > SHIPPING_THRESHOLD || items.length === 0 ? 0 : 12;
   const tax = Math.round(subtotal * 0.07 * 100) / 100;
   const total = subtotal + shipping + tax;
+
+  const showAuthHint = apiMode && !isAuthenticated;
 
   return (
     <>
@@ -44,7 +39,18 @@ export default function CartPage() {
         <Breadcrumb items={[{ label: 'Cart' }]} />
         <h1 className="mt-4 text-3xl font-bold tracking-tight sm:text-4xl">Your cart</h1>
 
-        {items.length === 0 ? (
+        {showAuthHint ? (
+          <EmptyState
+            className="mt-10"
+            title="Sign in to view your cart"
+            description="Your saved bag is synced when you sign in with the live API."
+            action={
+              <Link to={ROUTES.login} className={cn(buttonVariants())}>
+                Sign in
+              </Link>
+            }
+          />
+        ) : items.length === 0 ? (
           <EmptyState
             className="mt-10"
             title="Your cart is empty"
@@ -97,13 +103,11 @@ export default function CartPage() {
                           size="sm"
                           value={item.quantity}
                           max={item.maxStock}
-                          onChange={(quantity) =>
-                            dispatch(updateQuantity({ id: item.id, quantity }))
-                          }
+                          onChange={(quantity) => void adjustQuantity(item, quantity)}
                         />
                         <button
                           type="button"
-                          onClick={() => dispatch(removeItem(item.id))}
+                          onClick={() => void removeLine(item)}
                           className="inline-flex items-center gap-1.5 text-xs font-semibold text-muted-foreground transition-colors hover:text-destructive"
                         >
                           <Trash2 className="h-3.5 w-3.5" aria-hidden="true" />
@@ -128,13 +132,9 @@ export default function CartPage() {
                   </div>
                   <div className="flex items-center justify-between">
                     <dt className="text-muted-foreground">Delivery Charges</dt>
-                    <dd className="font-semibold">
-                      Free
-                    </dd>
+                    <dd className="font-semibold">Free</dd>
                   </div>
-                  <div className="flex items-center justify-between">
-              
-                  </div>
+                  <div className="flex items-center justify-between" />
                   <div className="mt-4 flex items-center justify-between border-t border-border pt-4 text-base">
                     <dt className="font-semibold">Total</dt>
                     <dd className="text-lg font-bold">{formatPrice(total, PKR_FORMAT)}</dd>
@@ -146,6 +146,7 @@ export default function CartPage() {
                   className="mt-6"
                   rightIcon={<ArrowRight className="h-4 w-4" />}
                   onClick={() => navigate(ROUTES.checkout)}
+                  disabled={apiMode && isFetching}
                 >
                   Checkout
                 </Button>

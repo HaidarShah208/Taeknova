@@ -8,10 +8,13 @@ import { localStore } from '@utils/storage';
 const rawBaseQuery = fetchBaseQuery({
   baseUrl: env.apiBaseUrl,
   credentials: 'include',
-  prepareHeaders: (headers) => {
+  prepareHeaders: (headers, { arg }) => {
     const token = localStore.get<string | null>(STORAGE_KEYS.authToken, null);
     if (token) headers.set('Authorization', `Bearer ${token}`);
     headers.set('Accept', 'application/json');
+    if (typeof arg === 'object' && arg !== null && 'body' in arg && arg.body instanceof FormData) {
+      headers.delete('Content-Type');
+    }
     return headers;
   },
 });
@@ -40,6 +43,15 @@ export const TAG_TYPES = [
   'AdminInventory',
   'AdminUser',
   'AdminAnalytics',
+  'PublicProduct',
+  'PublicCategory',
+  'ServerCart',
+  'ServerWishlist',
+  'CheckoutSummary',
+  'ServerOrder',
+  'ServerReview',
+  'UserProfile',
+  'UserAddress',
 ] as const;
 export type ApiTagType = (typeof TAG_TYPES)[number];
 

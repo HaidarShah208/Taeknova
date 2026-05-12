@@ -13,7 +13,6 @@ export function unwrapBackendData<T>(raw: unknown): T {
   return envelope.data;
 }
 
-/** For responses that only return `{ success, message }` without `data`. */
 export function assertBackendSuccess(raw: unknown): void {
   const envelope = raw as BackendApiEnvelope<unknown>;
   if (!envelope.success) {

@@ -3,7 +3,6 @@ import { useMemo, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { toast } from 'sonner';
 
-import { useAppDispatch, useAppSelector } from '@redux';
 import { Breadcrumb } from '@components/shared/Breadcrumb';
 import { PriceTag } from '@components/shared/PriceTag';
 import { ProductGrid } from '@components/shared/ProductGrid';
@@ -18,12 +17,11 @@ import { ErrorState } from '@components/ui/ErrorState';
 import { Loader } from '@components/ui/Loader';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@components/ui/Tabs';
 import { ROUTES } from '@constants/routes';
-import { addItem } from '@redux/cart';
+import { useCommerceProductActions } from '@hooks/commerce/useCommerceProductActions';
 import {
-  useGetProductBySlugQuery,
-  useGetRelatedProductsQuery,
-} from '@redux/products';
-import { selectIsInWishlist, toggleWishlist } from '@redux/wishlist';
+  useUnifiedProductBySlug,
+  useUnifiedRelatedProducts,
+} from '@hooks/commerce/useUnifiedProductBySlug';
 import { cn } from '@lib/cn';
 import { uniqueBy } from '@utils/misc';
 
@@ -34,10 +32,11 @@ const VALUE_PROPS = [
 
 export default function ProductDetailsPage() {
   const { slug = '' } = useParams<{ slug: string }>();
-  const dispatch = useAppDispatch();
-  const { data: product, isLoading, isError, refetch } = useGetProductBySlugQuery(slug);
-  const { data: related } = useGetRelatedProductsQuery({ slug, limit: 4 });
-  const isWishlisted = useAppSelector(selectIsInWishlist(product?.id ?? ''));
+  const { product, isLoading, isError, refetch } = useUnifiedProductBySlug(slug);
+  const related = useUnifiedRelatedProducts(slug, 4);
+  const { isWishlisted, toggleWishlistForProduct, addToCart } = useCommerceProductActions(
+    product ?? null,
+  );
 
   const [selectedColor, setSelectedColor] = useState<string | null>(null);
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
@@ -90,22 +89,7 @@ export default function ProductDetailsPage() {
       toast.error('Please choose a size and color');
       return;
     }
-    dispatch(
-      addItem({
-        product: {
-          id: product.id,
-          slug: product.slug,
-          title: product.title,
-          price: product.price,
-          ...(product.comparePrice !== undefined ? { comparePrice: product.comparePrice } : {}),
-          images: product.images,
-          currency: product.currency,
-        },
-        variant: selectedVariant,
-        quantity,
-      }),
-    );
-    toast.success(`${product.title} added to cart`);
+    void addToCart({ product, variant: selectedVariant, quantity });
   };
 
   return (
@@ -259,7 +243,9 @@ export default function ProductDetailsPage() {
                 <Button
                   size="lg"
                   variant="outline"
-                  onClick={() => dispatch(toggleWishlist(product.id))}
+                  onClick={() => {
+                    void toggleWishlistForProduct();
+                  }}
                   aria-label={isWishlisted ? 'Remove from wishlist' : 'Save to wishlist'}
                   aria-pressed={isWishlisted}
                   leftIcon={

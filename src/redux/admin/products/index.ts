@@ -6,7 +6,7 @@ import type {
   AdminProductListResponse,
   AdminUpdateProductBody,
 } from '@app-types/admin';
-import { assertBackendSuccess, unwrapBackendData } from '@redux/admin/apiEnvelope';
+import { assertBackendSuccess, unwrapBackendData } from '@services/apiEnvelope';
 
 export interface AdminUpdateProductRequest {
   productId: string;

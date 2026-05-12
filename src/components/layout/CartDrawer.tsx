@@ -1,18 +1,13 @@
 import { Trash2 } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 
-import { useAppDispatch, useAppSelector } from '@redux';
 import { buttonVariants } from '@components/ui/Button';
 import { Drawer } from '@components/ui/Drawer';
 import { EmptyState } from '@components/ui/EmptyState';
 import { QuantitySelector } from '@components/shared/QuantitySelector';
 import { ROUTES } from '@constants/routes';
-import {
-  removeItem,
-  selectCartItems,
-  selectCartSubtotal,
-  updateQuantity,
-} from '@redux/cart';
+import { useUnifiedCart } from '@hooks/commerce/useUnifiedCart';
+import { useAppDispatch, useAppSelector } from '@redux';
 import { selectCartDrawerOpen, setCartDrawerOpen } from '@redux/ui';
 import { cn } from '@lib/cn';
 import { formatPrice } from '@lib/formatters';
@@ -21,8 +16,7 @@ export function CartDrawer() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const isOpen = useAppSelector(selectCartDrawerOpen);
-  const items = useAppSelector(selectCartItems);
-  const subtotal = useAppSelector(selectCartSubtotal);
+  const { items, subtotal, adjustQuantity, removeLine, apiMode, isAuthenticated } = useUnifiedCart();
 
   const close = () => dispatch(setCartDrawerOpen(false));
 
@@ -30,6 +24,8 @@ export function CartDrawer() {
     close();
     navigate(ROUTES.checkout);
   };
+
+  const showAuthHint = apiMode && !isAuthenticated;
 
   return (
     <Drawer
@@ -39,7 +35,8 @@ export function CartDrawer() {
       size="xl"
       title={`Your cart (${items.length})`}
       footer={
-        items.length > 0 && (
+        items.length > 0 &&
+        !showAuthHint && (
           <div className="space-y-3">
             <div className="flex items-center justify-between text-sm">
               <span className="text-muted-foreground">Subtotal</span>
@@ -66,16 +63,22 @@ export function CartDrawer() {
         )
       }
     >
-      {items.length === 0 ? (
+      {showAuthHint ? (
+        <EmptyState
+          title="Sign in to view your cart"
+          description="Sync your bag across devices with the live API."
+          action={
+            <Link to={ROUTES.login} onClick={close} className={cn(buttonVariants())}>
+              Sign in
+            </Link>
+          }
+        />
+      ) : items.length === 0 ? (
         <EmptyState
           title="Your cart is empty"
           description="Start exploring our latest performance kits and add favorites to your bag."
           action={
-            <Link
-              to={ROUTES.products}
-              onClick={close}
-              className={cn(buttonVariants())}
-            >
+            <Link to={ROUTES.products} onClick={close} className={cn(buttonVariants())}>
               Browse products
             </Link>
           }
@@ -112,7 +115,7 @@ export function CartDrawer() {
                   </div>
                   <button
                     type="button"
-                    onClick={() => dispatch(removeItem(item.id))}
+                    onClick={() => void removeLine(item)}
                     aria-label="Remove item"
                     className="text-muted-foreground transition-colors hover:text-destructive"
                   >
@@ -124,9 +127,7 @@ export function CartDrawer() {
                     size="sm"
                     value={item.quantity}
                     max={item.maxStock}
-                    onChange={(quantity) =>
-                      dispatch(updateQuantity({ id: item.id, quantity }))
-                    }
+                    onChange={(quantity) => void adjustQuantity(item, quantity)}
                   />
                   <span className="text-sm font-bold text-foreground">
                     {formatPrice(item.price * item.quantity)}

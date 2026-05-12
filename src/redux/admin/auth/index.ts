@@ -2,7 +2,7 @@ import { baseApi } from '@services/baseApi';
 import { clearSession, setSession } from '@redux/auth';
 import type { User } from '@app-types/auth';
 import type { AdminLoginResponse, AdminRefreshResponse } from '@app-types/admin';
-import { assertBackendSuccess, unwrapBackendData } from '@redux/admin/apiEnvelope';
+import { assertBackendSuccess, unwrapBackendData } from '@services/apiEnvelope';
 import { mapBackendAuthUserToUser } from '@redux/admin/mapBackendUser';
 
 export interface AdminLoginRequest {

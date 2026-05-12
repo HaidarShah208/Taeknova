@@ -1,5 +1,5 @@
 import { Filter } from 'lucide-react';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 
 import { Breadcrumb } from '@components/shared/Breadcrumb';
 import { FilterSidebar } from '@components/shared/FilterSidebar';
@@ -12,8 +12,12 @@ import { EmptyState } from '@components/ui/EmptyState';
 import { ErrorState } from '@components/ui/ErrorState';
 import { Pagination } from '@components/ui/Pagination';
 import { Select } from '@components/ui/Select';
+import env from '@lib/env';
 import { useGetCategoriesQuery } from '@redux/categories';
-import { useGetProductsQuery, useProductFiltersFromUrl } from '@redux/products';
+import { useListPublicCategoriesQuery } from '@redux/customer';
+import { useProductFiltersFromUrl } from '@redux/products';
+import { mapPublicCategoryToUi } from '@services/catalogMappers';
+import { useUnifiedProductListing } from '@hooks/commerce/useUnifiedProductListing';
 
 const SORT_OPTIONS = [
   { value: 'new', label: 'Newest' },
@@ -27,12 +31,19 @@ export default function ProductsPage() {
   const { filters, setFilters, resetFilters, setPage } = useProductFiltersFromUrl();
   const [isFilterOpen, setFilterOpen] = useState(false);
 
-  const { data: categoriesData } = useGetCategoriesQuery();
-  const { data, isLoading, isError, refetch, isFetching } = useGetProductsQuery(filters);
+  const useApiCatalog = !env.enableMockApi;
+  const { data: publicCategories } = useListPublicCategoriesQuery(undefined, { skip: !useApiCatalog });
+  const { data: mockCategories } = useGetCategoriesQuery(undefined, { skip: useApiCatalog });
+
+  const categories = useMemo(() => {
+    if (useApiCatalog) return (publicCategories ?? []).map(mapPublicCategoryToUi);
+    return mockCategories ?? [];
+  }, [mockCategories, publicCategories, useApiCatalog]);
+
+  const { data, isLoading, isError, refetch, isFetching } = useUnifiedProductListing(filters);
 
   const products = data?.data ?? [];
   const meta = data?.meta;
-  const categories = categoriesData ?? [];
 
   return (
     <>

@@ -13,6 +13,15 @@ import './admin/categories';
 import './admin/products';
 import './admin/inventory';
 import './admin/orders';
+import './customer/catalog';
+import './customer/auth';
+import './customer/cart';
+import './customer/wishlist';
+import './customer/checkout';
+import './customer/orders';
+import './customer/reviews';
+import './customer/profile';
+import './customer/addresses';
 import './analytics';
 
 const apiMiddleware = baseApi.middleware as Middleware;

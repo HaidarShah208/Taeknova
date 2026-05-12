@@ -6,6 +6,8 @@ import { Toaster } from 'sonner';
 
 import { store } from '@redux';
 
+import { AuthBootstrap } from './AuthBootstrap';
+
 interface AppProvidersProps {
   children: ReactNode;
 }
@@ -13,6 +15,7 @@ interface AppProvidersProps {
 export function AppProviders({ children }: AppProvidersProps) {
   return (
     <ReduxProvider store={store}>
+      <AuthBootstrap />
       <HelmetProvider>
         <BrowserRouter>
           {children}

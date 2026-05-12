@@ -6,8 +6,10 @@ import { useAppDispatch, useAppSelector } from '@redux';
 import { Container } from '@components/ui/Container';
 import { PRIMARY_NAV } from '@constants/navigation';
 import { ROUTES } from '@constants/routes';
+import env from '@lib/env';
 import { selectIsAdmin, selectIsAuthenticated } from '@redux/auth';
 import { selectCartCount } from '@redux/cart';
+import { useGetCartQuery, useGetWishlistQuery } from '@redux/customer';
 import {
   selectCartDrawerOpen,
   selectMobileMenuOpen,
@@ -30,9 +32,20 @@ export function Navbar() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const cartCount = useAppSelector(selectCartCount);
-  const wishlistCount = useAppSelector(selectWishlistIds).length;
+  const localCartCount = useAppSelector(selectCartCount);
+  const wishlistIds = useAppSelector(selectWishlistIds);
   const isAuthenticated = useAppSelector(selectIsAuthenticated);
+  const { data: serverCart } = useGetCartQuery(undefined, {
+    skip: env.enableMockApi || !isAuthenticated,
+  });
+  const { data: serverWishlist } = useGetWishlistQuery(undefined, {
+    skip: env.enableMockApi || !isAuthenticated,
+  });
+
+  const cartBadge = env.enableMockApi
+    ? localCartCount
+    : (serverCart ?? []).reduce((n, line) => n + line.quantity, 0);
+  const wishlistCount = env.enableMockApi ? wishlistIds.length : (serverWishlist?.length ?? 0);
   const isAdmin = useAppSelector(selectIsAdmin);
   const isSearchOpen = useAppSelector(selectSearchOpen);
   const isCartDrawerOpen = useAppSelector(selectCartDrawerOpen);
@@ -137,16 +150,16 @@ export function Navbar() {
             <button
               type="button"
               onClick={() => dispatch(setCartDrawerOpen(!isCartDrawerOpen))}
-              aria-label={`Open cart, ${cartCount} item${cartCount === 1 ? '' : 's'}`}
+              aria-label={`Open cart, ${cartBadge} item${cartBadge === 1 ? '' : 's'}`}
               className="relative inline-flex h-10 w-10 items-center justify-center rounded-lg text-foreground transition-colors hover:bg-muted"
             >
               <ShoppingBag className="h-5 w-5" aria-hidden="true" />
-              {cartCount > 0 && (
+              {cartBadge > 0 && (
                 <span
                   aria-hidden="true"
                   className="absolute -right-0.5 -top-0.5 inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-primary px-1 text-[10px] font-bold text-primary-foreground"
                 >
-                  {cartCount}
+                  {cartBadge}
                 </span>
               )}
             </button>

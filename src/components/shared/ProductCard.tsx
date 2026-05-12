@@ -1,13 +1,10 @@
 import { Heart, ShoppingBag } from 'lucide-react';
 import { memo, useCallback } from 'react';
 import { Link } from 'react-router-dom';
-import { toast } from 'sonner';
 
-import { useAppDispatch, useAppSelector } from '@redux';
 import { Badge } from '@components/ui/Badge';
 import { ROUTES } from '@constants/routes';
-import { addItem } from '@redux/cart';
-import { selectIsInWishlist, toggleWishlist } from '@redux/wishlist';
+import { useCommerceProductActions } from '@hooks/commerce/useCommerceProductActions';
 import { cn } from '@lib/cn';
 import type { Product } from '@app-types/product';
 
@@ -21,8 +18,7 @@ interface ProductCardProps {
 }
 
 function ProductCardBase({ product, className, variant = 'default' }: ProductCardProps) {
-  const dispatch = useAppDispatch();
-  const isWishlisted = useAppSelector(selectIsInWishlist(product.id));
+  const { isWishlisted, toggleWishlistForProduct, addToCart } = useCommerceProductActions(product);
 
   const primaryImage = product.images[0]?.url ?? '';
   const hoverImage = product.images[1]?.url ?? primaryImage;
@@ -33,34 +29,18 @@ function ProductCardBase({ product, className, variant = 'default' }: ProductCar
       event.preventDefault();
       event.stopPropagation();
       if (!firstVariant) return;
-      dispatch(
-        addItem({
-          product: {
-            id: product.id,
-            slug: product.slug,
-            title: product.title,
-            price: product.price,
-            ...(product.comparePrice !== undefined ? { comparePrice: product.comparePrice } : {}),
-            images: product.images,
-            currency: product.currency,
-          },
-          variant: firstVariant,
-          quantity: 1,
-        }),
-      );
-      toast.success(`${product.title} added to cart`);
+      void addToCart({ product, variant: firstVariant, quantity: 1 });
     },
-    [dispatch, firstVariant, product],
+    [addToCart, firstVariant, product],
   );
 
   const handleWishlist = useCallback(
     (event: React.MouseEvent<HTMLButtonElement>) => {
       event.preventDefault();
       event.stopPropagation();
-      dispatch(toggleWishlist(product.id));
-      toast.success(isWishlisted ? 'Removed from wishlist' : 'Saved to wishlist');
+      void toggleWishlistForProduct();
     },
-    [dispatch, product.id, isWishlisted],
+    [toggleWishlistForProduct],
   );
 
   return (

@@ -4,7 +4,7 @@ import type {
   AdminCreateCategoryBody,
   AdminUpdateCategoryBody,
 } from '@app-types/admin';
-import { assertBackendSuccess, unwrapBackendData } from '@redux/admin/apiEnvelope';
+import { assertBackendSuccess, unwrapBackendData } from '@services/apiEnvelope';
 
 export interface AdminUpdateCategoryRequest {
   categoryId: string;

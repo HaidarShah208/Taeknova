@@ -4,17 +4,20 @@ import { useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 
-import { useAppDispatch } from '@redux';
 import { FormField } from '@components/forms/FormField';
 import { PageMeta } from '@components/layout/PageMeta';
 import { Button } from '@components/ui/Button';
 import { ROUTES } from '@constants/routes';
+import env from '@lib/env';
+import { useRegisterMutation } from '@redux/customer';
+import { useAppDispatch } from '@redux';
 import { setSession } from '@redux/auth';
 import { registerSchema, type RegisterFormValues } from '@redux/auth';
 
 export default function RegisterPage() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const [registerUser, { isLoading: isApiRegister }] = useRegisterMutation();
 
   const {
     register,
@@ -26,6 +29,21 @@ export default function RegisterPage() {
   });
 
   const onSubmit = async (values: RegisterFormValues) => {
+    if (!env.enableMockApi) {
+      try {
+        await registerUser({
+          fullName: `${values.firstName.trim()} ${values.lastName.trim()}`.trim(),
+          email: values.email.trim(),
+          password: values.password,
+        }).unwrap();
+        toast.success('Account created!');
+        navigate(ROUTES.dashboardProfile, { replace: true });
+      } catch {
+        toast.error('Could not create account');
+      }
+      return;
+    }
+
     await new Promise((resolve) => setTimeout(resolve, 500));
     dispatch(
       setSession({
@@ -103,7 +121,7 @@ export default function RegisterPage() {
             register={register}
             errors={errors}
           />
-          <Button type="submit" fullWidth size="lg" isLoading={isSubmitting}>
+          <Button type="submit" fullWidth size="lg" isLoading={isSubmitting || isApiRegister}>
             Create account
           </Button>
         </form>
