@@ -27,11 +27,27 @@ export const cartApi = baseApi.injectEndpoints({
         body: { quantity },
       }),
       transformResponse: (raw: unknown) => unwrapBackendData<CartLineDto>(raw),
-      invalidatesTags: (_r, _e, arg) => [
-        { type: 'ServerCart', id: 'LIST' },
-        { type: 'ServerCart', id: arg.variantId },
-        'CheckoutSummary',
-      ],
+      /** Optimistic quantity so +/- feels instant; do not invalidate ServerCart (avoids refetch flicker). */
+      async onQueryStarted({ variantId, quantity }, { dispatch, queryFulfilled }) {
+        const patch = dispatch(
+          cartApi.util.updateQueryData('getCart', undefined, (draft) => {
+            const line = draft?.find((l) => l.variantId === variantId);
+            if (line) line.quantity = quantity;
+          }),
+        );
+        try {
+          const { data } = await queryFulfilled;
+          dispatch(
+            cartApi.util.updateQueryData('getCart', undefined, (draft) => {
+              const idx = draft?.findIndex((l) => l.variantId === variantId) ?? -1;
+              if (draft && idx >= 0) draft[idx] = data;
+            }),
+          );
+        } catch {
+          patch.undo();
+        }
+      },
+      invalidatesTags: ['CheckoutSummary'],
     }),
     removeCartItem: builder.mutation<void, string>({
       query: (variantId) => ({ url: `/cart/items/${variantId}`, method: 'DELETE' }),

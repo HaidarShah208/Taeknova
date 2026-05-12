@@ -6,44 +6,59 @@ import { Button } from '@components/ui/Button';
 import { cn } from '@lib/cn';
 import type { Category, ProductFilters } from '@app-types/product';
 
-const SIZES = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
+const SIZES = ['XS', 'S', 'M', 'L', 'XL'];
 const COLORS = [
-  { name: 'Onyx', hex: '#0f172a' },
-  { name: 'Crimson', hex: '#dc2626' },
-  { name: 'Cobalt', hex: '#2645f5' },
-  { name: 'Emerald', hex: '#10b981' },
-  { name: 'Slate', hex: '#64748b' },
+  { name: 'Onyx', hex: '#3b3b3b' },
+  { name: 'Crimson', hex: '#a40808' },
+  { name: 'Cobalt', hex: '#003366' },
+  { name: 'Emerald', hex: '#f4ede7' },
+  { name: 'Slate', hex: '#c49b1e' },
 ];
+
+/** Slider snaps to PKR 0, 500, 1000, … */
+const PRICE_STEP = 500;
 const MIN_PRICE = 0;
-const MAX_PRICE = 500;
-const PRICE_STEP = 5;
+/** Default upper bound before catalog prices are known */
+const DEFAULT_PRICE_SLIDER_MAX = 10_000;
 
 interface FilterSidebarProps {
   filters: ProductFilters;
   onChange: (next: ProductFilters) => void;
   onReset: () => void;
   categories: Category[];
+  /** Max value for the price slider (PKR); parent should grow this from loaded product prices */
+  priceSliderMax?: number;
   className?: string;
 }
 
 const toggleInArray = (arr: string[] = [], value: string): string[] =>
   arr.includes(value) ? arr.filter((v) => v !== value) : [...arr, value];
 
+const snapToPriceStep = (n: number): number =>
+  Math.round(Math.max(0, n) / PRICE_STEP) * PRICE_STEP;
+
 export function FilterSidebar({
   filters,
   onChange,
   onReset,
   categories,
+  priceSliderMax: priceSliderMaxProp,
   className,
 }: FilterSidebarProps) {
-  const priceMax = filters.priceMax ?? MAX_PRICE;
+  const sliderMax = Math.max(PRICE_STEP, priceSliderMaxProp ?? DEFAULT_PRICE_SLIDER_MAX);
+
+  const rangeValue = useMemo(() => {
+    if (filters.priceMax === undefined) return sliderMax;
+    return Math.min(snapToPriceStep(filters.priceMax), sliderMax);
+  }, [filters.priceMax, sliderMax]);
 
   const updatePrice = (nextMax: number): void => {
-    const safeMax = Math.max(MIN_PRICE, Math.min(nextMax, MAX_PRICE));
+    const snapped = snapToPriceStep(nextMax);
+    const clamped = Math.min(Math.max(MIN_PRICE, snapped), sliderMax);
     onChange({
       ...filters,
       priceMin: undefined,
-      priceMax: safeMax === MAX_PRICE ? undefined : safeMax,
+      priceMax: clamped >= sliderMax ? undefined : clamped,
     });
   };
 
@@ -56,6 +71,9 @@ export function FilterSidebar({
     if (filters.rating) n += 1;
     return n;
   }, [filters]);
+
+  const selectedPriceSummary =
+    filters.priceMax === undefined ? 'No max' : `Up to PKR ${rangeValue.toLocaleString()}`;
 
   return (
     <aside
@@ -111,42 +129,41 @@ export function FilterSidebar({
               <div className="flex items-center justify-between text-xs font-medium text-muted-foreground">
                 <span>Max Price (PKR)</span>
                 <span className="rounded-full border border-border bg-background px-2 py-0.5 text-foreground">
-                  {priceMax}
+                  {filters.priceMax === undefined ? `${sliderMax.toLocaleString()}+` : rangeValue.toLocaleString()}
                 </span>
               </div>
               <input
                 type="range"
                 min={MIN_PRICE}
-                max={MAX_PRICE}
+                max={sliderMax}
                 step={PRICE_STEP}
-                value={priceMax}
+                value={rangeValue}
                 onChange={(event) => updatePrice(Number(event.target.value))}
                 className="h-2 w-full cursor-pointer appearance-none rounded-full bg-primary/20 accent-primary"
                 aria-label="Maximum price range"
               />
               <div className="flex items-center justify-between text-[11px] text-muted-foreground">
                 <span>PKR {MIN_PRICE}</span>
-                <span>PKR {MAX_PRICE}</span>
+                <span>PKR {sliderMax.toLocaleString()}</span>
               </div>
             </div>
 
-            <p className="text-xs text-muted-foreground">
-              Selected: Up to PKR {priceMax.toLocaleString()}
-            </p>
+            <p className="text-xs text-muted-foreground">Selected: {selectedPriceSummary}</p>
           </div>
         </AccordionItem>
 
         <AccordionItem value="sizes" trigger="Sizes">
           <div className="flex flex-wrap gap-2">
             {SIZES.map((size) => {
-              const isActive = filters.sizes?.includes(size) ?? false;
+              const isActive = filters.sizes?.[0] === size;
               return (
                 <button
                   key={size}
                   type="button"
-                  onClick={() =>
-                    onChange({ ...filters, sizes: toggleInArray(filters.sizes, size) })
-                  }
+                  onClick={() => {
+                    const next = isActive ? undefined : [size];
+                    onChange({ ...filters, sizes: next });
+                  }}
                   aria-pressed={isActive}
                   className={cn(
                     'inline-flex h-9 min-w-[2.5rem] items-center justify-center rounded-md border px-2 text-xs font-semibold transition-colors',
@@ -171,8 +188,7 @@ export function FilterSidebar({
                   key={color.name}
                   type="button"
                   onClick={() => {
-                    const next =
-                      filters.colors?.[0] === color.name ? undefined : [color.name];
+                    const next = filters.colors?.[0] === color.name ? undefined : [color.name];
                     onChange({ ...filters, colors: next });
                   }}
                   aria-pressed={isActive}
@@ -191,32 +207,6 @@ export function FilterSidebar({
               );
             })}
           </div>
-        </AccordionItem>
-
-        <AccordionItem value="rating" trigger="Rating">
-          <ul className="flex flex-col gap-1">
-            {[4, 3, 2].map((rating) => {
-              const isActive = filters.rating === rating;
-              return (
-                <li key={rating}>
-                  <button
-                    type="button"
-                    onClick={() =>
-                      onChange({ ...filters, rating: isActive ? undefined : rating })
-                    }
-                    className={cn(
-                      'flex w-full items-center justify-between rounded-md px-2 py-1.5 text-sm transition-colors',
-                      isActive
-                        ? 'bg-primary/10 font-semibold text-primary'
-                        : 'text-foreground hover:bg-muted',
-                    )}
-                  >
-                    <span>{rating}+ stars</span>
-                  </button>
-                </li>
-              );
-            })}
-          </ul>
         </AccordionItem>
       </Accordion>
 

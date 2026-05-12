@@ -106,10 +106,15 @@ export default function CheckoutPage() {
     dispatch(closeAllOverlays());
   }, [dispatch]);
 
+  const cartQtySignature = useMemo(
+    () => displayItems.map((i) => `${i.variantId}:${i.quantity}`).join('|'),
+    [displayItems],
+  );
+
   useEffect(() => {
     if (!apiMode || !isAuthenticated || displayItems.length === 0) return;
     void getSummary({ fromCart: true });
-  }, [apiMode, displayItems.length, getSummary, isAuthenticated]);
+  }, [apiMode, cartQtySignature, displayItems.length, getSummary, isAuthenticated]);
 
   const shipping = displaySubtotal > 150 ? 0 : 12;
   const tax = Math.round(displaySubtotal * 0.07 * 100) / 100;
@@ -321,7 +326,7 @@ export default function CheckoutPage() {
                       <div className="min-w-0 flex-1">
                         <p className="truncate text-sm font-semibold">{item.title}</p>
                         <p className="text-xs text-muted-foreground">
-                          {item.size} • {item.color} • Qty {item.quantity}
+                          {[item.size, item.color].filter(Boolean).join(' • ') || '—'}
                         </p>
                       </div>
                       <p className="shrink-0 text-sm font-semibold tabular-nums">
@@ -349,6 +354,12 @@ export default function CheckoutPage() {
                     <dt className="text-muted-foreground">Tax</dt>
                     <dd className="tabular-nums">
                       {formatPrice(Number(summary?.taxAmount ?? tax), PKR)}
+                    </dd>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <dt className="text-muted-foreground">Quantity</dt>
+                    <dd className="tabular-nums">
+                      {displayItems.reduce((sum, i) => sum + i.quantity, 0)} units
                     </dd>
                   </div>
                   <div className="flex items-center justify-between border-t border-border pt-3 text-base">

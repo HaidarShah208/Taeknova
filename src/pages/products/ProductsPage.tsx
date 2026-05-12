@@ -1,5 +1,5 @@
 import { Filter } from 'lucide-react';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 import { Breadcrumb } from '@components/shared/Breadcrumb';
 import { FilterSidebar } from '@components/shared/FilterSidebar';
@@ -27,9 +27,13 @@ const SORT_OPTIONS = [
   { value: 'rating', label: 'Top rated' },
 ];
 
+const PRICE_SLIDER_STEP = 500;
+const DEFAULT_PRICE_CEILING = 10_000;
+
 export default function ProductsPage() {
   const { filters, setFilters, resetFilters, setPage } = useProductFiltersFromUrl();
   const [isFilterOpen, setFilterOpen] = useState(false);
+  const [priceSliderCeiling, setPriceSliderCeiling] = useState(DEFAULT_PRICE_CEILING);
 
   const useApiCatalog = !env.enableMockApi;
   const { data: publicCategories } = useListPublicCategoriesQuery(undefined, { skip: !useApiCatalog });
@@ -44,6 +48,16 @@ export default function ProductsPage() {
 
   const products = data?.data ?? [];
   const meta = data?.meta;
+
+  /** Grow max-price slider with the highest price seen (current page + URL filter), in PKR steps of 500 */
+  useEffect(() => {
+    const pageMax = products.reduce((m, p) => Math.max(m, p.price), 0);
+    const urlMax = filters.priceMax ?? 0;
+    const peak = Math.max(pageMax, urlMax);
+    if (peak <= 0) return;
+    const snapped = Math.ceil(peak / PRICE_SLIDER_STEP) * PRICE_SLIDER_STEP;
+    setPriceSliderCeiling((prev) => Math.max(prev, snapped, DEFAULT_PRICE_CEILING));
+  }, [products, filters.priceMax]);
 
   return (
     <>
@@ -90,6 +104,7 @@ export default function ProductsPage() {
               onChange={setFilters}
               onReset={resetFilters}
               categories={categories}
+              priceSliderMax={priceSliderCeiling}
             />
           </div>
 
@@ -146,6 +161,7 @@ export default function ProductsPage() {
             setFilterOpen(false);
           }}
           categories={categories}
+          priceSliderMax={priceSliderCeiling}
           className="border-0 p-0"
         />
       </Drawer>
