@@ -19,12 +19,10 @@ import { Modal } from '@components/ui/Modal';
 import { useDebounce } from '@hooks/useDebounce';
 import { formatPrice } from '@lib/formatters';
 import {
-  useAdminApproveProductMutation,
   useAdminCreateProductMutation,
   useAdminDeleteProductMutation,
   useAdminListCategoriesQuery,
   useAdminListProductsQuery,
-  useAdminRejectProductMutation,
   useAdminUpdateProductMutation,
 } from '@redux/admin';
 
@@ -92,8 +90,6 @@ export function ProductsManagement() {
   const [createProduct, { isLoading: isCreating }] = useAdminCreateProductMutation();
   const [updateProduct, { isLoading: isUpdating }] = useAdminUpdateProductMutation();
   const [deleteProduct] = useAdminDeleteProductMutation();
-  const [approveProduct, { isLoading: isApproving }] = useAdminApproveProductMutation();
-  const [rejectProduct, { isLoading: isRejecting }] = useAdminRejectProductMutation();
 
   useEffect(() => {
     setPage(1);
@@ -163,7 +159,7 @@ export function ProductsManagement() {
       categoryId: categoryOptions[0]?.id ?? '',
       price: 0,
       stock: 0,
-      status: 'PENDING',
+      status: 'APPROVED',
     };
   }, [editing, categoryOptions]);
 
@@ -256,44 +252,6 @@ export function ProductsManagement() {
                 header: 'Actions',
                 render: (row) => (
                   <div className="flex flex-wrap items-center gap-1">
-                    {row.status === 'PENDING' ? (
-                      <>
-                        <Button
-                          type="button"
-                          variant="outline"
-                          size="sm"
-                          className="h-8 px-2 text-xs"
-                          isLoading={isApproving}
-                          onClick={async () => {
-                            try {
-                              await approveProduct(row.id).unwrap();
-                              toast.success('Approved');
-                            } catch {
-                              toast.error('Approve failed');
-                            }
-                          }}
-                        >
-                          Approve
-                        </Button>
-                        <Button
-                          type="button"
-                          variant="outline"
-                          size="sm"
-                          className="h-8 px-2 text-xs"
-                          isLoading={isRejecting}
-                          onClick={async () => {
-                            try {
-                              await rejectProduct(row.id).unwrap();
-                              toast.success('Rejected');
-                            } catch {
-                              toast.error('Reject failed');
-                            }
-                          }}
-                        >
-                          Reject
-                        </Button>
-                      </>
-                    ) : null}
                     <button
                       type="button"
                       onClick={() => {
@@ -345,10 +303,9 @@ export function ProductsManagement() {
             setEditing(null);
           }}
           submitLabel={editing ? 'Update product' : 'Create product'}
+          isSubmitting={isCreating || isUpdating}
+          showStatusField={Boolean(editing)}
         />
-        {isCreating || isUpdating ? (
-          <p className="mt-2 text-xs text-slate-500">Saving…</p>
-        ) : null}
       </Modal>
 
       <ConfirmModal

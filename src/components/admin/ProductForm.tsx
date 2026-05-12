@@ -17,6 +17,10 @@ interface ProductFormProps {
   onSubmit: (values: ProductFormValues) => void;
   onCancel?: () => void;
   submitLabel?: string;
+  /** Shows spinner inside the submit button and disables the form actions. */
+  isSubmitting?: boolean;
+  /** When false, status is omitted (e.g. create flow where the API sets status). */
+  showStatusField?: boolean;
 }
 
 const DEFAULT_VALUES: ProductFormValues = {
@@ -33,6 +37,8 @@ export function ProductForm({
   onSubmit,
   onCancel,
   submitLabel = 'Save product',
+  isSubmitting = false,
+  showStatusField = true,
 }: ProductFormProps) {
   const [values, setValues] = useState<ProductFormValues>(initialValues ?? DEFAULT_VALUES);
 
@@ -54,7 +60,8 @@ export function ProductForm({
           value={values.name}
           onChange={(event) => setValues((prev) => ({ ...prev, name: event.target.value }))}
           required
-          className="h-10 w-full rounded-lg border border-slate-300 bg-white px-3 text-slate-900 outline-none focus:border-primary"
+          disabled={isSubmitting}
+          className="h-10 w-full rounded-lg border border-slate-300 bg-white px-3 text-slate-900 outline-none focus:border-primary disabled:opacity-60"
         />
       </label>
 
@@ -64,7 +71,8 @@ export function ProductForm({
           value={values.categoryId}
           onChange={(event) => setValues((prev) => ({ ...prev, categoryId: event.target.value }))}
           required
-          className="h-10 w-full rounded-lg border border-slate-300 bg-white px-3 text-slate-900 outline-none focus:border-primary"
+          disabled={isSubmitting}
+          className="h-10 w-full rounded-lg border border-slate-300 bg-white px-3 text-slate-900 outline-none focus:border-primary disabled:opacity-60"
         >
           <option value="" disabled>
             Select category
@@ -88,7 +96,8 @@ export function ProductForm({
             setValues((prev) => ({ ...prev, price: Number(event.target.value || 0) }))
           }
           required
-          className="h-10 w-full rounded-lg border border-slate-300 bg-white px-3 text-slate-900 outline-none focus:border-primary"
+          disabled={isSubmitting}
+          className="h-10 w-full rounded-lg border border-slate-300 bg-white px-3 text-slate-900 outline-none focus:border-primary disabled:opacity-60"
         />
       </label>
 
@@ -102,32 +111,38 @@ export function ProductForm({
             setValues((prev) => ({ ...prev, stock: Number(event.target.value || 0) }))
           }
           required
-          className="h-10 w-full rounded-lg border border-slate-300 bg-white px-3 text-slate-900 outline-none focus:border-primary"
+          disabled={isSubmitting}
+          className="h-10 w-full rounded-lg border border-slate-300 bg-white px-3 text-slate-900 outline-none focus:border-primary disabled:opacity-60"
         />
       </label>
 
-      <label className="space-y-1 text-sm sm:col-span-2">
-        <span className="text-slate-700">Status</span>
-        <select
-          value={values.status}
-          onChange={(event) =>
-            setValues((prev) => ({ ...prev, status: event.target.value as ProductStatus }))
-          }
-          className="h-10 w-full rounded-lg border border-slate-300 bg-white px-3 text-slate-900 outline-none focus:border-primary"
-        >
-          <option value="PENDING">Pending</option>
-          <option value="APPROVED">Approved</option>
-          <option value="REJECTED">Rejected</option>
-        </select>
-      </label>
+      {showStatusField ? (
+        <label className="space-y-1 text-sm sm:col-span-2">
+          <span className="text-slate-700">Status</span>
+          <select
+            value={values.status}
+            onChange={(event) =>
+              setValues((prev) => ({ ...prev, status: event.target.value as ProductStatus }))
+            }
+            disabled={isSubmitting}
+            className="h-10 w-full rounded-lg border border-slate-300 bg-white px-3 text-slate-900 outline-none focus:border-primary disabled:opacity-60"
+          >
+            <option value="PENDING">Pending</option>
+            <option value="APPROVED">Approved</option>
+            <option value="REJECTED">Rejected</option>
+          </select>
+        </label>
+      ) : null}
 
       <div className="flex items-center justify-end gap-2 sm:col-span-2">
         {onCancel ? (
-          <Button type="button" variant="ghost" onClick={onCancel}>
+          <Button type="button" variant="ghost" onClick={onCancel} disabled={isSubmitting}>
             Cancel
           </Button>
         ) : null}
-        <Button type="submit">{submitLabel}</Button>
+        <Button type="submit" isLoading={isSubmitting}>
+          {submitLabel}
+        </Button>
       </div>
     </form>
   );
