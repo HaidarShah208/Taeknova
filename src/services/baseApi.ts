@@ -43,6 +43,7 @@ export const TAG_TYPES = [
   'AdminInventory',
   'AdminUser',
   'AdminAnalytics',
+  'AdminOrder',
   'PublicProduct',
   'PublicCategory',
   'ServerCart',

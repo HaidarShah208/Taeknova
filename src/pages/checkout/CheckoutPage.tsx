@@ -169,15 +169,7 @@ export default function CheckoutPage() {
                 <CardTitle className="text-base">Contact</CardTitle>
               </CardHeader>
               <CardContent className="grid gap-4 sm:grid-cols-2">
-                <FormField
-                  name="email"
-                  label="Email"
-                  type="email"
-                  autoComplete="email"
-                  register={register}
-                  errors={errors}
-                />
-                <div className="hidden sm:block" />
+             
                 <FormField
                   name="firstName"
                   label="First name"
@@ -197,6 +189,14 @@ export default function CheckoutPage() {
                   label="Phone"
                   type="tel"
                   autoComplete="tel"
+                  register={register}
+                  errors={errors}
+                />
+                   <FormField
+                  name="email"
+                  label="Email"
+                  type="email"
+                  autoComplete="email"
                   register={register}
                   errors={errors}
                 />

@@ -24,6 +24,7 @@ import {
   useAdminListCategoriesQuery,
   useAdminListProductsQuery,
   useAdminUpdateProductMutation,
+  useAdminUpdateStockMutation,
   useAdminUploadProductImageMutation,
 } from '@redux/admin';
 
@@ -42,12 +43,19 @@ function sumVariantStock(p: AdminProduct): number {
   return (p.variants ?? []).reduce((s, v) => s + v.stockQuantity, 0);
 }
 
+/** First variant matches admin “default variant” stock field (single-variant products). */
+function primaryVariantStock(p: AdminProduct): number {
+  const first = p.variants?.[0];
+  if (first) return first.stockQuantity;
+  return sumVariantStock(p);
+}
+
 function productToFormValues(p: AdminProduct): ProductFormValues {
   return {
     name: p.name,
     categoryId: p.categoryId,
     price: Number(p.basePrice),
-    stock: sumVariantStock(p),
+    stock: primaryVariantStock(p),
     status: p.status,
     imageFile: null,
   };
@@ -93,6 +101,7 @@ export function ProductsManagement() {
   const [updateProduct, { isLoading: isUpdating }] = useAdminUpdateProductMutation();
   const [deleteProduct] = useAdminDeleteProductMutation();
   const [uploadProductImage, { isLoading: isUploading }] = useAdminUploadProductImageMutation();
+  const [updateStock, { isLoading: isUpdatingStock }] = useAdminUpdateStockMutation();
 
   useEffect(() => {
     setPage(1);
@@ -121,6 +130,22 @@ export function ProductsManagement() {
           },
         }).unwrap();
         productId = updated.id;
+
+        const primaryVariant = editing.variants?.[0];
+        if (primaryVariant) {
+          const nextQty = Math.max(0, Math.floor(Number(values.stock)));
+          if (nextQty !== primaryVariant.stockQuantity) {
+            try {
+              await updateStock({
+                variantId: primaryVariant.id,
+                newQuantity: nextQty,
+                reason: 'Admin product edit',
+              }).unwrap();
+            } catch {
+              toast.error('Product saved, but stock could not be updated. Try Inventory or save again.');
+            }
+          }
+        }
       } else {
         const created = await createProduct({
           name: values.name,
@@ -343,7 +368,7 @@ export function ProductsManagement() {
             setEditing(null);
           }}
           submitLabel={editing ? 'Update product' : 'Create product'}
-          isSubmitting={isCreating || isUpdating || isUploading}
+          isSubmitting={isCreating || isUpdating || isUploading || isUpdatingStock}
           showStatusField={Boolean(editing)}
         />
       </Modal>

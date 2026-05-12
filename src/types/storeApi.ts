@@ -88,6 +88,8 @@ export interface CheckoutSummaryDto {
 export interface OrderDto {
   id: ID;
   userId: ID;
+  /** Present on admin list (`GET /orders/admin`). */
+  user?: { id: ID; email: string; fullName: string };
   status: string;
   paymentStatus: string;
   shippingAddressSnapshot: Record<string, unknown>;
