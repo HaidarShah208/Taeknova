@@ -3,12 +3,23 @@ import { useEffect, useRef, useState } from 'react';
 
 import type { ProductStatus } from '@app-types/admin';
 import { Button } from '@components/ui/Button';
+import {
+  CATALOG_COLOR_OPTIONS,
+  CATALOG_SIZES,
+  DEFAULT_CATALOG_COLOR,
+  DEFAULT_CATALOG_SIZE,
+  type CatalogColorName,
+  type CatalogSize,
+} from '@constants/catalogFilters';
 
 export interface ProductFormValues {
   name: string;
   categoryId: string;
   price: number;
   stock: number;
+  /** Default (primary) variant — must match shop filter options. */
+  size: CatalogSize;
+  color: CatalogColorName;
   status: ProductStatus;
   /** Chosen file is uploaded after product create/update via admin image API. */
   imageFile: File | null;
@@ -33,6 +44,8 @@ const DEFAULT_VALUES: ProductFormValues = {
   categoryId: '',
   price: 0,
   stock: 0,
+  size: DEFAULT_CATALOG_SIZE,
+  color: DEFAULT_CATALOG_COLOR,
   status: 'PENDING',
   imageFile: null,
 };
@@ -135,6 +148,44 @@ export function ProductForm({
           disabled={isSubmitting}
           className="h-10 w-full rounded-lg border border-slate-300 bg-white px-3 text-slate-900 outline-none focus:border-primary disabled:opacity-60"
         />
+      </label>
+
+      <label className="space-y-1 text-sm">
+        <span className="text-slate-700">Size (shop filter)</span>
+        <select
+          value={values.size}
+          onChange={(event) =>
+            setValues((prev) => ({ ...prev, size: event.target.value as CatalogSize }))
+          }
+          required
+          disabled={isSubmitting}
+          className="h-10 w-full rounded-lg border border-slate-300 bg-white px-3 text-slate-900 outline-none focus:border-primary disabled:opacity-60"
+        >
+          {CATALOG_SIZES.map((s) => (
+            <option key={s} value={s}>
+              {s}
+            </option>
+          ))}
+        </select>
+      </label>
+
+      <label className="space-y-1 text-sm">
+        <span className="text-slate-700">Color (shop filter)</span>
+        <select
+          value={values.color}
+          onChange={(event) =>
+            setValues((prev) => ({ ...prev, color: event.target.value as CatalogColorName }))
+          }
+          required
+          disabled={isSubmitting}
+          className="h-10 w-full rounded-lg border border-slate-300 bg-white px-3 text-slate-900 outline-none focus:border-primary disabled:opacity-60"
+        >
+          {CATALOG_COLOR_OPTIONS.map((c) => (
+            <option key={c.name} value={c.name}>
+              {c.name}
+            </option>
+          ))}
+        </select>
       </label>
 
       <div className="space-y-2 sm:col-span-2">

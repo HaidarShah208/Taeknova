@@ -8,10 +8,10 @@ import { ErrorState } from '@components/ui/ErrorState';
 import { SectionHeading } from '@components/ui/SectionHeading';
 import { Skeleton } from '@components/ui/Skeleton';
 import { ROUTES } from '@constants/routes';
-import { useGetCategoriesQuery } from '@redux/categories';
+import { useUnifiedCategories } from '@hooks/commerce/useUnifiedCategories';
 
 export default function CategoriesPage() {
-  const { data, isLoading, isError, refetch } = useGetCategoriesQuery();
+  const { categories, isLoading, isError, refetch } = useUnifiedCategories();
 
   return (
     <>
@@ -42,7 +42,7 @@ export default function CategoriesPage() {
               ? Array.from({ length: 6 }).map((_, idx) => (
                   <Skeleton key={idx} className="aspect-[4/3] w-full rounded-2xl" />
                 ))
-              : (data ?? []).map((category) => (
+              : categories.map((category) => (
                   <Link
                     key={category.id}
                     to={ROUTES.categoryDetails(category.slug)}

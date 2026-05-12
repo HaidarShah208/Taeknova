@@ -5,11 +5,11 @@ import { Link } from 'react-router-dom';
 import { SectionWrapper } from '@components/shared/SectionWrapper';
 import { Skeleton } from '@components/ui/Skeleton';
 import { ROUTES } from '@constants/routes';
-import { useGetCategoriesQuery } from '@redux/categories';
+import { useUnifiedCategories } from '@hooks/commerce/useUnifiedCategories';
 import { cn } from '@lib/cn';
 
 export function CategoriesSection() {
-  const { data, isLoading } = useGetCategoriesQuery();
+  const { categories, isLoading } = useUnifiedCategories();
 
   return (
     <SectionWrapper
@@ -41,7 +41,7 @@ export function CategoriesSection() {
           ? Array.from({ length: 6 }).map((_, idx) => (
               <Skeleton key={idx} className="aspect-[3/4] w-full rounded-2xl" />
             ))
-          : (data ?? []).map((category, idx) => (
+          : categories.map((category, idx) => (
               <motion.div
                 key={category.id}
                 initial={{ opacity: 0, y: 16 }}

@@ -2,13 +2,18 @@ import type { Product, Category, ProductFilters } from '@app-types/product';
 import type { PublicCategoryDto, PublicProductDto } from '@app-types/storeApi';
 
 export function mapPublicCategoryToUi(dto: PublicCategoryDto): Category {
+  const count = dto.productCount ?? 0;
+  const image =
+    dto.coverImageUrl && dto.coverImageUrl.length > 0
+      ? dto.coverImageUrl
+      : `https://picsum.photos/seed/tikcat-${encodeURIComponent(dto.slug)}/1200/800`;
   return {
     id: dto.id,
     slug: dto.slug,
     name: dto.name,
     description: dto.description ?? '',
-    image: '',
-    productCount: 0,
+    image,
+    productCount: count,
   };
 }
 
@@ -67,6 +72,8 @@ export function buildCatalogListArg(
   categoryId?: string;
   minPrice?: number;
   maxPrice?: number;
+  size?: string;
+  color?: string;
   sort: 'newest' | 'price_asc' | 'price_desc' | 'name_asc';
 } {
   const page = filters.page ?? 1;
@@ -76,6 +83,8 @@ export function buildCatalogListArg(
     const slug = filters.categories[0];
     if (slug) categoryId = categorySlugToId.get(slug);
   }
+  const size = filters.sizes?.[0];
+  const color = filters.colors?.[0];
   return {
     page,
     limit,
@@ -83,6 +92,8 @@ export function buildCatalogListArg(
     categoryId,
     minPrice: filters.priceMin,
     maxPrice: filters.priceMax,
+    size,
+    color,
     sort: mapProductFiltersToCatalogSort(filters),
   };
 }

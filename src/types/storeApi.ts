@@ -8,6 +8,10 @@ export interface PublicCategoryDto {
   isActive: boolean;
   createdAt: string;
   updatedAt: string;
+  /** Approved products in this category (catalog list). */
+  productCount?: number;
+  /** Representative image from latest approved product with images. */
+  coverImageUrl?: string | null;
 }
 
 export interface PublicProductVariantDto {

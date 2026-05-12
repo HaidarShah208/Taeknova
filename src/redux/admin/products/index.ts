@@ -13,6 +13,12 @@ export interface AdminUpdateProductRequest {
   body: AdminUpdateProductBody;
 }
 
+export interface AdminPatchProductVariantRequest {
+  productId: string;
+  variantId: string;
+  body: { size: string; color: string };
+}
+
 export interface AdminUploadProductImageRequest {
   productId: string;
   file: File;
@@ -51,7 +57,11 @@ export const adminProductsApi = baseApi.injectEndpoints({
         body,
       }),
       transformResponse: (raw: unknown) => unwrapBackendData<AdminProduct>(raw),
-      invalidatesTags: [{ type: 'AdminProduct', id: 'LIST' }],
+      invalidatesTags: [
+        { type: 'AdminProduct', id: 'LIST' },
+        { type: 'PublicProduct', id: 'LIST' },
+        { type: 'PublicCategory', id: 'LIST' },
+      ],
     }),
     adminUpdateProduct: builder.mutation<AdminProduct, AdminUpdateProductRequest>({
       query: ({ productId, body }) => ({
@@ -63,6 +73,22 @@ export const adminProductsApi = baseApi.injectEndpoints({
       invalidatesTags: (_result, _err, { productId }) => [
         { type: 'AdminProduct', id: productId },
         { type: 'AdminProduct', id: 'LIST' },
+        { type: 'PublicProduct', id: 'LIST' },
+        { type: 'PublicCategory', id: 'LIST' },
+      ],
+    }),
+    adminPatchProductVariant: builder.mutation<AdminProduct, AdminPatchProductVariantRequest>({
+      query: ({ productId, variantId, body }) => ({
+        url: `/products/${productId}/variants/${variantId}`,
+        method: 'PATCH',
+        body,
+      }),
+      transformResponse: (raw: unknown) => unwrapBackendData<AdminProduct>(raw),
+      invalidatesTags: (_result, _err, { productId }) => [
+        { type: 'AdminProduct', id: productId },
+        { type: 'AdminProduct', id: 'LIST' },
+        { type: 'PublicProduct', id: 'LIST' },
+        { type: 'PublicCategory', id: 'LIST' },
       ],
     }),
     adminDeleteProduct: builder.mutation<void, string>({
@@ -125,6 +151,7 @@ export const {
   useAdminListProductsQuery,
   useAdminCreateProductMutation,
   useAdminUpdateProductMutation,
+  useAdminPatchProductVariantMutation,
   useAdminDeleteProductMutation,
   useAdminApproveProductMutation,
   useAdminRejectProductMutation,

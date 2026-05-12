@@ -19,10 +19,19 @@ import { Modal } from '@components/ui/Modal';
 import { useDebounce } from '@hooks/useDebounce';
 import { formatPrice } from '@lib/formatters';
 import {
+  CATALOG_COLOR_OPTIONS,
+  CATALOG_SIZES,
+  DEFAULT_CATALOG_COLOR,
+  DEFAULT_CATALOG_SIZE,
+  type CatalogColorName,
+  type CatalogSize,
+} from '@constants/catalogFilters';
+import {
   useAdminCreateProductMutation,
   useAdminDeleteProductMutation,
   useAdminListCategoriesQuery,
   useAdminListProductsQuery,
+  useAdminPatchProductVariantMutation,
   useAdminUpdateProductMutation,
   useAdminUpdateStockMutation,
   useAdminUploadProductImageMutation,
@@ -50,12 +59,23 @@ function primaryVariantStock(p: AdminProduct): number {
   return sumVariantStock(p);
 }
 
+function isCatalogSize(s: string): s is CatalogSize {
+  return (CATALOG_SIZES as readonly string[]).includes(s);
+}
+
+function isCatalogColor(c: string): c is CatalogColorName {
+  return CATALOG_COLOR_OPTIONS.some((o) => o.name === c);
+}
+
 function productToFormValues(p: AdminProduct): ProductFormValues {
+  const first = p.variants?.[0];
   return {
     name: p.name,
     categoryId: p.categoryId,
     price: Number(p.basePrice),
     stock: primaryVariantStock(p),
+    size: first && isCatalogSize(first.size) ? first.size : DEFAULT_CATALOG_SIZE,
+    color: first && isCatalogColor(first.color) ? first.color : DEFAULT_CATALOG_COLOR,
     status: p.status,
     imageFile: null,
   };
@@ -102,6 +122,7 @@ export function ProductsManagement() {
   const [deleteProduct] = useAdminDeleteProductMutation();
   const [uploadProductImage, { isLoading: isUploading }] = useAdminUploadProductImageMutation();
   const [updateStock, { isLoading: isUpdatingStock }] = useAdminUpdateStockMutation();
+  const [patchVariant, { isLoading: isPatchingVariant }] = useAdminPatchProductVariantMutation();
 
   useEffect(() => {
     setPage(1);
@@ -145,6 +166,17 @@ export function ProductsManagement() {
               toast.error('Product saved, but stock could not be updated. Try Inventory or save again.');
             }
           }
+          if (primaryVariant.size !== values.size || primaryVariant.color !== values.color) {
+            try {
+              await patchVariant({
+                productId: editing.id,
+                variantId: primaryVariant.id,
+                body: { size: values.size, color: values.color },
+              }).unwrap();
+            } catch {
+              toast.error('Product saved, but size/color could not be updated.');
+            }
+          }
         }
       } else {
         const created = await createProduct({
@@ -154,8 +186,8 @@ export function ProductsManagement() {
           categoryId: values.categoryId,
           variants: [
             {
-              size: 'Standard',
-              color: 'Default',
+              size: values.size,
+              color: values.color,
               sku: `SKU-${Date.now().toString(36)}`,
               stockQuantity: values.stock,
             },
@@ -202,6 +234,8 @@ export function ProductsManagement() {
       categoryId: categoryOptions[0]?.id ?? '',
       price: 0,
       stock: 0,
+      size: DEFAULT_CATALOG_SIZE,
+      color: DEFAULT_CATALOG_COLOR,
       status: 'APPROVED',
       imageFile: null,
     };
@@ -368,7 +402,7 @@ export function ProductsManagement() {
             setEditing(null);
           }}
           submitLabel={editing ? 'Update product' : 'Create product'}
-          isSubmitting={isCreating || isUpdating || isUploading || isUpdatingStock}
+          isSubmitting={isCreating || isUpdating || isUploading || isUpdatingStock || isPatchingVariant}
           showStatusField={Boolean(editing)}
         />
       </Modal>

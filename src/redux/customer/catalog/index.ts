@@ -29,6 +29,8 @@ export const catalogApi = baseApi.injectEndpoints({
         categoryId?: string;
         minPrice?: number;
         maxPrice?: number;
+        size?: string;
+        color?: string;
         sort?: CatalogSortParam;
       }
     >({
@@ -40,6 +42,8 @@ export const catalogApi = baseApi.injectEndpoints({
           categoryId: arg.categoryId,
           minPrice: arg.minPrice,
           maxPrice: arg.maxPrice,
+          size: arg.size,
+          color: arg.color,
           sort: arg.sort,
         })}`,
       }),
@@ -81,7 +85,7 @@ export const catalogApi = baseApi.injectEndpoints({
     }),
     listPublicCategoryProducts: builder.query<
       PublicProductListDto,
-      { slug: string; page: number; limit: number; search?: string; sort?: CatalogSortParam }
+      { slug: string; page: number; limit: number; search?: string; sort?: CatalogSortParam; size?: string; color?: string }
     >({
       query: (arg) => ({
         url: `/catalog/categories/${encodeURIComponent(arg.slug)}/products${buildQuery({
@@ -89,6 +93,8 @@ export const catalogApi = baseApi.injectEndpoints({
           limit: arg.limit,
           search: arg.search,
           sort: arg.sort,
+          size: arg.size,
+          color: arg.color,
         })}`,
       }),
       transformResponse: (raw: unknown) => unwrapBackendData<PublicProductListDto>(raw),

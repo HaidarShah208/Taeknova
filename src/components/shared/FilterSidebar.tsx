@@ -5,15 +5,7 @@ import { Accordion, AccordionItem } from '@components/ui/Accordion';
 import { Button } from '@components/ui/Button';
 import { cn } from '@lib/cn';
 import type { Category, ProductFilters } from '@app-types/product';
-
-const SIZES = ['XS', 'S', 'M', 'L', 'XL'];
-const COLORS = [
-  { name: 'Onyx', hex: '#3b3b3b' },
-  { name: 'Crimson', hex: '#a40808' },
-  { name: 'Cobalt', hex: '#003366' },
-  { name: 'Emerald', hex: '#f4ede7' },
-  { name: 'Slate', hex: '#c49b1e' },
-];
+import { CATALOG_COLOR_OPTIONS, CATALOG_SIZES } from '@constants/catalogFilters';
 
 /** Slider snaps to PKR 0, 500, 1000, … */
 const PRICE_STEP = 500;
@@ -154,7 +146,7 @@ export function FilterSidebar({
 
         <AccordionItem value="sizes" trigger="Sizes">
           <div className="flex flex-wrap gap-2">
-            {SIZES.map((size) => {
+            {CATALOG_SIZES.map((size) => {
               const isActive = filters.sizes?.[0] === size;
               return (
                 <button
@@ -181,7 +173,7 @@ export function FilterSidebar({
 
         <AccordionItem value="colors" trigger="Colors">
           <div className="flex flex-wrap gap-3">
-            {COLORS.map((color) => {
+            {CATALOG_COLOR_OPTIONS.map((color) => {
               const isActive = filters.colors?.includes(color.name) ?? false;
               return (
                 <button
