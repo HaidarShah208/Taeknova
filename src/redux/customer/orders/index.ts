@@ -29,7 +29,13 @@ export const ordersApi = baseApi.injectEndpoints({
     }),
     createOrder: builder.mutation<
       OrderDto,
-      { addressId: string; shippingMethod?: string; customerNotes?: string }
+      {
+        addressId: string;
+        shippingMethod?: string;
+        customerNotes?: string;
+        paymentMethod: string;
+        paymentProofUrl?: string | null;
+      }
     >({
       query: (body) => ({ url: '/orders', method: 'POST', body }),
       transformResponse: (raw: unknown) => unwrapBackendData<OrderDto>(raw),
@@ -39,6 +45,18 @@ export const ordersApi = baseApi.injectEndpoints({
         { type: 'AdminOrder', id: 'LIST' },
         'CheckoutSummary',
       ],
+    }),
+    uploadOrderPaymentProof: builder.mutation<{ url: string }, File>({
+      query: (file) => {
+        const formData = new FormData();
+        formData.append('image', file);
+        return {
+          url: '/orders/payment-proof',
+          method: 'POST',
+          body: formData,
+        };
+      },
+      transformResponse: (raw: unknown) => unwrapBackendData<{ url: string }>(raw),
     }),
     cancelOrder: builder.mutation<void, string>({
       query: (orderId) => ({ url: `/orders/${orderId}/cancel`, method: 'PATCH' }),
@@ -60,5 +78,6 @@ export const {
   useListMyOrdersQuery,
   useGetMyOrderQuery,
   useCreateOrderMutation,
+  useUploadOrderPaymentProofMutation,
   useCancelOrderMutation,
 } = ordersApi;

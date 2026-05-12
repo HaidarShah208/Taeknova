@@ -106,6 +106,9 @@ export interface OrderDto {
   customerNotes?: string;
   createdAt: string;
   updatedAt: string;
+  paymentMethod?: string | null;
+  paymentProofUrl?: string | null;
+  codFeeAmount?: string;
   items?: OrderItemDto[];
 }
 

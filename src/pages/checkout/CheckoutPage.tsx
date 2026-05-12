@@ -17,12 +17,8 @@ import { EmptyState } from '@components/ui/EmptyState';
 import { ROUTES } from '@constants/routes';
 import env from '@lib/env';
 import { useUnifiedCart } from '@hooks/commerce/useUnifiedCart';
-import {
-  useCreateAddressMutation,
-  useCreateOrderMutation,
-  useGetCheckoutSummaryMutation,
-} from '@redux/customer';
-import { clearCart, selectCartItems, selectCartSubtotal } from '@redux/cart';
+import { useCreateAddressMutation, useGetCheckoutSummaryMutation } from '@redux/customer';
+import { selectCartItems, selectCartSubtotal } from '@redux/cart';
 import { formatPrice, type FormatPriceOptions } from '@lib/formatters';
 import { closeAllOverlays } from '@redux/ui';
 
@@ -75,7 +71,7 @@ export default function CheckoutPage() {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const apiMode = !env.enableMockApi;
-  const { items, subtotal, clearAll, isAuthenticated } = useUnifiedCart();
+  const { items, subtotal, isAuthenticated } = useUnifiedCart();
   const mockItems = useAppSelector(selectCartItems);
   const mockSubtotal = useAppSelector(selectCartSubtotal);
 
@@ -83,7 +79,6 @@ export default function CheckoutPage() {
   const displaySubtotal = apiMode ? subtotal : mockSubtotal;
 
   const [getSummary, { data: summary, isLoading: summaryLoading }] = useGetCheckoutSummaryMutation();
-  const [placeOrder, { isLoading: placingOrder }] = useCreateOrderMutation();
   const [createAddress, { isLoading: creatingAddress }] = useCreateAddressMutation();
 
   const resolver = useMemo(
@@ -122,9 +117,15 @@ export default function CheckoutPage() {
 
   const onSubmitMock = async (_values: CheckoutFormValues) => {
     await new Promise((resolve) => setTimeout(resolve, 600));
-    dispatch(clearCart());
-    toast.success('Order placed! Confirmation sent to your inbox.');
-    navigate(ROUTES.dashboardOrders);
+    navigate(ROUTES.checkoutPayment, {
+      state: {
+        mock: true,
+        mockSubtotal: displaySubtotal,
+        mockShipping: shipping,
+        mockTax: tax,
+        mockTotal: total,
+      },
+    });
   };
 
   const onSubmitApi = async (values: CheckoutFormValues) => {
@@ -142,14 +143,13 @@ export default function CheckoutPage() {
         isDefault: false,
       }).unwrap();
 
-      await placeOrder({
-        addressId: addr.id,
-        customerNotes: `Contact email: ${values.email}`,
-      }).unwrap();
-
-      await clearAll();
-      toast.success('Order placed!');
-      navigate(ROUTES.dashboardOrders);
+      navigate(ROUTES.checkoutPayment, {
+        state: {
+          addressId: addr.id,
+          customerNotes: `Contact email: ${values.email}`,
+          prefetchedTotal: Number(summary?.totalAmount ?? total),
+        },
+      });
     } catch {
       toast.error('Could not complete checkout. Check your details and try again.');
     }
@@ -167,7 +167,7 @@ export default function CheckoutPage() {
     );
   }
 
-  const saving = apiMode ? placingOrder || creatingAddress : isSubmitting;
+  const saving = apiMode ? creatingAddress : isSubmitting;
 
   return (
     <>
