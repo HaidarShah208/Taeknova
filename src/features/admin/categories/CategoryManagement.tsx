@@ -83,10 +83,7 @@ export function CategoryManagement() {
 
   return (
     <div className="space-y-4">
-      <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-        <p className="text-sm text-slate-600">
-          Create categories here first — products require at least one category.
-        </p>
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-end">
         <Button type="button" size="sm" leftIcon={<Plus className="h-4 w-4" />} onClick={openCreate}>
           Add category
         </Button>
@@ -101,7 +98,7 @@ export function CategoryManagement() {
         <DataTable
           data={data}
           getRowKey={(row) => row.id}
-          emptyMessage="No categories yet. Use “Add category” above."
+          emptyMessage="No categories yet."
           columns={[
             { key: 'name', header: 'Category', render: (row) => row.name },
             { key: 'slug', header: 'Slug', render: (row) => row.slug },
@@ -149,7 +146,6 @@ export function CategoryManagement() {
           resetForm();
         }}
         title="Add category"
-        description="Slug must be unique (e.g. team-kits). Leave slug empty to generate from the name."
       >
         <div className="grid gap-3">
           <label className="text-sm">
@@ -167,7 +163,7 @@ export function CategoryManagement() {
               value={slug}
               onChange={(e) => setSlug(e.target.value)}
               className="mt-1 h-10 w-full rounded-lg border border-slate-300 px-3 font-mono text-sm"
-              placeholder="Auto from name if empty"
+              placeholder="Unique; auto from name if empty"
             />
           </label>
           <label className="text-sm sm:col-span-2">

@@ -63,12 +63,7 @@ export function DashboardOverview() {
         />
       </section>
 
-      <AnalyticsOverview
-        productsTotal={productsTotal}
-        categoriesCount={categoriesCount}
-        lowStockProducts={lowStockProducts}
-        isLoading={loading}
-      />
+      
 
       <AdminCard title="Operational notes">
         <p className="text-sm text-slate-700">

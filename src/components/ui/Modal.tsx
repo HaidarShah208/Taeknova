@@ -34,7 +34,7 @@ export function Modal({
   description,
   children,
   footer,
-  size = 'md',
+  size = 'xl',
   closeOnOverlay = true,
   closeOnEscape = true,
   hideCloseButton = false,
@@ -82,7 +82,7 @@ export function Modal({
             )}
           >
             {(title || !hideCloseButton) && (
-              <header className="flex items-start justify-between gap-3 border-b border-border px-6 py-4">
+              <header className="flex items-start justify-between gap-3 px-6 py-4">
                 <div className="space-y-1">
                   {title && (
                     <h2 id="modal-title" className="text-lg font-semibold tracking-tight">
@@ -109,7 +109,7 @@ export function Modal({
             )}
             <div className="px-6 py-5">{children}</div>
             {footer && (
-              <footer className="flex items-center justify-end gap-2 border-t border-border bg-muted/30 px-6 py-4">
+              <footer className="flex items-center justify-end gap-2   bg-muted/30 px-6 py-4">
                 {footer}
               </footer>
             )}

@@ -24,6 +24,7 @@ import {
   useAdminListCategoriesQuery,
   useAdminListProductsQuery,
   useAdminUpdateProductMutation,
+  useAdminUploadProductImageMutation,
 } from '@redux/admin';
 
 const PAGE_SIZE = 10;
@@ -48,6 +49,7 @@ function productToFormValues(p: AdminProduct): ProductFormValues {
     price: Number(p.basePrice),
     stock: sumVariantStock(p),
     status: p.status,
+    imageFile: null,
   };
 }
 
@@ -90,6 +92,7 @@ export function ProductsManagement() {
   const [createProduct, { isLoading: isCreating }] = useAdminCreateProductMutation();
   const [updateProduct, { isLoading: isUpdating }] = useAdminUpdateProductMutation();
   const [deleteProduct] = useAdminDeleteProductMutation();
+  const [uploadProductImage, { isLoading: isUploading }] = useAdminUploadProductImageMutation();
 
   useEffect(() => {
     setPage(1);
@@ -106,8 +109,9 @@ export function ProductsManagement() {
       return;
     }
     try {
+      let productId: string;
       if (editing) {
-        await updateProduct({
+        const updated = await updateProduct({
           productId: editing.id,
           body: {
             name: values.name,
@@ -116,9 +120,9 @@ export function ProductsManagement() {
             status: values.status,
           },
         }).unwrap();
-        toast.success('Product updated');
+        productId = updated.id;
       } else {
-        await createProduct({
+        const created = await createProduct({
           name: values.name,
           slug: `${slugify(values.name)}-${Date.now().toString(36)}`,
           basePrice: values.price,
@@ -132,8 +136,22 @@ export function ProductsManagement() {
             },
           ],
         }).unwrap();
-        toast.success('Product created');
+        productId = created.id;
       }
+
+      let photoSaved = false;
+      if (values.imageFile) {
+        try {
+          await uploadProductImage({ productId, file: values.imageFile }).unwrap();
+          photoSaved = true;
+        } catch {
+          toast.error('Photo upload failed — edit the product and try the image again.');
+        }
+      }
+
+      const base = editing ? 'Product updated' : 'Product created';
+      toast.success(values.imageFile && photoSaved ? `${base} · Photo saved` : base);
+
       setFormOpen(false);
       setEditing(null);
     } catch {
@@ -160,6 +178,7 @@ export function ProductsManagement() {
       price: 0,
       stock: 0,
       status: 'APPROVED',
+      imageFile: null,
     };
   }, [editing, categoryOptions]);
 
@@ -167,7 +186,7 @@ export function ProductsManagement() {
     <div className="space-y-6">
       <AdminCard
         title="Products"
-        description="List, create, and update products from the admin API."
+        description="Create and edit catalog items, photos, and stock."
         action={
           <Button
             onClick={openCreate}
@@ -218,6 +237,25 @@ export function ProductsManagement() {
             getRowKey={(row) => row.id}
             emptyMessage="No products match your filters."
             columns={[
+              {
+                key: 'thumb',
+                header: 'Photo',
+                render: (row) => {
+                  const src = row.imageUrls?.[0];
+                  return src ? (
+                    <img
+                      src={src}
+                      alt=""
+                      className="h-11 w-11 rounded-lg border border-slate-200 object-cover"
+                      loading="lazy"
+                    />
+                  ) : (
+                    <span className="inline-flex h-11 w-11 items-center justify-center rounded-lg border border-dashed border-slate-200 bg-slate-50 text-[10px] font-medium text-slate-400">
+                      No photo
+                    </span>
+                  );
+                },
+              },
               { key: 'name', header: 'Product', render: (row) => row.name },
               {
                 key: 'category',
@@ -293,17 +331,19 @@ export function ProductsManagement() {
           setEditing(null);
         }}
         title={editing ? 'Edit product' : 'Create product'}
+        size="xl"
       >
         <ProductForm
           categoryOptions={categoryOptions}
           initialValues={formInitial}
+          existingImageUrls={editing?.imageUrls}
           onSubmit={(v) => void handleSubmit(v)}
           onCancel={() => {
             setFormOpen(false);
             setEditing(null);
           }}
           submitLabel={editing ? 'Update product' : 'Create product'}
-          isSubmitting={isCreating || isUpdating}
+          isSubmitting={isCreating || isUpdating || isUploading}
           showStatusField={Boolean(editing)}
         />
       </Modal>

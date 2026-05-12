@@ -1,19 +1,16 @@
-import { AdminCard } from '@components/admin';
 import { CategoryManagement } from '@features/admin/categories/CategoryManagement';
 
 export function SettingsManagement() {
   return (
-    <div className="space-y-6">
-      <AdminCard title="Platform settings" description="Feature flags and maintenance toggles are not backed by an API in this project yet.">
-        <p className="text-sm text-slate-700">
-          When you add settings endpoints, bind controls here. Until then, only category data below is
-          live (same as elsewhere in the admin app).
-        </p>
-      </AdminCard>
+    <div className="mx-auto max-w-5xl">
+      <header className="mb-6">
+        <h1 className="text-xl font-semibold tracking-tight text-slate-900">Settings</h1>
+        <p className="mt-1 text-sm text-slate-500">Categories used when you create products.</p>
+      </header>
 
-      <AdminCard title="Category management" description="Manage product categories used across the catalog.">
+      <section className="rounded-2xl border border-slate-200/90 bg-white p-5 shadow-sm sm:p-6">
         <CategoryManagement />
-      </AdminCard>
+      </section>
     </div>
   );
 }
