@@ -1,9 +1,10 @@
 import { baseApi } from '@services/baseApi';
-import { clearSession, setSession } from '@redux/auth';
+import { clearSession, setAccessToken, setSession } from '@redux/auth';
 import type { User } from '@app-types/auth';
 import type { AdminLoginResponse, AdminRefreshResponse } from '@app-types/admin';
 import { assertBackendSuccess, unwrapBackendData } from '@services/apiEnvelope';
 import { mapBackendAuthUserToUser } from '@redux/admin/mapBackendUser';
+import { getJwtExpiryMs } from '@lib/jwtClient';
 
 export interface AdminLoginRequest {
   email: string;
@@ -25,7 +26,7 @@ export const adminAuthApi = baseApi.injectEndpoints({
           setSession({
             user: mapBackendAuthUserToUser(data.user),
             token: data.accessToken,
-            expiresAt: null,
+            expiresAt: getJwtExpiryMs(data.accessToken),
           }),
         );
       },
@@ -40,14 +41,11 @@ export const adminAuthApi = baseApi.injectEndpoints({
       async onQueryStarted(_arg, { dispatch, queryFulfilled, getState }) {
         const { data } = await queryFulfilled;
         const user = (getState() as unknown as { auth: { user: User | null } }).auth.user;
+        const exp = getJwtExpiryMs(data.accessToken);
         if (user) {
-          dispatch(
-            setSession({
-              user,
-              token: data.accessToken,
-              expiresAt: null,
-            }),
-          );
+          dispatch(setSession({ user, token: data.accessToken, expiresAt: exp }));
+        } else {
+          dispatch(setAccessToken({ token: data.accessToken, expiresAt: exp }));
         }
       },
     }),

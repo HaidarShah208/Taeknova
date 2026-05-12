@@ -2,6 +2,7 @@ import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 
 import { STORAGE_KEYS } from '@constants/app';
 import type { AuthSession, User } from '@app-types/auth';
+import { getJwtExpiryMs } from '@lib/jwtClient';
 import { localStore } from '@utils/storage';
 
 interface AuthState {
@@ -16,7 +17,7 @@ const persistedToken = localStore.get<string | null>(STORAGE_KEYS.authToken, nul
 const initialState: AuthState = {
   user: null,
   token: persistedToken,
-  expiresAt: null,
+  expiresAt: persistedToken ? getJwtExpiryMs(persistedToken) : null,
   status: persistedToken ? 'authenticated' : 'unauthenticated',
 };
 
@@ -24,10 +25,16 @@ const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
+    setAccessToken(state, action: PayloadAction<{ token: string; expiresAt: number | null }>) {
+      state.token = action.payload.token;
+      state.expiresAt = action.payload.expiresAt;
+      state.status = 'authenticated';
+      localStore.set(STORAGE_KEYS.authToken, action.payload.token);
+    },
     setSession(state, action: PayloadAction<AuthSession>) {
       state.user = action.payload.user;
       state.token = action.payload.token;
-      state.expiresAt = action.payload.expiresAt;
+      state.expiresAt = action.payload.expiresAt ?? getJwtExpiryMs(action.payload.token);
       state.status = 'authenticated';
       localStore.set(STORAGE_KEYS.authToken, action.payload.token);
     },
@@ -44,7 +51,7 @@ const authSlice = createSlice({
   },
 });
 
-export const { setSession, setUser, clearSession } = authSlice.actions;
+export const { setAccessToken, setSession, setUser, clearSession } = authSlice.actions;
 export const authReducer = authSlice.reducer;
 
 export const selectIsAuthenticated = (state: { auth: AuthState }): boolean =>

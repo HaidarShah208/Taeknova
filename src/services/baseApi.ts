@@ -1,8 +1,12 @@
 import { createApi, fetchBaseQuery, type BaseQueryFn } from '@reduxjs/toolkit/query/react';
 import type { FetchArgs, FetchBaseQueryError } from '@reduxjs/toolkit/query';
 
+import type { User } from '@app-types/auth';
 import { STORAGE_KEYS } from '@constants/app';
 import env from '@lib/env';
+import { getJwtExpiryMs } from '@lib/jwtClient';
+import { clearSession, setAccessToken, setSession } from '@redux/auth';
+import { unwrapBackendData } from '@services/apiEnvelope';
 import { localStore } from '@utils/storage';
 
 const rawBaseQuery = fetchBaseQuery({
@@ -19,12 +23,80 @@ const rawBaseQuery = fetchBaseQuery({
   },
 });
 
-const baseQueryWithErrorHandling: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryError> = async (
+let refreshPromise: Promise<boolean> | null = null;
+
+function isAuthRefreshRequest(args: string | FetchArgs): boolean {
+  const url = typeof args === 'string' ? args : args.url;
+  return url.includes('/auth/refresh');
+}
+
+function isAuthLoginRequest(args: string | FetchArgs): boolean {
+  const url = typeof args === 'string' ? args : args.url;
+  return url.includes('/auth/login') || url.includes('/auth/register');
+}
+
+async function trySilentRefresh(api: Parameters<BaseQueryFn>[1]): Promise<boolean> {
+  if (!refreshPromise) {
+    refreshPromise = (async () => {
+      try {
+        const result = await rawBaseQuery(
+          { url: '/auth/refresh', method: 'POST', body: {} },
+          api,
+          {},
+        );
+        if (result.error) return false;
+        const data = unwrapBackendData<{ accessToken: string }>(result.data);
+        const exp = getJwtExpiryMs(data.accessToken);
+        const user = (api.getState() as { auth: { user: User | null } }).auth.user;
+        if (user) {
+          api.dispatch(
+            setSession({
+              user,
+              token: data.accessToken,
+              expiresAt: exp,
+            }),
+          );
+        } else {
+          api.dispatch(
+            setAccessToken({
+              token: data.accessToken,
+              expiresAt: exp,
+            }),
+          );
+        }
+        return true;
+      } catch {
+        return false;
+      } finally {
+        refreshPromise = null;
+      }
+    })();
+  }
+  return refreshPromise;
+}
+
+const baseQueryWithReauth: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryError> = async (
   args,
   api,
   extraOptions,
 ) => {
-  const result = await rawBaseQuery(args, api, extraOptions);
+  let result = await rawBaseQuery(args, api, extraOptions);
+
+  if (result.error?.status === 401 && !env.enableMockApi) {
+    if (isAuthRefreshRequest(args) || isAuthLoginRequest(args)) {
+      if (result.error && env.isDev) {
+        console.error('[RTK Query]', result.error.status, result.error.data);
+      }
+      return result;
+    }
+    const refreshed = await trySilentRefresh(api);
+    if (refreshed) {
+      result = await rawBaseQuery(args, api, extraOptions);
+    } else {
+      api.dispatch(clearSession());
+    }
+  }
+
   if (result.error && env.isDev) {
     console.error('[RTK Query]', result.error.status, result.error.data);
   }
@@ -58,7 +130,7 @@ export type ApiTagType = (typeof TAG_TYPES)[number];
 
 export const baseApi = createApi({
   reducerPath: 'api',
-  baseQuery: baseQueryWithErrorHandling,
+  baseQuery: baseQueryWithReauth,
   tagTypes: TAG_TYPES,
   endpoints: () => ({}),
   refetchOnReconnect: true,

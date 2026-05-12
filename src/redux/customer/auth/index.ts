@@ -3,6 +3,7 @@ import { setSession } from '@redux/auth';
 import type { AdminLoginResponse } from '@app-types/admin';
 import { unwrapBackendData } from '@services/apiEnvelope';
 import { mapBackendAuthUserToUser } from '@redux/admin/mapBackendUser';
+import { getJwtExpiryMs } from '@lib/jwtClient';
 
 export interface RegisterRequest {
   fullName: string;
@@ -25,7 +26,7 @@ export const customerAuthApi = baseApi.injectEndpoints({
           setSession({
             user: mapBackendAuthUserToUser(data.user),
             token: data.accessToken,
-            expiresAt: null,
+            expiresAt: getJwtExpiryMs(data.accessToken),
           }),
         );
       },
