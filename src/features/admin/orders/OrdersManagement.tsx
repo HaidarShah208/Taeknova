@@ -30,7 +30,7 @@ function orderStatusTone(s: string): 'success' | 'warning' | 'danger' | 'neutral
   if (s === 'SHIPPED') return 'success';
   if (s === 'CANCELLED') return 'danger';
   if (s === 'PENDING') return 'warning';
-  if (s === 'CONFIRMED' || s === 'PROCESSING') return 'neutral';
+  if (s === 'CONFIRMED' || s === 'PROCESSING') return 'success';
   return 'neutral';
 }
 

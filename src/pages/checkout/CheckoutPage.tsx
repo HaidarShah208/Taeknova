@@ -1,6 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ArrowRight, ShieldCheck } from 'lucide-react';
-import { useEffect, useMemo } from 'react';
+import { useEffect, useLayoutEffect, useMemo } from 'react';
 import { useForm, type Resolver } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
@@ -23,7 +23,8 @@ import {
   useGetCheckoutSummaryMutation,
 } from '@redux/customer';
 import { clearCart, selectCartItems, selectCartSubtotal } from '@redux/cart';
-import { formatPrice } from '@lib/formatters';
+import { formatPrice, type FormatPriceOptions } from '@lib/formatters';
+import { closeAllOverlays } from '@redux/ui';
 
 const shippingShape = {
   email: z.string().email('Enter a valid email'),
@@ -63,6 +64,13 @@ const defaultFormValues: CheckoutFormValues = {
   cardCvc: '',
 };
 
+const PKR: FormatPriceOptions = {
+  currency: 'PKR',
+  locale: 'en-PK',
+  minimumFractionDigits: 0,
+  maximumFractionDigits: 0,
+};
+
 export default function CheckoutPage() {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
@@ -93,6 +101,10 @@ export default function CheckoutPage() {
     mode: 'onBlur',
     defaultValues: defaultFormValues,
   });
+
+  useLayoutEffect(() => {
+    dispatch(closeAllOverlays());
+  }, [dispatch]);
 
   useEffect(() => {
     if (!apiMode || !isAuthenticated || displayItems.length === 0) return;
@@ -161,7 +173,7 @@ export default function CheckoutPage() {
 
         <form
           onSubmit={handleSubmit(apiMode ? onSubmitApi : onSubmitMock)}
-          className="mt-8 grid gap-8 lg:grid-cols-[1fr_400px]"
+          className="mt-8 grid gap-8 lg:grid-cols-[1fr_400px] lg:items-stretch"
         >
           <div className="space-y-6">
             <Card>
@@ -169,7 +181,6 @@ export default function CheckoutPage() {
                 <CardTitle className="text-base">Contact</CardTitle>
               </CardHeader>
               <CardContent className="grid gap-4 sm:grid-cols-2">
-             
                 <FormField
                   name="firstName"
                   label="First name"
@@ -192,7 +203,7 @@ export default function CheckoutPage() {
                   register={register}
                   errors={errors}
                 />
-                   <FormField
+                <FormField
                   name="email"
                   label="Email"
                   type="email"
@@ -288,66 +299,77 @@ export default function CheckoutPage() {
             ) : null}
           </div>
 
-          <Card>
-            <CardHeader>
+          <Card className="flex h-full min-h-[min(70vh,28rem)] flex-col overflow-hidden lg:sticky lg:top-24 lg:max-h-[calc(100vh-8rem)] lg:self-start">
+            <CardHeader className="shrink-0">
               <CardTitle>Order summary</CardTitle>
             </CardHeader>
-            <CardContent>
+            <CardContent className="flex min-h-0 flex-1 flex-col gap-0 pt-2">
               {apiMode && summaryLoading && (
-                <p className="mb-3 text-sm text-muted-foreground">Calculating totals…</p>
+                <p className="mb-3 shrink-0 text-sm text-muted-foreground">Calculating totals…</p>
               )}
-              <ul className="divide-y divide-border">
-                {displayItems.map((item) => (
-                  <li key={item.id} className="flex items-center gap-3 py-3">
-                    <div className="h-14 w-14 shrink-0 overflow-hidden rounded-md bg-muted">
-                      <img
-                        src={item.image}
-                        alt={item.title}
-                        className="h-full w-full object-cover"
-                      />
-                    </div>
-                    <div className="min-w-0 flex-1">
-                      <p className="truncate text-sm font-semibold">{item.title}</p>
-                      <p className="text-xs text-muted-foreground">
-                        {item.size} • {item.color} • Qty {item.quantity}
+              <div className="min-h-0 flex-1 overflow-y-auto">
+                <ul className="divide-y divide-border">
+                  {displayItems.map((item) => (
+                    <li key={item.id} className="flex items-center gap-3 py-3">
+                      <div className="h-14 w-14 shrink-0 overflow-hidden rounded-md bg-muted">
+                        <img
+                          src={item.image}
+                          alt={item.title}
+                          className="h-full w-full object-cover"
+                        />
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <p className="truncate text-sm font-semibold">{item.title}</p>
+                        <p className="text-xs text-muted-foreground">
+                          {item.size} • {item.color} • Qty {item.quantity}
+                        </p>
+                      </div>
+                      <p className="shrink-0 text-sm font-semibold tabular-nums">
+                        {formatPrice(item.price * item.quantity, PKR)}
                       </p>
-                    </div>
-                    <p className="text-sm font-semibold">{formatPrice(item.price * item.quantity)}</p>
-                  </li>
-                ))}
-              </ul>
-              <dl className="mt-4 space-y-2 border-t border-border pt-4 text-sm">
-                <div className="flex items-center justify-between">
-                  <dt className="text-muted-foreground">Subtotal</dt>
-                  <dd>{formatPrice(summary?.subtotalAmount ?? displaySubtotal)}</dd>
-                </div>
-                <div className="flex items-center justify-between">
-                  <dt className="text-muted-foreground">Shipping</dt>
-                  <dd>
-                    {(summary?.shippingAmount ?? shipping) === 0
-                      ? 'Free'
-                      : formatPrice(summary?.shippingAmount ?? shipping)}
-                  </dd>
-                </div>
-                <div className="flex items-center justify-between">
-                  <dt className="text-muted-foreground">Tax</dt>
-                  <dd>{formatPrice(summary?.taxAmount ?? tax)}</dd>
-                </div>
-                <div className="flex items-center justify-between border-t border-border pt-3 text-base">
-                  <dt className="font-semibold">Total</dt>
-                  <dd className="text-lg font-bold">{formatPrice(summary?.totalAmount ?? total)}</dd>
-                </div>
-              </dl>
-              <Button
-                fullWidth
-                size="lg"
-                type="submit"
-                isLoading={saving}
-                className="mt-6"
-                rightIcon={<ArrowRight className="h-4 w-4" />}
-              >
-                Place order
-              </Button>
+                    </li>
+                  ))}
+                </ul>
+                <dl className="mt-4 space-y-2 border-t border-border pt-4 text-sm">
+                  <div className="flex items-center justify-between">
+                    <dt className="text-muted-foreground">Subtotal</dt>
+                    <dd className="tabular-nums">
+                      {formatPrice(Number(summary?.subtotalAmount ?? displaySubtotal), PKR)}
+                    </dd>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <dt className="text-muted-foreground">Shipping</dt>
+                    <dd className="tabular-nums">
+                      {(summary?.shippingAmount ?? shipping) === 0
+                        ? 'Free'
+                        : formatPrice(Number(summary?.shippingAmount ?? shipping), PKR)}
+                    </dd>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <dt className="text-muted-foreground">Tax</dt>
+                    <dd className="tabular-nums">
+                      {formatPrice(Number(summary?.taxAmount ?? tax), PKR)}
+                    </dd>
+                  </div>
+                  <div className="flex items-center justify-between border-t border-border pt-3 text-base">
+                    <dt className="font-semibold">Total</dt>
+                    <dd className="text-lg font-bold tabular-nums">
+                      {formatPrice(Number(summary?.totalAmount ?? total), PKR)}
+                    </dd>
+                  </div>
+                </dl>
+              </div>
+              <div className="mt-auto shrink-0   bg-card pt-4">
+                <Button
+                  fullWidth
+                  size="lg"
+                  type="submit"
+                  isLoading={saving}
+                  rightIcon={<ArrowRight className="h-4 w-4" />}
+                >
+                  Place order
+                </Button>
+              </div>
             </CardContent>
           </Card>
         </form>

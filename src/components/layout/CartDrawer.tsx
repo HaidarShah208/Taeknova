@@ -1,5 +1,6 @@
 import { Trash2 } from 'lucide-react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useLayoutEffect, useRef } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 import { buttonVariants } from '@components/ui/Button';
 import { Drawer } from '@components/ui/Drawer';
@@ -8,21 +9,47 @@ import { QuantitySelector } from '@components/shared/QuantitySelector';
 import { ROUTES } from '@constants/routes';
 import { useUnifiedCart } from '@hooks/commerce/useUnifiedCart';
 import { useAppDispatch, useAppSelector } from '@redux';
-import { selectCartDrawerOpen, setCartDrawerOpen } from '@redux/ui';
+import { selectCartDrawerOpen, closeAllOverlays } from '@redux/ui';
 import { cn } from '@lib/cn';
 import { formatPrice } from '@lib/formatters';
+
+const PKR: Parameters<typeof formatPrice>[1] = {
+  currency: 'PKR',
+  locale: 'en-PK',
+  minimumFractionDigits: 0,
+  maximumFractionDigits: 0,
+};
 
 export function CartDrawer() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
+  const prevPath = useRef<string | null>(null);
   const isOpen = useAppSelector(selectCartDrawerOpen);
   const { items, subtotal, adjustQuantity, removeLine, apiMode, isAuthenticated } = useUnifiedCart();
 
-  const close = () => dispatch(setCartDrawerOpen(false));
+  const close = () => dispatch(closeAllOverlays());
+
+  /** Any route change closes the drawer (handles SPA nav + auth redirects where layout may remount). */
+  useLayoutEffect(() => {
+    if (prevPath.current !== null && prevPath.current !== location.pathname) {
+      dispatch(closeAllOverlays());
+    }
+    prevPath.current = location.pathname;
+  }, [location.pathname, dispatch]);
 
   const handleCheckout = () => {
     close();
-    navigate(ROUTES.checkout);
+    window.setTimeout(() => {
+      navigate(ROUTES.checkout);
+    }, 0);
+  };
+
+  const handleViewCart = () => {
+    close();
+    window.setTimeout(() => {
+      navigate(ROUTES.cart);
+    }, 0);
   };
 
   const showAuthHint = apiMode && !isAuthenticated;
@@ -40,7 +67,7 @@ export function CartDrawer() {
           <div className="space-y-3">
             <div className="flex items-center justify-between text-sm">
               <span className="text-muted-foreground">Subtotal</span>
-              <span className="text-base font-bold">{formatPrice(subtotal)}</span>
+              <span className="text-base font-bold">{formatPrice(subtotal, PKR)}</span>
             </div>
             <p className="text-xs text-muted-foreground">
               Shipping and taxes calculated at checkout.
@@ -52,13 +79,13 @@ export function CartDrawer() {
             >
               Checkout
             </button>
-            <Link
-              to={ROUTES.cart}
-              onClick={close}
+            <button
+              type="button"
+              onClick={handleViewCart}
               className={cn(buttonVariants({ variant: 'outline', fullWidth: true }))}
             >
               View cart
-            </Link>
+            </button>
           </div>
         )
       }
@@ -130,7 +157,7 @@ export function CartDrawer() {
                     onChange={(quantity) => void adjustQuantity(item, quantity)}
                   />
                   <span className="text-sm font-bold text-foreground">
-                    {formatPrice(item.price * item.quantity)}
+                    {formatPrice(item.price * item.quantity, PKR)}
                   </span>
                 </div>
               </div>

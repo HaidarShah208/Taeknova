@@ -6,7 +6,7 @@ import { Footer } from '@components/layout/Footer';
 import { MobileMenu } from '@components/layout/MobileMenu';
 import { Navbar } from '@components/layout/Navbar';
 import { useAppDispatch } from '@redux';
-import { setCartDrawerOpen } from '@redux/ui';
+import { closeAllOverlays } from '@redux/ui';
 
 import { ScrollToTop } from './ScrollToTop';
 
@@ -15,8 +15,15 @@ export function MainLayout() {
   const location = useLocation();
 
   useEffect(() => {
-    dispatch(setCartDrawerOpen(false));
+    dispatch(closeAllOverlays());
   }, [location.pathname, dispatch]);
+
+  useEffect(
+    () => () => {
+      dispatch(closeAllOverlays());
+    },
+    [dispatch],
+  );
 
   return (
     <div className="flex min-h-screen flex-col bg-background text-foreground">
