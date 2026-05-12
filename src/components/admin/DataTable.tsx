@@ -20,6 +20,8 @@ interface DataTableProps<T> {
   columns: Column<T>[];
   getRowKey: (row: T) => string;
   emptyMessage?: string;
+  /** Applied to the inner `<table>` so wide admin tables scroll horizontally. */
+  tableClassName?: string;
 }
 
 export function DataTable<T>({
@@ -27,9 +29,10 @@ export function DataTable<T>({
   columns,
   getRowKey,
   emptyMessage = 'No records found.',
+  tableClassName = 'min-w-[1024px]',
 }: DataTableProps<T>) {
   return (
-    <Table>
+    <Table className={tableClassName}>
       <TableHeader>
         <TableRow>
           {columns.map((column) => (

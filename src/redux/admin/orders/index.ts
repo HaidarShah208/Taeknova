@@ -1,6 +1,6 @@
 import { baseApi } from '@services/baseApi';
 import type { OrderDto } from '@app-types/storeApi';
-import { unwrapBackendData } from '@services/apiEnvelope';
+import { assertBackendSuccess, unwrapBackendData } from '@services/apiEnvelope';
 
 export interface AdminOrderListResponse {
   items: OrderDto[];
@@ -11,6 +11,10 @@ export interface AdminListOrdersQuery {
   page?: number;
   limit?: number;
 }
+
+const orderInvalidations = (): Array<
+  { type: 'AdminOrder'; id: 'LIST' } | { type: 'ServerOrder'; id: 'LIST' } | 'CheckoutSummary'
+> => [{ type: 'AdminOrder', id: 'LIST' }, { type: 'ServerOrder', id: 'LIST' }, 'CheckoutSummary'];
 
 function buildAdminOrdersUrl(params?: AdminListOrdersQuery): string {
   const q = new URLSearchParams();
@@ -33,8 +37,37 @@ export const adminOrdersApi = baseApi.injectEndpoints({
             ]
           : [{ type: 'AdminOrder' as const, id: 'LIST' }],
     }),
+    adminApproveOrder: builder.mutation<OrderDto, string>({
+      query: (orderId) => ({ url: `/orders/admin/${orderId}/approve`, method: 'PATCH' }),
+      transformResponse: (raw: unknown) => unwrapBackendData<OrderDto>(raw),
+      invalidatesTags: (_r, _e, id) => [...orderInvalidations(), { type: 'AdminOrder', id }],
+    }),
+    adminRejectOrder: builder.mutation<void, string>({
+      query: (orderId) => ({ url: `/orders/admin/${orderId}/reject`, method: 'PATCH' }),
+      transformResponse: (raw: unknown) => {
+        assertBackendSuccess(raw);
+        return undefined;
+      },
+      invalidatesTags: (_r, _e, id) => [...orderInvalidations(), { type: 'AdminOrder', id }],
+    }),
+    adminShipOrder: builder.mutation<OrderDto, string>({
+      query: (orderId) => ({ url: `/orders/admin/${orderId}/ship`, method: 'PATCH' }),
+      transformResponse: (raw: unknown) => unwrapBackendData<OrderDto>(raw),
+      invalidatesTags: (_r, _e, id) => [...orderInvalidations(), { type: 'AdminOrder', id }],
+    }),
+    adminDeliverOrder: builder.mutation<OrderDto, string>({
+      query: (orderId) => ({ url: `/orders/admin/${orderId}/deliver`, method: 'PATCH' }),
+      transformResponse: (raw: unknown) => unwrapBackendData<OrderDto>(raw),
+      invalidatesTags: (_r, _e, id) => [...orderInvalidations(), { type: 'AdminOrder', id }],
+    }),
   }),
   overrideExisting: true,
 });
 
-export const { useAdminListAllOrdersQuery } = adminOrdersApi;
+export const {
+  useAdminListAllOrdersQuery,
+  useAdminApproveOrderMutation,
+  useAdminRejectOrderMutation,
+  useAdminShipOrderMutation,
+  useAdminDeliverOrderMutation,
+} = adminOrdersApi;

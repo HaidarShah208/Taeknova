@@ -6,8 +6,10 @@ import { useAppDispatch, useAppSelector } from '@redux';
 import { PageMeta } from '@components/layout/PageMeta';
 import { Button } from '@components/ui/Button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@components/ui/Card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@components/ui/Tabs';
 import { ROUTES } from '@constants/routes';
 import env from '@lib/env';
+import { OrderTrackTab } from '@features/profile/OrderTrackTab';
 import { useAdminLogoutMutation } from '@redux/admin/auth';
 import { clearSession, selectCurrentUser } from '@redux/auth';
 import { useGetProfileQuery } from '@redux/customer';
@@ -43,45 +45,58 @@ export default function ProfilePage() {
     <>
       <PageMeta title="My Profile" />
       <div className="mx-auto max-w-3xl py-8">
-        <Card>
-          <CardHeader>
-            <CardTitle>My Profile</CardTitle>
-            <CardDescription>Manage your account details and sign out.</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            {apiMode && isLoading && (
-              <p className="text-sm text-muted-foreground">Loading profile…</p>
-            )}
-            <div className="rounded-xl border border-border bg-muted/30 p-4">
-              <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                Account name
-              </p>
-              <p className="mt-1 inline-flex items-center gap-2 text-sm font-semibold text-foreground">
-                <User className="h-4 w-4 text-primary" />
-                {displayName}
-              </p>
-            </div>
+        <Tabs defaultValue="profile" className="w-full">
+          <TabsList className="mb-6 w-full justify-start sm:w-auto">
+            <TabsTrigger value="profile">Profile</TabsTrigger>
+            <TabsTrigger value="track">Track orders</TabsTrigger>
+          </TabsList>
 
-            <div className="rounded-xl border border-border bg-muted/30 p-4">
-              <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                Email
-              </p>
-              <p className="mt-1 inline-flex items-center gap-2 text-sm font-semibold text-foreground">
-                <Mail className="h-4 w-4 text-primary" />
-                {email}
-              </p>
-            </div>
+          <TabsContent value="profile" className="space-y-0">
+            <Card>
+              <CardHeader>
+                <CardTitle>My Profile</CardTitle>
+                <CardDescription>Manage your account details and sign out.</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                {apiMode && isLoading && (
+                  <p className="text-sm text-muted-foreground">Loading profile…</p>
+                )}
+                <div className="rounded-xl border border-border bg-muted/30 p-4">
+                  <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                    Account name
+                  </p>
+                  <p className="mt-1 inline-flex items-center gap-2 text-sm font-semibold text-foreground">
+                    <User className="h-4 w-4 text-primary" />
+                    {displayName}
+                  </p>
+                </div>
 
-            <Button
-              variant="destructive"
-              onClick={() => void handleLogout()}
-              isLoading={isLoggingOut}
-              leftIcon={<LogOut className="h-4 w-4" />}
-            >
-              Logout
-            </Button>
-          </CardContent>
-        </Card>
+                <div className="rounded-xl border border-border bg-muted/30 p-4">
+                  <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                    Email
+                  </p>
+                  <p className="mt-1 inline-flex items-center gap-2 text-sm font-semibold text-foreground">
+                    <Mail className="h-4 w-4 text-primary" />
+                    {email}
+                  </p>
+                </div>
+
+                <Button
+                  variant="destructive"
+                  onClick={() => void handleLogout()}
+                  isLoading={isLoggingOut}
+                  leftIcon={<LogOut className="h-4 w-4" />}
+                >
+                  Logout
+                </Button>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="track">
+            <OrderTrackTab />
+          </TabsContent>
+        </Tabs>
       </div>
     </>
   );

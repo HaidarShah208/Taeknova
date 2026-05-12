@@ -49,6 +49,7 @@ export const ordersApi = baseApi.injectEndpoints({
       invalidatesTags: (_r, _e, id) => [
         { type: 'ServerOrder', id },
         { type: 'ServerOrder', id: 'LIST' },
+        { type: 'AdminOrder', id: 'LIST' },
       ],
     }),
   }),
