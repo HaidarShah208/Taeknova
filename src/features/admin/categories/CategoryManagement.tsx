@@ -1,22 +1,45 @@
 import { DataTable, StatusBadge } from '@components/admin';
-import { ADMIN_CATEGORIES } from '@features/admin/data/mockAdminData';
+import { useAdminListCategoriesQuery } from '@redux/admin';
 
 export function CategoryManagement() {
+  const { data = [], isLoading, isError, refetch } = useAdminListCategoriesQuery();
+
   return (
-    <DataTable
-      data={ADMIN_CATEGORIES}
-      getRowKey={(row) => row.id}
-      columns={[
-        { key: 'name', header: 'Category', render: (row) => row.name },
-        { key: 'products', header: 'Products', render: (row) => row.products },
-        {
-          key: 'status',
-          header: 'Status',
-          render: (row) => (
-            <StatusBadge label={row.status} tone={row.status === 'active' ? 'success' : 'neutral'} />
-          ),
-        },
-      ]}
-    />
+    <div className="space-y-3">
+      {isError ? (
+        <p className="text-sm text-red-700">Could not load categories.</p>
+      ) : null}
+      {isLoading ? (
+        <p className="text-sm text-slate-600">Loading categories…</p>
+      ) : (
+        <DataTable
+          data={data}
+          getRowKey={(row) => row.id}
+          columns={[
+            { key: 'name', header: 'Category', render: (row) => row.name },
+            { key: 'slug', header: 'Slug', render: (row) => row.slug },
+            {
+              key: 'status',
+              header: 'Status',
+              render: (row) => (
+                <StatusBadge
+                  label={row.isActive ? 'Active' : 'Inactive'}
+                  tone={row.isActive ? 'success' : 'neutral'}
+                />
+              ),
+            },
+          ]}
+        />
+      )}
+      {isError ? (
+        <button
+          type="button"
+          onClick={() => void refetch()}
+          className="text-sm font-semibold text-primary underline"
+        >
+          Retry
+        </button>
+      ) : null}
+    </div>
   );
 }

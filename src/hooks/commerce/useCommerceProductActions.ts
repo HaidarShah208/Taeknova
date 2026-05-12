@@ -1,8 +1,10 @@
 import { useCallback, useMemo } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 
 import type { Product, ProductVariant } from '@app-types/product';
 import env from '@lib/env';
+import { ROUTES } from '@constants/routes';
 import { useAppDispatch, useAppSelector } from '@redux';
 import { selectIsAuthenticated } from '@redux/auth';
 import { addItem } from '@redux/cart';
@@ -22,6 +24,8 @@ interface QuickAddPayload {
 
 export function useCommerceProductActions(product: Product | null) {
   const apiMode = !env.enableMockApi;
+  const navigate = useNavigate();
+  const location = useLocation();
   const dispatch = useAppDispatch();
   const isAuthed = useAppSelector(selectIsAuthenticated);
   const mockWishlisted = useAppSelector(selectIsInWishlist(product?.id ?? '__none__'));
@@ -67,10 +71,11 @@ export function useCommerceProductActions(product: Product | null) {
     async ({ product: p, variant, quantity = 1 }: QuickAddPayload) => {
       if (!p) return;
       if (apiMode) {
-        if (!isAuthed) {
-          toast.error('Sign in to add items to your cart');
-          return;
-        }
+      if (!isAuthed) {
+        toast.info('Please sign in to add items to your cart');
+        navigate(ROUTES.login, { state: { from: location.pathname }, replace: false });
+        return;
+      }
         try {
           await addCartLine({ variantId: variant.id, quantity }).unwrap();
           toast.success(`${p.title} added to cart`);
@@ -96,7 +101,7 @@ export function useCommerceProductActions(product: Product | null) {
       );
       toast.success(`${p.title} added to cart`);
     },
-    [addCartLine, apiMode, dispatch, isAuthed],
+    [addCartLine, apiMode, dispatch, isAuthed, location.pathname, navigate],
   );
 
   return { apiMode, isWishlisted, toggleWishlistForProduct, addToCart };

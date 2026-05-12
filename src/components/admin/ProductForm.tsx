@@ -1,17 +1,19 @@
 import { useEffect, useState } from 'react';
 
+import type { ProductStatus } from '@app-types/admin';
 import { Button } from '@components/ui/Button';
 
 export interface ProductFormValues {
   name: string;
-  category: string;
+  categoryId: string;
   price: number;
   stock: number;
-  status: 'active' | 'draft';
+  status: ProductStatus;
 }
 
 interface ProductFormProps {
   initialValues?: ProductFormValues;
+  categoryOptions: { id: string; name: string }[];
   onSubmit: (values: ProductFormValues) => void;
   onCancel?: () => void;
   submitLabel?: string;
@@ -19,14 +21,15 @@ interface ProductFormProps {
 
 const DEFAULT_VALUES: ProductFormValues = {
   name: '',
-  category: 'Uniforms',
+  categoryId: '',
   price: 0,
   stock: 0,
-  status: 'active',
+  status: 'PENDING',
 };
 
 export function ProductForm({
   initialValues,
+  categoryOptions,
   onSubmit,
   onCancel,
   submitLabel = 'Save product',
@@ -57,12 +60,21 @@ export function ProductForm({
 
       <label className="space-y-1 text-sm">
         <span className="text-slate-700">Category</span>
-        <input
-          value={values.category}
-          onChange={(event) => setValues((prev) => ({ ...prev, category: event.target.value }))}
+        <select
+          value={values.categoryId}
+          onChange={(event) => setValues((prev) => ({ ...prev, categoryId: event.target.value }))}
           required
           className="h-10 w-full rounded-lg border border-slate-300 bg-white px-3 text-slate-900 outline-none focus:border-primary"
-        />
+        >
+          <option value="" disabled>
+            Select category
+          </option>
+          {categoryOptions.map((c) => (
+            <option key={c.id} value={c.id}>
+              {c.name}
+            </option>
+          ))}
+        </select>
       </label>
 
       <label className="space-y-1 text-sm">
@@ -70,6 +82,7 @@ export function ProductForm({
         <input
           type="number"
           min={0}
+          step="0.01"
           value={values.price}
           onChange={(event) =>
             setValues((prev) => ({ ...prev, price: Number(event.target.value || 0) }))
@@ -80,7 +93,7 @@ export function ProductForm({
       </label>
 
       <label className="space-y-1 text-sm">
-        <span className="text-slate-700">Stock</span>
+        <span className="text-slate-700">Stock (default variant)</span>
         <input
           type="number"
           min={0}
@@ -98,16 +111,13 @@ export function ProductForm({
         <select
           value={values.status}
           onChange={(event) =>
-            setValues((prev) => ({ ...prev, status: event.target.value as ProductFormValues['status'] }))
+            setValues((prev) => ({ ...prev, status: event.target.value as ProductStatus }))
           }
           className="h-10 w-full rounded-lg border border-slate-300 bg-white px-3 text-slate-900 outline-none focus:border-primary"
         >
-          <option value="active" className="bg-white text-slate-900">
-            Active
-          </option>
-          <option value="draft" className="bg-white text-slate-900">
-            Draft
-          </option>
+          <option value="PENDING">Pending</option>
+          <option value="APPROVED">Approved</option>
+          <option value="REJECTED">Rejected</option>
         </select>
       </label>
 
