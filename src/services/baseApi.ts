@@ -7,6 +7,7 @@ import { localStore } from '@utils/storage';
 
 const rawBaseQuery = fetchBaseQuery({
   baseUrl: env.apiBaseUrl,
+  credentials: 'include',
   prepareHeaders: (headers) => {
     const token = localStore.get<string | null>(STORAGE_KEYS.authToken, null);
     if (token) headers.set('Authorization', `Bearer ${token}`);
@@ -27,7 +28,19 @@ const baseQueryWithErrorHandling: BaseQueryFn<string | FetchArgs, unknown, Fetch
   return result;
 };
 
-export const TAG_TYPES = ['Product', 'Category', 'Cart', 'User', 'Order', 'Wishlist'] as const;
+export const TAG_TYPES = [
+  'Product',
+  'Category',
+  'Cart',
+  'User',
+  'Order',
+  'Wishlist',
+  'AdminProduct',
+  'AdminCategory',
+  'AdminInventory',
+  'AdminUser',
+  'AdminAnalytics',
+] as const;
 export type ApiTagType = (typeof TAG_TYPES)[number];
 
 export const baseApi = createApi({

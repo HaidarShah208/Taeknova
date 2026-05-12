@@ -1,19 +1,24 @@
 import type { ID } from '@app-types/common';
 
+export type AppUserRole = 'user' | 'admin';
+
 export interface User {
   id: ID;
   email: string;
   firstName: string;
   lastName: string;
-  role?: 'user' | 'admin';
+  /** Present when session comes from admin API (`fullName` from backend). */
+  fullName?: string;
+  role?: AppUserRole;
   avatarUrl?: string;
-  createdAt: string;
+  createdAt?: string;
 }
 
 export interface AuthSession {
   user: User;
   token: string;
-  expiresAt: number;
+  /** `null` when expiry is unknown (e.g. admin JWT from backend without `exp` in client). */
+  expiresAt: number | null;
 }
 
 export interface LoginPayload {

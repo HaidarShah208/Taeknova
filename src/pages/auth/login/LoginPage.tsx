@@ -5,10 +5,12 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 
 import { useAppDispatch } from '@redux';
+import { useAdminLoginMutation } from '@redux/admin/auth';
 import { FormField } from '@components/forms/FormField';
 import { PageMeta } from '@components/layout/PageMeta';
 import { Button } from '@components/ui/Button';
 import { ROUTES } from '@constants/routes';
+import env from '@lib/env';
 import { setSession } from '@redux/auth';
 import { loginSchema, type LoginFormValues } from '@redux/auth';
 
@@ -16,6 +18,7 @@ export default function LoginPage() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const location = useLocation();
+  const [adminLogin, { isLoading: isApiLogin }] = useAdminLoginMutation();
   const redirectTo =
     (location.state as { from?: string } | null)?.from ?? ROUTES.dashboard;
 
@@ -29,6 +32,31 @@ export default function LoginPage() {
   });
 
   const onSubmit = async (values: LoginFormValues) => {
+    if (!env.enableMockApi) {
+      try {
+        const data = await adminLogin({
+          email: values.email.trim(),
+          password: values.password,
+        }).unwrap();
+        const isAdminUser = data.user.role === 'ADMIN';
+        const from = (location.state as { from?: string } | null)?.from;
+        if (from?.startsWith(ROUTES.adminRoot) && isAdminUser) {
+          navigate(from, { replace: true });
+        } else if (isAdminUser) {
+          navigate(ROUTES.adminDashboard, { replace: true });
+        } else {
+          navigate(
+            redirectTo === ROUTES.dashboard ? ROUTES.dashboardProfile : redirectTo,
+            { replace: true },
+          );
+        }
+        toast.success('Welcome back!');
+      } catch {
+        toast.error('Invalid email or password');
+      }
+      return;
+    }
+
     await new Promise((resolve) => setTimeout(resolve, 500));
     const isAdmin = values.email.toLowerCase().includes('admin');
     const fallbackRoute = isAdmin ? ROUTES.adminDashboard : ROUTES.dashboard;
@@ -99,7 +127,7 @@ export default function LoginPage() {
               Forgot password?
             </Link>
           </div>
-          <Button type="submit" fullWidth size="lg" isLoading={isSubmitting}>
+          <Button type="submit" fullWidth size="lg" isLoading={isSubmitting || isApiLogin}>
             Sign in
           </Button>
         </form>

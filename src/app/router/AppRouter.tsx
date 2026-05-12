@@ -10,6 +10,7 @@ import { MainLayout } from '@layouts/MainLayout';
 import { GuestRoute } from './GuestRoute';
 import { ProtectedRoute } from './ProtectedRoute';
 import { RouteFallback } from './RouteFallback';
+import { AdminRoute } from './AdminRoute';
 
 const HomePage = lazy(() => import('@pages/home/HomePage'));
 const ProductsPage = lazy(() => import('@pages/products/ProductsPage'));
@@ -108,9 +109,9 @@ export function AppRouter() {
         <Route
           path={ROUTES.adminRoot}
           element={
-            <ProtectedRoute>
+            <AdminRoute>
               <AdminLayout />
-            </ProtectedRoute>
+            </AdminRoute>
           }
         >
           <Route index element={<Navigate to="dashboard" replace />} />

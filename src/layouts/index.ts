@@ -1,3 +1,3 @@
 export { MainLayout } from './MainLayout';
 export { AuthLayout } from './AuthLayout';
-export { DashboardLayout } from './ProfileLayout';
+export { ProfileLayout as DashboardLayout } from './ProfileLayout';
