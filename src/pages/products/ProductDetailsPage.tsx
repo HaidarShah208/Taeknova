@@ -1,5 +1,5 @@
 import { Heart, ShieldCheck, ShoppingBag, Truck } from 'lucide-react';
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { toast } from 'sonner';
 
@@ -23,6 +23,10 @@ import {
   useUnifiedRelatedProducts,
 } from '@hooks/commerce/useUnifiedProductBySlug';
 import { cn } from '@lib/cn';
+import { useAppSelector } from '@redux';
+import { selectCartItems } from '@redux/cart';
+import { selectIsAuthenticated } from '@redux/auth';
+import { useGetCartQuery } from '@redux/customer';
 import { uniqueBy } from '@utils/misc';
 
 const VALUE_PROPS = [
@@ -34,9 +38,14 @@ export default function ProductDetailsPage() {
   const { slug = '' } = useParams<{ slug: string }>();
   const { product, isLoading, isError, refetch } = useUnifiedProductBySlug(slug);
   const related = useUnifiedRelatedProducts(slug, 4);
-  const { isWishlisted, toggleWishlistForProduct, addToCart } = useCommerceProductActions(
+  const { apiMode, isWishlisted, toggleWishlistForProduct, addToCart } = useCommerceProductActions(
     product ?? null,
   );
+  const isAuthed = useAppSelector(selectIsAuthenticated);
+  const mockCartItems = useAppSelector(selectCartItems);
+  const { data: serverCart = [] } = useGetCartQuery(undefined, {
+    skip: !apiMode || !isAuthed,
+  });
 
   const [selectedColor, setSelectedColor] = useState<string | null>(null);
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
@@ -62,6 +71,32 @@ export default function ProductDetailsPage() {
     );
   }, [product, activeColor, activeSize]);
 
+  const qtyInCartForVariant = useMemo(() => {
+    if (!selectedVariant) return 0;
+    if (apiMode) {
+      const line = serverCart.find((l) => l.variantId === selectedVariant.id);
+      return line?.quantity ?? 0;
+    }
+    const line = mockCartItems.find((i) => i.variantId === selectedVariant.id);
+    return line?.quantity ?? 0;
+  }, [apiMode, mockCartItems, selectedVariant, serverCart]);
+
+  const remainingStock = useMemo(() => {
+    if (!selectedVariant) return 0;
+    return Math.max(0, selectedVariant.stock - qtyInCartForVariant);
+  }, [selectedVariant, qtyInCartForVariant]);
+
+  const canAddToCart = Boolean(selectedVariant && remainingStock > 0);
+
+  useEffect(() => {
+    if (!selectedVariant) return;
+    if (remainingStock <= 0) {
+      setQuantity(1);
+      return;
+    }
+    setQuantity((q) => Math.min(Math.max(1, q), remainingStock));
+  }, [remainingStock, selectedVariant?.id]);
+
   if (isLoading) {
     return (
       <Container className="flex min-h-[60vh] items-center justify-center py-16">
@@ -84,12 +119,17 @@ export default function ProductDetailsPage() {
     );
   }
 
-  const handleAddToCart = () => {
+  const handleAddToCart = async () => {
     if (!selectedVariant) {
       toast.error('Please choose a size and color');
       return;
     }
-    void addToCart({ product, variant: selectedVariant, quantity });
+    if (!canAddToCart) {
+      toast.error('This variant is already at max quantity in your cart');
+      return;
+    }
+    const ok = await addToCart({ product, variant: selectedVariant, quantity });
+    if (ok) setQuantity(1);
   };
 
   return (
@@ -172,9 +212,9 @@ export default function ProductDetailsPage() {
             <div className="mt-8 space-y-6">
               <div>
                 <p className="text-sm font-semibold text-foreground">
-                  Color: <span className="font-normal text-muted-foreground">{activeColor}</span>
+                  Color: 
                 </p>
-                <div className="mt-3 flex flex-wrap gap-2">
+                <div className="mt-3 ms-4 flex flex-wrap gap-2">
                   {colors.map((color) => (
                     <button
                       key={color}
@@ -182,7 +222,7 @@ export default function ProductDetailsPage() {
                       onClick={() => setSelectedColor(color)}
                       aria-pressed={activeColor === color}
                       className={cn(
-                        'inline-flex h-10 items-center rounded-full border px-4 text-sm font-medium transition-colors',
+                        'inline-flex h-7 items-center rounded-full border px-4 text-sm font-medium transition-colors',
                         activeColor === color
                           ? 'border-primary bg-primary text-primary-foreground'
                           : 'border-border bg-background text-foreground hover:border-foreground/40',
@@ -197,7 +237,7 @@ export default function ProductDetailsPage() {
               <div>
                 <div className="flex items-center justify-between">
                   <p className="text-sm font-semibold text-foreground">
-                    Size: <span className="font-normal text-muted-foreground">{activeSize}</span>
+                    Size:  
                   </p>
                   <button
                     type="button"
@@ -206,7 +246,7 @@ export default function ProductDetailsPage() {
                     Size guide
                   </button>
                 </div>
-                <div className="mt-3 flex flex-wrap gap-2">
+                <div className="mt-3 ms-4 flex flex-wrap gap-2">
                   {sizes.map((size) => (
                     <button
                       key={size}
@@ -214,7 +254,7 @@ export default function ProductDetailsPage() {
                       onClick={() => setSelectedSize(size)}
                       aria-pressed={activeSize === size}
                       className={cn(
-                        'inline-flex h-10 min-w-[3rem] items-center justify-center rounded-md border px-3 text-sm font-semibold transition-colors',
+                        'inline-flex h-7 min-w-[3rem] items-center justify-center rounded-md border px-3 text-sm font-semibold transition-colors',
                         activeSize === size
                           ? 'border-primary bg-primary text-primary-foreground'
                           : 'border-border bg-background text-foreground hover:border-foreground/40',
@@ -226,39 +266,48 @@ export default function ProductDetailsPage() {
                 </div>
               </div>
 
-              <div className="flex flex-wrap items-center gap-3">
-                <QuantitySelector
-                  value={quantity}
-                  onChange={setQuantity}
-                  max={selectedVariant?.stock ?? 10}
-                />
-                <Button
-                  size="lg"
-                  onClick={handleAddToCart}
-                  leftIcon={<ShoppingBag className="h-4 w-4" />}
-                  className="flex-1"
-                >
-                  Add to cart
-                </Button>
-                <Button
-                  size="lg"
-                  variant="outline"
-                  onClick={() => {
-                    void toggleWishlistForProduct();
-                  }}
-                  aria-label={isWishlisted ? 'Remove from wishlist' : 'Save to wishlist'}
-                  aria-pressed={isWishlisted}
-                  leftIcon={
-                    <Heart
-                      className={cn(
-                        'h-4 w-4',
-                        isWishlisted && 'fill-destructive text-destructive',
-                      )}
-                    />
-                  }
-                >
-                  {isWishlisted ? 'Saved' : 'Wishlist'}
-                </Button>
+              <div className="flex flex-col gap-2">
+                <div className="flex flex-wrap items-center gap-3">
+                  <QuantitySelector
+                    value={quantity}
+                    onChange={setQuantity}
+                    max={Math.max(1, remainingStock)}
+                    min={1}
+                    disabled={!canAddToCart}
+                  />
+                  <Button
+                    size="lg"
+                    onClick={() => void handleAddToCart()}
+                    disabled={!canAddToCart}
+                    leftIcon={<ShoppingBag className="h-4 w-4" />}
+                    className="flex-1"
+                  >
+                    Add to cart
+                  </Button>
+                  <Button
+                    size="lg"
+                    variant="outline"
+                    type="button"
+                    onClick={toggleWishlistForProduct}
+                    aria-label={isWishlisted ? 'Remove from wishlist' : 'Save to wishlist'}
+                    aria-pressed={isWishlisted}
+                    leftIcon={
+                      <Heart
+                        className={cn(
+                          'h-5 w-5',
+                          isWishlisted && 'fill-destructive text-destructive',
+                        )}
+                      />
+                    }
+                  />
+                </div>
+                {qtyInCartForVariant > 0 ? (
+                  <p className="text-xs text-muted-foreground">
+                    {remainingStock > 0
+                      ? `In your cart: ${qtyInCartForVariant} for this variant · you can add up to ${remainingStock} more.`
+                      : `In your cart: ${qtyInCartForVariant} for this variant (max stock in cart).`}
+                  </p>
+                ) : null}
               </div>
 
               <ul className="flex flex-wrap gap-x-6 gap-y-2 border-t border-border pt-5 text-sm text-muted-foreground">

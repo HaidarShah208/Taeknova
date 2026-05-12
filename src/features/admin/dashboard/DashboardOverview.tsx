@@ -1,7 +1,6 @@
 import { BarChart3, Package, ShoppingCart, Tags } from 'lucide-react';
 
 import { AdminCard, StatsCard } from '@components/admin';
-import { AnalyticsOverview } from '@features/admin/analytics/AnalyticsOverview';
 import { useAdminListCategoriesQuery, useAdminListProductsQuery } from '@redux/admin';
 
 export function DashboardOverview() {

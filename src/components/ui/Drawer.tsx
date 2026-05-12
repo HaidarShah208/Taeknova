@@ -72,14 +72,14 @@ export function Drawer({
   return createPortal(
     <AnimatePresence>
       {isOpen && (
-        <div className="fixed inset-0 z-50">
+        <div className="fixed inset-0 z-[100]">
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.18 }}
             onClick={onClose}
-            className="absolute inset-0 bg-foreground/40 backdrop-blur-sm"
+            className="absolute inset-0 z-0 bg-foreground/40 backdrop-blur-sm"
             aria-hidden="true"
           />
           <motion.aside
@@ -91,7 +91,7 @@ export function Drawer({
             exit={motionInitial[side]}
             transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
             className={cn(
-              'absolute flex flex-col bg-card text-card-foreground shadow-elevated',
+              'absolute z-10 flex flex-col bg-card text-card-foreground shadow-elevated',
               sideClasses[side],
               isHorizontal ? sizeClasses[size].x : sizeClasses[size].y,
               className,

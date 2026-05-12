@@ -43,23 +43,21 @@ export function useCommerceProductActions(product: Product | null) {
     return wishlist.some((w) => w.productId === product.id);
   }, [apiMode, mockWishlisted, product, wishlist]);
 
-  const toggleWishlistForProduct = useCallback(async () => {
+  const toggleWishlistForProduct = useCallback(() => {
     if (!product) return;
     if (apiMode) {
       if (!isAuthed) {
         toast.error('Sign in to use your wishlist');
         return;
       }
-      try {
-        if (isWishlisted) {
-          await removeWish(product.id).unwrap();
-          toast.success('Removed from wishlist');
-        } else {
-          await addWish({ productId: product.id }).unwrap();
-          toast.success('Saved to wishlist');
-        }
-      } catch {
-        toast.error('Wishlist could not be updated');
+      if (isWishlisted) {
+        void removeWish(product.id)
+          .unwrap()
+          .catch(() => toast.error('Could not update wishlist'));
+      } else {
+        void addWish({ productId: product.id })
+          .unwrap()
+          .catch(() => toast.error('Could not update wishlist'));
       }
       return;
     }
@@ -68,21 +66,22 @@ export function useCommerceProductActions(product: Product | null) {
   }, [addWish, apiMode, dispatch, isAuthed, isWishlisted, mockWishlisted, product, removeWish]);
 
   const addToCart = useCallback(
-    async ({ product: p, variant, quantity = 1 }: QuickAddPayload) => {
-      if (!p) return;
+    async ({ product: p, variant, quantity = 1 }: QuickAddPayload): Promise<boolean> => {
+      if (!p) return false;
       if (apiMode) {
-      if (!isAuthed) {
-        toast.info('Please sign in to add items to your cart');
-        navigate(ROUTES.login, { state: { from: location.pathname }, replace: false });
-        return;
-      }
+        if (!isAuthed) {
+          toast.info('Please sign in to add items to your cart');
+          navigate(ROUTES.login, { state: { from: location.pathname }, replace: false });
+          return false;
+        }
         try {
           await addCartLine({ variantId: variant.id, quantity }).unwrap();
           toast.success(`${p.title} added to cart`);
+          return true;
         } catch {
           toast.error('Could not add to cart');
+          return false;
         }
-        return;
       }
       dispatch(
         addItem({
@@ -100,6 +99,7 @@ export function useCommerceProductActions(product: Product | null) {
         }),
       );
       toast.success(`${p.title} added to cart`);
+      return true;
     },
     [addCartLine, apiMode, dispatch, isAuthed, location.pathname, navigate],
   );
