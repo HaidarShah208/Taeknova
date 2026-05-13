@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 
 import { APP_NAME } from '@constants/app';
 import { ROUTES } from '@constants/routes';
+import logo from '../../assets/brandLogo.png'
 import { cn } from '@lib/cn';
 
 interface LogoProps {
@@ -23,16 +24,8 @@ export function Logo({ className, size = 'md' }: LogoProps) {
       aria-label={`${APP_NAME} home`}
       className={cn('inline-flex items-center font-display font-bold tracking-tight', s.wrap, className)}
     >
-      <span
-        className={cn(
-          'inline-flex items-center justify-center rounded-lg bg-gradient-to-br from-primary to-primary-900 font-black text-primary-foreground shadow-soft',
-          s.mark,
-        )}
-        aria-hidden="true"
-      >
-        T
-      </span>
-      <span className={cn('text-foreground', s.text)}>{APP_NAME}</span>
+    
+        <img src={logo} className='w-16 h-20 object-cover ' alt="" />
     </Link>
   );
 }

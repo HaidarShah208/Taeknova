@@ -69,7 +69,7 @@ export function CategoriesSection() {
                       <p className="text-xs font-semibold uppercase tracking-widest text-background/80">
                         {category.productCount} styles
                       </p>
-                      <h3 className="mt-1 text-lg font-bold leading-tight tracking-tight">
+                      <h3 className="mt-1 text-lg text-white font-bold leading-tight tracking-tight">
                         {category.name}
                       </h3>
                     </div>
