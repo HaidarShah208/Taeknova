@@ -1,6 +1,6 @@
 import { BarChart3, Package, ShoppingCart, Tags } from 'lucide-react';
 
-import { AdminCard, StatsCard } from '@components/admin';
+import {  StatsCard } from '@components/admin';
 import { useAdminListCategoriesQuery, useAdminListProductsQuery } from '@redux/admin';
 import { useAdminListAllOrdersQuery } from '@redux/admin/orders';
 import { useAdminOverviewAnalyticsQuery } from '@redux/analytics';
@@ -85,13 +85,7 @@ export function DashboardOverview() {
 
       
 
-      <AdminCard title="Operational notes">
-        <p className="text-sm text-slate-700">
-          Dashboard counts use authenticated admin APIs (<code className="text-xs">/products</code>,{' '}
-          <code className="text-xs">/categories</code>). Extend the backend with admin analytics and
-          order listing when you need full operations visibility.
-        </p>
-      </AdminCard>
+       
     </div>
   );
 }

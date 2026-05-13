@@ -12,7 +12,7 @@ interface AdminCardProps {
 
 export function AdminCard({ title, description, action, children, className }: AdminCardProps) {
   return (
-    <section className={cn('rounded-2xl border border-slate-200 bg-white p-5 text-slate-900 shadow-sm', className)}>
+    <section className={cn('rounded-2xl border border-slate-200 bg-white p-5 overflow-hidden text-slate-900 shadow-sm', className)}>
       {(title || description || action) && (
         <header className="mb-4 flex items-start justify-between gap-3">
           <div>

@@ -96,12 +96,10 @@ export function OrdersManagement() {
         {isLoading ? (
           <p className="text-sm text-slate-600">Loading orders…</p>
         ) : (
-          <div className="w-full max-w-full overflow-x-auto">
             <DataTable
               data={items}
               getRowKey={(row) => row.id}
               emptyMessage="No orders yet. Customer checkouts will appear here."
-              tableClassName="min-w-[1400px]"
               columns={[
                 {
                   key: 'id',
@@ -131,11 +129,7 @@ export function OrdersManagement() {
                     </span>
                   ),
                 },
-                {
-                  key: 'items',
-                  header: 'Lines',
-                  render: (row) => String(row.items?.length ?? 0),
-                },
+               
                 {
                   key: 'total',
                   header: 'Total',
@@ -241,7 +235,6 @@ export function OrdersManagement() {
                 },
               ]}
             />
-          </div>
         )}
 
         <div className="mt-4">

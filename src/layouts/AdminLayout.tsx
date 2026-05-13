@@ -18,7 +18,7 @@ export function AdminLayout() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900">
+    <div className="min-h-screen  bg-slate-50 text-slate-900">
       <div className="grid min-h-screen lg:grid-cols-[260px_1fr]">
         <aside className="border-r border-slate-200 bg-white p-5">
           <div className="mb-8 flex items-center gap-3">

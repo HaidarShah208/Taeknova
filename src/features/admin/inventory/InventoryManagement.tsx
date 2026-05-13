@@ -1,4 +1,3 @@
-import { AlertTriangle } from 'lucide-react';
 import { useMemo } from 'react';
 
 import type { AdminProduct } from '@app-types/admin';

@@ -49,7 +49,7 @@ export function SearchBar({
       role="search"
       onSubmit={handleSubmit}
       className={cn(
-        'group relative flex w-full items-center rounded-full border border-input bg-background pl-11 pr-2 transition-all focus-within:border-primary focus-within:ring-2 focus-within:ring-ring/50',
+        'group relative flex w-full items-center rounded-full border border-input bg-background pl-11 pr-2 transition-all focus-within:border-primary focus-within:ring-0 focus-within:ring-ring/50',
         sizeClasses[size],
         className,
       )}
@@ -65,7 +65,7 @@ export function SearchBar({
         placeholder={placeholder}
         autoFocus={autoFocus}
         aria-label="Search"
-        className="w-full bg-transparent text-foreground placeholder:text-muted-foreground/70 focus:outline-none"
+        className="w-full bg-transparent text-foreground placeholder:text-muted-foreground/70 focus:outline-none focus-within:ring-0"
       />
       {value && (
         <button
