@@ -52,7 +52,7 @@ export function OrdersManagement() {
 
   const { data, isLoading, isError, refetch, isFetching } = useAdminListAllOrdersQuery(listArg);
   const [approveOrder] = useAdminApproveOrderMutation();
-  const [rejectOrder] = useAdminRejectOrderMutation();
+  const [rejectOrder, { isLoading: isRejecting }] = useAdminRejectOrderMutation();
   const [shipOrder] = useAdminShipOrderMutation();
   const [deliverOrder] = useAdminDeliverOrderMutation();
 
@@ -74,8 +74,13 @@ export function OrdersManagement() {
   const confirmReject = async () => {
     if (!rejectId) return;
     const id = rejectId;
-    setRejectId(null);
-    await run(id, () => rejectOrder(id).unwrap(), 'Order rejected');
+    try {
+      await rejectOrder(id).unwrap();
+      toast.success('Order rejected');
+      setRejectId(null);
+    } catch {
+      toast.error('Action failed');
+    }
   };
 
   return (
@@ -250,6 +255,7 @@ export function OrdersManagement() {
         title="Reject this order?"
         description="Stock will be returned to inventory and the customer will see this order as cancelled."
         confirmLabel="Reject order"
+        isConfirmLoading={isRejecting}
         onClose={() => setRejectId(null)}
         onConfirm={() => void confirmReject()}
       />

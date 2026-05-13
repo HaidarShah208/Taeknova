@@ -14,6 +14,8 @@ export const STORAGE_KEYS = {
   cart: 'tikwando.cart',
   wishlist: 'tikwando.wishlist',
   authToken: 'tikwando.auth.token',
+  /** Full user object for rehydration (mock tokens are not JWTs). */
+  authUser: 'tikwando.auth.user',
   recentlyViewed: 'tikwando.recently-viewed',
   theme: 'tikwando.theme',
 } as const;

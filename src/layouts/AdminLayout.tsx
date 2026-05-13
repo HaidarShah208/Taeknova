@@ -1,20 +1,28 @@
 import { LogOut, ShieldCheck } from 'lucide-react';
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
+import { toast } from 'sonner';
 
-import { useAppDispatch, useAppSelector } from '@redux';
+import { useAppSelector } from '@redux';
+import { Button } from '@components/ui/Button';
 import { ADMIN_NAV } from '@constants/navigation';
 import { ROUTES } from '@constants/routes';
-import { clearSession, selectCurrentUser } from '@redux/auth';
+import { selectCurrentUser } from '@redux/auth';
+import { useAdminLogoutMutation } from '@redux/admin';
 import { cn } from '@lib/cn';
 
 export function AdminLayout() {
-  const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const user = useAppSelector(selectCurrentUser);
+  const [logout, { isLoading: isLoggingOut }] = useAdminLogoutMutation();
 
-  const handleLogout = () => {
-    dispatch(clearSession());
-    navigate(ROUTES.home);
+  const handleLogout = async () => {
+    try {
+      await logout().unwrap();
+      toast.success('Signed out');
+      navigate(ROUTES.home, { replace: true });
+    } catch {
+      toast.error('Could not sign out');
+    }
   };
 
   return (
@@ -53,15 +61,20 @@ export function AdminLayout() {
 
           <div className="mt-8 rounded-xl border border-slate-200 bg-slate-50 p-3">
             <p className="text-sm font-semibold">{user ? `${user.firstName} ${user.lastName}` : 'Admin'}</p>
-            <p className="mt-0.5 text-xs text-slate-500">{user?.email ?? 'admin@tikwando.com'}</p>
-            <button
+            <p className="mt-0.5 text-xs text-slate-500">{user?.email?.trim() ? user.email : '—'}</p>
+            <Button
               type="button"
-              onClick={handleLogout}
-              className="mt-3 inline-flex w-full items-center justify-center gap-2 rounded-lg border border-slate-300 px-3 py-2 text-xs font-semibold text-slate-700 transition-colors hover:bg-slate-100"
+              variant="outline"
+              size="sm"
+              fullWidth
+              className="mt-3 border-slate-300 text-slate-700"
+              leftIcon={<LogOut className="h-3.5 w-3.5" />}
+              isLoading={isLoggingOut}
+              disabled={isLoggingOut}
+              onClick={() => void handleLogout()}
             >
-              <LogOut className="h-3.5 w-3.5" />
               Sign out
-            </button>
+            </Button>
           </div>
         </aside>
 

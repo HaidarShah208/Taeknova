@@ -207,10 +207,10 @@ export function CategoryManagement() {
         title="Delete category"
         description="This cannot be undone if no products use it. If products reference this category, the API will reject the delete."
         confirmLabel="Delete"
+        isConfirmLoading={isDeleting}
         onClose={() => setDeletingId(null)}
         onConfirm={() => void handleDelete()}
       />
-      {isDeleting ? <p className="text-xs text-slate-500">Deleting…</p> : null}
     </div>
   );
 }

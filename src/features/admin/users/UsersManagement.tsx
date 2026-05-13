@@ -132,10 +132,10 @@ export function UsersManagement() {
             : 'Selected user account will be removed.'
         }
         confirmLabel="Remove account"
+        isConfirmLoading={isRemoving}
         onClose={() => setDeletingUserId(null)}
         onConfirm={() => void handleRemoveUser()}
       />
-      {isRemoving ? <p className="text-xs text-slate-500">Removing account…</p> : null}
     </div>
   );
 }

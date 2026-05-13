@@ -16,6 +16,8 @@ interface ModalProps {
   size?: 'sm' | 'md' | 'lg' | 'xl';
   closeOnOverlay?: boolean;
   closeOnEscape?: boolean;
+  /** When true, the header close button is non-interactive (e.g. while a destructive action runs). */
+  disableCloseButton?: boolean;
   hideCloseButton?: boolean;
   className?: string;
 }
@@ -37,19 +39,20 @@ export function Modal({
   size = 'xl',
   closeOnOverlay = true,
   closeOnEscape = true,
+  disableCloseButton = false,
   hideCloseButton = false,
   className,
 }: ModalProps) {
   useLockBodyScroll(isOpen);
 
   useEffect(() => {
-    if (!isOpen || !closeOnEscape) return;
+    if (!isOpen || !closeOnEscape || disableCloseButton) return;
     const onKey = (event: KeyboardEvent) => {
       if (event.key === 'Escape') onClose();
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [isOpen, closeOnEscape, onClose]);
+  }, [isOpen, closeOnEscape, disableCloseButton, onClose]);
 
   if (typeof document === 'undefined') return null;
 
@@ -63,7 +66,7 @@ export function Modal({
             exit={{ opacity: 0 }}
             transition={{ duration: 0.15 }}
             className="absolute inset-0 bg-foreground/40 backdrop-blur-sm"
-            onClick={() => closeOnOverlay && onClose()}
+            onClick={() => closeOnOverlay && !disableCloseButton && onClose()}
             aria-hidden="true"
           />
           <motion.div
@@ -99,8 +102,9 @@ export function Modal({
                   <button
                     type="button"
                     onClick={onClose}
+                    disabled={disableCloseButton}
                     aria-label="Close modal"
-                    className="-m-1 rounded-md p-1 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+                    className="-m-1 rounded-md p-1 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground disabled:pointer-events-none disabled:opacity-40"
                   >
                     <X className="h-5 w-5" aria-hidden="true" />
                   </button>

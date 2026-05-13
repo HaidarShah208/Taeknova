@@ -119,7 +119,7 @@ export function ProductsManagement() {
 
   const [createProduct, { isLoading: isCreating }] = useAdminCreateProductMutation();
   const [updateProduct, { isLoading: isUpdating }] = useAdminUpdateProductMutation();
-  const [deleteProduct] = useAdminDeleteProductMutation();
+  const [deleteProduct, { isLoading: isDeletingProduct }] = useAdminDeleteProductMutation();
   const [uploadProductImage, { isLoading: isUploading }] = useAdminUploadProductImageMutation();
   const [updateStock, { isLoading: isUpdatingStock }] = useAdminUpdateStockMutation();
   const [patchVariant, { isLoading: isPatchingVariant }] = useAdminPatchProductVariantMutation();
@@ -412,6 +412,7 @@ export function ProductsManagement() {
         title="Delete product"
         description="Are you sure you want to remove this product?"
         confirmLabel="Delete"
+        isConfirmLoading={isDeletingProduct}
         onClose={() => setDeletingId(null)}
         onConfirm={() => void handleDelete()}
       />

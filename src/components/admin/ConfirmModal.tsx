@@ -8,6 +8,8 @@ interface ConfirmModalProps {
   confirmLabel?: string;
   onConfirm: () => void;
   onClose: () => void;
+  /** Shows spinner on confirm and blocks dismissing the modal while true. */
+  isConfirmLoading?: boolean;
 }
 
 export function ConfirmModal({
@@ -17,6 +19,7 @@ export function ConfirmModal({
   confirmLabel = 'Confirm',
   onConfirm,
   onClose,
+  isConfirmLoading = false,
 }: ConfirmModalProps) {
   return (
     <Modal
@@ -24,12 +27,15 @@ export function ConfirmModal({
       onClose={onClose}
       title={title}
       description={description}
+      closeOnOverlay={!isConfirmLoading}
+      closeOnEscape={!isConfirmLoading}
+      disableCloseButton={isConfirmLoading}
       footer={
         <>
-          <Button variant="ghost" onClick={onClose}>
+          <Button variant="ghost" onClick={onClose} disabled={isConfirmLoading}>
             Cancel
           </Button>
-          <Button variant="destructive" onClick={onConfirm}>
+          <Button variant="destructive" onClick={onConfirm} isLoading={isConfirmLoading} disabled={isConfirmLoading}>
             {confirmLabel}
           </Button>
         </>
