@@ -2,47 +2,34 @@ import { Trash2 } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { toast } from 'sonner';
 
-import { AdminCard, ConfirmModal, DataTable, StatusBadge } from '@components/admin';
-import { Button } from '@components/ui/Button';
-import {
-  useAdminCreateAdminUserMutation,
-  useAdminListUsersQuery,
-  useAdminRemoveUserMutation,
-} from '@redux/admin';
+import { AdminCard, ConfirmModal, DataTable, Pagination, SearchBar, StatusBadge } from '@components/admin';
+import { useAdminListUsersQuery, useAdminRemoveUserMutation } from '@redux/admin';
 
 export function UsersManagement() {
-  const [fullName, setFullName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const PAGE_SIZE = 10;
   const [deletingUserId, setDeletingUserId] = useState<string | null>(null);
+  const [search, setSearch] = useState('');
+  const [page, setPage] = useState(1);
 
   const { data: rows = [], isLoading, isError, refetch } = useAdminListUsersQuery();
-  const [createAdmin, { isLoading: isCreatingAdmin }] = useAdminCreateAdminUserMutation();
   const [removeUser, { isLoading: isRemoving }] = useAdminRemoveUserMutation();
 
-  const handleCreate = async () => {
-    if (!fullName.trim() || !email.trim() || !password) {
-      toast.error('Fill in all fields');
-      return;
-    }
-    try {
-      const user = await createAdmin({
-        fullName: fullName.trim(),
-        email: email.trim().toLowerCase(),
-        password,
-      }).unwrap();
-      if (!user?.id) {
-        toast.error('Unexpected response while creating admin');
-        return;
-      }
-      setFullName('');
-      setEmail('');
-      setPassword('');
-      toast.success('Admin user created');
-    } catch {
-      toast.error('Could not create admin');
-    }
-  };
+  const filteredUsers = useMemo(() => {
+    const term = search.trim().toLowerCase();
+    return rows
+      .filter((row) => row.role === 'USER')
+      .filter((row) => {
+        if (!term) return true;
+        return row.fullName.toLowerCase().includes(term) || row.email.toLowerCase().includes(term);
+      });
+  }, [rows, search]);
+
+  const totalPages = Math.max(1, Math.ceil(filteredUsers.length / PAGE_SIZE));
+  const visibleRows = useMemo(() => {
+    const safePage = Math.min(page, totalPages);
+    const start = (safePage - 1) * PAGE_SIZE;
+    return filteredUsers.slice(start, start + PAGE_SIZE);
+  }, [filteredUsers, page, totalPages]);
 
   const deletingUser = useMemo(
     () => rows.find((row) => row.id === deletingUserId) ?? null,
@@ -65,17 +52,27 @@ export function UsersManagement() {
    
 
       <AdminCard
-        title="All users"
-        description="All accounts from the user side and admin side. Removing an account blocks future login for that user."
+        title="Customer users"
+        description="Only role USER accounts are listed here. Removed users cannot log in afterwards."
       >
+        <div className="mb-4 grid gap-3 sm:max-w-md">
+          <SearchBar
+            value={search}
+            onChange={(value) => {
+              setSearch(value);
+              setPage(1);
+            }}
+            placeholder="Search by name or email"
+          />
+        </div>
         {isError ? <p className="mb-3 text-sm text-red-700">Could not load users.</p> : null}
         {isLoading ? (
           <p className="text-sm text-slate-600">Loading users…</p>
         ) : (
         <DataTable
-          data={rows}
+          data={visibleRows}
           getRowKey={(row) => row.id}
-          emptyMessage="No users found."
+          emptyMessage="No customer users found."
           columns={[
             { key: 'name', header: 'Name', render: (row) => row.fullName },
             { key: 'email', header: 'Email', render: (row) => row.email },
@@ -113,6 +110,9 @@ export function UsersManagement() {
           ]}
         />
         )}
+        <div className="mt-4 border-t border-border pt-3">
+          <Pagination page={Math.min(page, totalPages)} totalPages={totalPages} onChange={setPage} />
+        </div>
         {isError ? (
           <button
             type="button"

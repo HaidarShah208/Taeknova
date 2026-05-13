@@ -2,12 +2,21 @@ import { BarChart3, Package, ShoppingCart, Tags } from 'lucide-react';
 
 import { AdminCard, StatsCard } from '@components/admin';
 import { useAdminListCategoriesQuery, useAdminListProductsQuery } from '@redux/admin';
+import { useAdminListAllOrdersQuery } from '@redux/admin/orders';
+import { useAdminOverviewAnalyticsQuery } from '@redux/analytics';
+import { formatPrice } from '@lib/formatters';
 
 export function DashboardOverview() {
   const { data: productsData, isLoading: productsLoading, isError: productsError } =
     useAdminListProductsQuery({ page: 1, limit: 100 });
   const { data: categories, isLoading: categoriesLoading, isError: categoriesError } =
     useAdminListCategoriesQuery();
+  const { data: ordersData, isLoading: ordersLoading, isError: ordersError } = useAdminListAllOrdersQuery({
+    page: 1,
+    limit: 1,
+  });
+  const { data: analyticsData, isLoading: analyticsLoading, isError: analyticsError } =
+    useAdminOverviewAnalyticsQuery();
 
   const productsTotal = productsData?.pagination.total ?? 0;
   const categoriesCount = categories?.length ?? 0;
@@ -15,9 +24,12 @@ export function DashboardOverview() {
     productsData?.items.filter(
       (p) => p.stockStatus === 'LOW_STOCK' || p.stockStatus === 'OUT_OF_STOCK',
     ).length ?? 0;
+  const ordersTotal = analyticsData?.allOrders ?? ordersData?.pagination.total ?? 0;
+  const revenue30d = analyticsData?.revenue30d ?? 0;
+  const revenueCurrency = analyticsData?.currency === 'PKR' ? 'PKR' : 'USD';
 
-  const loading = productsLoading || categoriesLoading;
-  const hasError = productsError || categoriesError;
+  const loading = productsLoading || categoriesLoading || ordersLoading || analyticsLoading;
+  const hasError = productsError || categoriesError || ordersError || analyticsError;
 
   return (
     <div className="space-y-6">
@@ -38,14 +50,23 @@ export function DashboardOverview() {
       <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <StatsCard
           label="Revenue (30d)"
-          value={loading ? '…' : '—'}
-          delta="Reporting API not configured"
+          value={
+            loading
+              ? '…'
+              : formatPrice(revenue30d, {
+                  currency: revenueCurrency,
+                  locale: revenueCurrency === 'PKR' ? 'en-PK' : 'en-US',
+                  minimumFractionDigits: 0,
+                  maximumFractionDigits: 0,
+                })
+          }
+          delta={`${analyticsData?.ordersLast30d ?? 0} orders in last ${analyticsData?.windowDays ?? 30} days`}
           icon={<BarChart3 className="h-4 w-4" />}
         />
         <StatsCard
           label="Orders (admin)"
-          value={loading ? '…' : '—'}
-          delta="Admin order list API not available"
+          value={loading ? '…' : String(ordersTotal)}
+          delta="From admin order records"
           icon={<ShoppingCart className="h-4 w-4" />}
         />
         <StatsCard

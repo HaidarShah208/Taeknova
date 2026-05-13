@@ -15,6 +15,23 @@ export default function AdminAnalyticsPage() {
     productsData?.items.filter(
       (p) => p.stockStatus === 'LOW_STOCK' || p.stockStatus === 'OUT_OF_STOCK',
     ).length ?? 0;
+  const productStatusSeries = [
+    {
+      label: 'Approved',
+      value: productsData?.items.filter((p) => p.status === 'APPROVED').length ?? 0,
+      toneClass: 'bg-emerald-500',
+    },
+    {
+      label: 'Pending',
+      value: productsData?.items.filter((p) => p.status === 'PENDING').length ?? 0,
+      toneClass: 'bg-amber-500',
+    },
+    {
+      label: 'Rejected',
+      value: productsData?.items.filter((p) => p.status === 'REJECTED').length ?? 0,
+      toneClass: 'bg-rose-500',
+    },
+  ];
 
   return (
     <>
@@ -30,6 +47,7 @@ export default function AdminAnalyticsPage() {
           productsTotal={productsTotal}
           categoriesCount={categoriesCount}
           lowStockProducts={lowStockProducts}
+          productStatusSeries={productStatusSeries}
           isLoading={productsLoading || categoriesLoading}
         />
       </div>

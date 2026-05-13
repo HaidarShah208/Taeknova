@@ -25,6 +25,15 @@ function snapshotRecipient(o: OrderDto): string {
   return '—';
 }
 
+function orderDisplayName(o: OrderDto): string {
+  const firstLine = o.items?.[0];
+  if (firstLine?.productName?.trim()) {
+    const extra = (o.items?.length ?? 0) - 1;
+    return extra > 0 ? `${firstLine.productName} +${extra} more` : firstLine.productName;
+  }
+  return `Order ${o.id.slice(0, 8)}`;
+}
+
 function orderStatusTone(s: string): 'success' | 'warning' | 'danger' | 'neutral' {
   if (s === 'DELIVERED') return 'success';
   if (s === 'SHIPPED') return 'success';
@@ -87,25 +96,23 @@ export function OrdersManagement() {
         {isLoading ? (
           <p className="text-sm text-slate-600">Loading orders…</p>
         ) : (
-          <div className="max-w-full overflow-x-auto">
+          <div className="w-full max-w-full overflow-x-auto">
             <DataTable
               data={items}
               getRowKey={(row) => row.id}
               emptyMessage="No orders yet. Customer checkouts will appear here."
-              tableClassName="min-w-[1180px]"
+              tableClassName="min-w-[1400px]"
               columns={[
                 {
                   key: 'id',
-                  header: 'Order',
-                  render: (row) => (
-                    <span className="font-mono text-xs text-slate-700">{row.id.slice(0, 8)}…</span>
-                  ),
+                  header: 'Order name',
+                  render: (row) => <span className="text-sm font-medium text-slate-800">{orderDisplayName(row)}</span>,
                 },
                 {
                   key: 'customer',
                   header: 'Customer',
                   render: (row) => (
-                    <div className="min-w-[140px]">
+                    <div className="">
                       <p className="truncate text-sm font-medium text-slate-900">
                         {row.user?.fullName ?? '—'}
                       </p>
