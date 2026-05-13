@@ -77,13 +77,7 @@ export function InventoryManagement() {
         )}
       </AdminCard>
 
-      <AdminCard title="Inventory alerts">
-        <div className="flex items-start gap-2 rounded-lg border border-amber-400/30 bg-amber-500/10 p-3 text-sm text-amber-900">
-          <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0" />
-          Thresholds are illustrative. Wire PATCH /inventory/stock from the product editor when you add
-          inline stock updates.
-        </div>
-      </AdminCard>
+       
     </div>
   );
 }

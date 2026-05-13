@@ -4,6 +4,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 import { useAppDispatch, useAppSelector } from '@redux';
 import { Container } from '@components/ui/Container';
+import { Button } from '@components/ui/Button';
 import { PRIMARY_NAV } from '@constants/navigation';
 import { ROUTES } from '@constants/routes';
 import env from '@lib/env';
@@ -138,18 +139,28 @@ export function Navbar() {
               )}
             </Link>
 
-            <button
-              type="button"
-              onClick={() =>
-                isAuthenticated
-                  ? navigate(isAdmin ? ROUTES.adminDashboard : ROUTES.dashboardProfile)
-                  : navigate(ROUTES.login)
-              }
-              aria-label={isAuthenticated ? 'Account' : 'Sign in'}
-              className="hidden h-10 w-10 items-center justify-center rounded-lg text-foreground transition-colors hover:bg-muted sm:inline-flex"
-            >
-              <User className="h-5 w-5" aria-hidden="true" />
-            </button>
+            {isAuthenticated ? (
+              <button
+                type="button"
+                onClick={() =>
+                  navigate(isAdmin ? ROUTES.adminDashboard : ROUTES.dashboardProfile)
+                }
+                aria-label="Account"
+                className="hidden h-10 w-10 items-center justify-center rounded-lg text-foreground transition-colors hover:bg-muted sm:inline-flex"
+              >
+                <User className="h-5 w-5" aria-hidden="true" />
+              </button>
+            ) : (
+              <Button
+                type="button"
+                size="sm"
+                variant="outline"
+                className="hidden sm:inline-flex"
+                onClick={() => navigate(ROUTES.login)}
+              >
+                Login
+              </Button>
+            )}
 
             <button
               type="button"

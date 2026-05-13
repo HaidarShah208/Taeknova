@@ -1,5 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Lock, Mail, User } from 'lucide-react';
+import { Eye, EyeOff, Lock, Mail, User } from 'lucide-react';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
@@ -18,6 +19,8 @@ export default function RegisterPage() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const [registerUser, { isLoading: isApiRegister }] = useRegisterMutation();
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const {
     register,
@@ -105,19 +108,39 @@ export default function RegisterPage() {
           <FormField
             name="password"
             label="Password"
-            type="password"
+            type={showPassword ? 'text' : 'password'}
             autoComplete="new-password"
             placeholder="At least 8 characters"
             leftIcon={<Lock className="h-4 w-4" />}
+            rightIcon={
+              <button
+                type="button"
+                onClick={() => setShowPassword((prev) => !prev)}
+                className="inline-flex items-center text-muted-foreground transition-colors hover:text-foreground"
+                aria-label={showPassword ? 'Hide password' : 'Show password'}
+              >
+                {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+              </button>
+            }
             register={register}
             errors={errors}
           />
           <FormField
             name="confirmPassword"
             label="Confirm password"
-            type="password"
+            type={showConfirmPassword ? 'text' : 'password'}
             autoComplete="new-password"
             leftIcon={<Lock className="h-4 w-4" />}
+            rightIcon={
+              <button
+                type="button"
+                onClick={() => setShowConfirmPassword((prev) => !prev)}
+                className="inline-flex items-center text-muted-foreground transition-colors hover:text-foreground"
+                aria-label={showConfirmPassword ? 'Hide password' : 'Show password'}
+              >
+                {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+              </button>
+            }
             register={register}
             errors={errors}
           />

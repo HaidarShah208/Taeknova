@@ -29,7 +29,7 @@ export function DataTable<T>({
   columns,
   getRowKey,
   emptyMessage = 'No records found.',
-  tableClassName = 'min-w-[1024px]',
+  tableClassName = 'min-w-full',
 }: DataTableProps<T>) {
   return (
     <Table className={tableClassName}>

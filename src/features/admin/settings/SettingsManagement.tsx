@@ -2,7 +2,7 @@ import { CategoryManagement } from '@features/admin/categories/CategoryManagemen
 
 export function SettingsManagement() {
   return (
-    <div className="mx-auto max-w-5xl">
+    <div className="">
       <header className="mb-6">
         <h1 className="text-xl font-semibold tracking-tight text-slate-900">Settings</h1>
         <p className="mt-1 text-sm text-slate-500">Categories used when you create products.</p>

@@ -1,17 +1,24 @@
-import { useState } from 'react';
+import { Trash2 } from 'lucide-react';
+import { useMemo, useState } from 'react';
 import { toast } from 'sonner';
 
-import type { AdminUserRecord } from '@app-types/admin';
-import { AdminCard, DataTable, StatusBadge } from '@components/admin';
+import { AdminCard, ConfirmModal, DataTable, StatusBadge } from '@components/admin';
 import { Button } from '@components/ui/Button';
-import { useAdminCreateAdminUserMutation } from '@redux/admin';
+import {
+  useAdminCreateAdminUserMutation,
+  useAdminListUsersQuery,
+  useAdminRemoveUserMutation,
+} from '@redux/admin';
 
 export function UsersManagement() {
-  const [rows, setRows] = useState<AdminUserRecord[]>([]);
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [createAdmin, { isLoading }] = useAdminCreateAdminUserMutation();
+  const [deletingUserId, setDeletingUserId] = useState<string | null>(null);
+
+  const { data: rows = [], isLoading, isError, refetch } = useAdminListUsersQuery();
+  const [createAdmin, { isLoading: isCreatingAdmin }] = useAdminCreateAdminUserMutation();
+  const [removeUser, { isLoading: isRemoving }] = useAdminRemoveUserMutation();
 
   const handleCreate = async () => {
     if (!fullName.trim() || !email.trim() || !password) {
@@ -24,7 +31,10 @@ export function UsersManagement() {
         email: email.trim().toLowerCase(),
         password,
       }).unwrap();
-      setRows((prev) => [user, ...prev]);
+      if (!user?.id) {
+        toast.error('Unexpected response while creating admin');
+        return;
+      }
       setFullName('');
       setEmail('');
       setPassword('');
@@ -34,54 +44,47 @@ export function UsersManagement() {
     }
   };
 
+  const deletingUser = useMemo(
+    () => rows.find((row) => row.id === deletingUserId) ?? null,
+    [rows, deletingUserId],
+  );
+
+  const handleRemoveUser = async () => {
+    if (!deletingUserId) return;
+    try {
+      await removeUser(deletingUserId).unwrap();
+      toast.success('User account removed');
+      setDeletingUserId(null);
+    } catch {
+      toast.error('Could not remove user account');
+    }
+  };
+
   return (
     <div className="space-y-6">
-      <AdminCard
-        title="Create admin user"
-        description="There is no GET /users directory in the API yet. New admins appear in the table below after a successful create."
-      >
-        <div className="grid gap-3 sm:grid-cols-2">
-          <label className="text-sm">
-            <span className="text-slate-700">Full name</span>
-            <input
-              value={fullName}
-              onChange={(e) => setFullName(e.target.value)}
-              className="mt-1 h-10 w-full rounded-lg border border-slate-300 px-3"
-            />
-          </label>
-          <label className="text-sm">
-            <span className="text-slate-700">Email</span>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="mt-1 h-10 w-full rounded-lg border border-slate-300 px-3"
-            />
-          </label>
-          <label className="text-sm sm:col-span-2">
-            <span className="text-slate-700">Password</span>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="mt-1 h-10 w-full rounded-lg border border-slate-300 px-3"
-            />
-          </label>
-        </div>
-        <Button type="button" className="mt-4" onClick={() => void handleCreate()} isLoading={isLoading}>
-          Create admin
-        </Button>
-      </AdminCard>
+   
 
-      <AdminCard title="Recently created (this session)" description="Rows returned from POST /users/admins.">
+      <AdminCard
+        title="All users"
+        description="All accounts from the user side and admin side. Removing an account blocks future login for that user."
+      >
+        {isError ? <p className="mb-3 text-sm text-red-700">Could not load users.</p> : null}
+        {isLoading ? (
+          <p className="text-sm text-slate-600">Loading users…</p>
+        ) : (
         <DataTable
           data={rows}
           getRowKey={(row) => row.id}
-          emptyMessage="No admins created in this session yet."
+          emptyMessage="No users found."
           columns={[
             { key: 'name', header: 'Name', render: (row) => row.fullName },
             { key: 'email', header: 'Email', render: (row) => row.email },
             { key: 'role', header: 'Role', render: (row) => row.role },
+            {
+              key: 'createdAt',
+              header: 'Joined',
+              render: (row) => new Date(row.createdAt).toLocaleDateString(),
+            },
             {
               key: 'status',
               header: 'Status',
@@ -92,9 +95,47 @@ export function UsersManagement() {
                 />
               ),
             },
+            {
+              key: 'actions',
+              header: '',
+              render: (row) => (
+                <button
+                  type="button"
+                  disabled={!row.isActive}
+                  onClick={() => setDeletingUserId(row.id)}
+                  className="rounded-md border border-red-200 p-1.5 text-red-600 transition-colors hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-40"
+                  aria-label={`Remove ${row.fullName}`}
+                >
+                  <Trash2 className="h-3.5 w-3.5" />
+                </button>
+              ),
+            },
           ]}
         />
+        )}
+        {isError ? (
+          <button
+            type="button"
+            onClick={() => void refetch()}
+            className="mt-3 text-sm font-semibold text-primary underline"
+          >
+            Retry
+          </button>
+        ) : null}
       </AdminCard>
+      <ConfirmModal
+        isOpen={Boolean(deletingUser)}
+        title="Remove user account"
+        description={
+          deletingUser
+            ? `${deletingUser.fullName} (${deletingUser.email}) will no longer be able to log in.`
+            : 'Selected user account will be removed.'
+        }
+        confirmLabel="Remove account"
+        onClose={() => setDeletingUserId(null)}
+        onConfirm={() => void handleRemoveUser()}
+      />
+      {isRemoving ? <p className="text-xs text-slate-500">Removing account…</p> : null}
     </div>
   );
 }

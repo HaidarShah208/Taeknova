@@ -1,5 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Lock, Mail } from 'lucide-react';
+import { Eye, EyeOff, Lock, Mail } from 'lucide-react';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
@@ -19,6 +20,7 @@ export default function LoginPage() {
   const navigate = useNavigate();
   const location = useLocation();
   const [adminLogin, { isLoading: isApiLogin }] = useAdminLoginMutation();
+  const [showPassword, setShowPassword] = useState(false);
   const redirectTo =
     (location.state as { from?: string } | null)?.from ?? ROUTES.dashboard;
 
@@ -105,10 +107,20 @@ export default function LoginPage() {
           <FormField
             name="password"
             label="Password"
-            type="password"
+            type={showPassword ? 'text' : 'password'}
             autoComplete="current-password"
             placeholder="Your password"
             leftIcon={<Lock className="h-4 w-4" />}
+            rightIcon={
+              <button
+                type="button"
+                onClick={() => setShowPassword((prev) => !prev)}
+                className="inline-flex items-center text-muted-foreground transition-colors hover:text-foreground"
+                aria-label={showPassword ? 'Hide password' : 'Show password'}
+              >
+                {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+              </button>
+            }
             register={register}
             errors={errors}
           />
