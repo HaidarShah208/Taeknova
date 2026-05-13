@@ -22,8 +22,8 @@ export default function HomePage() {
       <HeroSection />
       <TrustBarSection />
       <CategoriesSection />
-      <FeaturedProductsSection />
       <WhyChooseUsSection />
+      <FeaturedProductsSection />
       <ProcessSection />
       <NewArrivalsSection />
       <TeamShowcaseSection />

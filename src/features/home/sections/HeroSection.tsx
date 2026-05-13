@@ -3,6 +3,7 @@ import {
   ArrowRight,
   Sparkles,
 } from 'lucide-react';
+import taekwondo from '../../../assets/home/taekwondo.jpg'
 import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 
@@ -87,7 +88,7 @@ export function HeroSection() {
     <section className="relative overflow-hidden bg-foreground text-background">
       <div className="absolute inset-0 -z-0">
         <img
-          src="https://picsum.photos/seed/tikwando-hero/1800/1200"
+          src={taekwondo}
           alt=""
           aria-hidden="true"
           className="h-full w-full object-cover"
@@ -148,16 +149,16 @@ export function HeroSection() {
          
         </motion.div>
 
-        <motion.div
+        {/* <motion.div
           initial={{ opacity: 0, scale: 0.96 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.7, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
           className="relative hidden lg:col-span-5 lg:block"
         >
           <div className="absolute -inset-x-4 -inset-y-2 rounded-[2rem] bg-gradient-to-br from-primary/30 via-transparent to-background/10 blur-2xl" />
-          <div className="relative overflow-hidden rounded-[2rem] border border-background/20 bg-background/5 backdrop-blur">
+          <div className="relative overflow-hidden rounded-[2rem]   bg-background/5 backdrop-blur">
             <img
-              src="https://picsum.photos/seed/tikwando-hero-card/900/1100"
+              src={home}
               alt="Athlete in custom Tiknova kit"
               className="h-[34rem] w-full object-cover"
             />
@@ -173,21 +174,21 @@ export function HeroSection() {
                 <p className="text-sm font-bold">Apex Pro Soccer Kit</p>
               </div>
               <span className="rounded-full bg-primary px-3 py-1 text-xs font-bold text-primary-foreground">
-                $129
+                Rs. 4000
               </span>
             </div>
           </div>
-        </motion.div>
+        </motion.div> */}
       </Container>
 
       <div
         ref={statsRef}
-        className="relative z-10 border-background/10 bg-foreground/40 backdrop-blur"
+        className="relative mt-32 z-10 border-background/10 bg-foreground/40 backdrop-blur"
       >
         <Container>
-          <ul className="grid grid-cols-2 gap-y-6 py-6 sm:grid-cols-4 sm:py-8">
+          <ul className="mx-auto grid max-w-full grid-cols-2 justify-items-center gap-x-6 gap-y-8 py-6 text-center sm:grid-cols-4 sm:gap-x-8 sm:py-8">
             {STATS.map((stat) => (
-              <li key={stat.label} className="text-center sm:text-left">
+              <li key={stat.label}>
                 <p className="font-display text-2xl font-bold tracking-tight text-background sm:text-3xl">
                   <CountUp
                     end={stat.end}

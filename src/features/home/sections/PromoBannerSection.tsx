@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
 import { ArrowRight, BadgePercent, Truck, Users } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import jump from '../../../assets/home/flying.jpg'
 
 import { buttonVariants } from '@components/ui/Button';
 import { Container } from '@components/ui/Container';
@@ -26,7 +27,7 @@ export function PromoBannerSection() {
         >
           <div className="absolute inset-0 -z-0 opacity-30">
             <img
-              src="https://picsum.photos/seed/tikwando-promo/1600/700"
+              src={jump}
               alt=""
               aria-hidden="true"
               className="h-full w-full object-cover mix-blend-overlay"

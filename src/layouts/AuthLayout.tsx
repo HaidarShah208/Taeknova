@@ -2,6 +2,7 @@ import { Outlet } from 'react-router-dom';
 
 import { Logo } from '@components/layout/Logo';
 import { APP_TAGLINE } from '@constants/app';
+import authImg from '../assets/auth/auth.jpg'
 
 export function AuthLayout() {
   return (
@@ -9,7 +10,7 @@ export function AuthLayout() {
       <aside className="relative hidden overflow-hidden bg-foreground text-background lg:flex lg:flex-col lg:justify-between lg:p-10">
         <div className="absolute inset-0 -z-0 opacity-50">
           <img
-            src="https://picsum.photos/seed/tikwando-auth/1200/1600"
+            src={authImg}
             alt=""
             aria-hidden="true"
             className="h-full w-full object-cover"
