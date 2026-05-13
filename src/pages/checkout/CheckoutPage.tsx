@@ -378,7 +378,7 @@ export default function CheckoutPage() {
                   isLoading={saving}
                   rightIcon={<ArrowRight className="h-4 w-4" />}
                 >
-                  Place order
+                  Proceed Next
                 </Button>
               </div>
             </CardContent>

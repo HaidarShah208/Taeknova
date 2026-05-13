@@ -1,5 +1,5 @@
-import { Building2, Smartphone, Upload } from 'lucide-react';
-import { useEffect, useMemo, useState } from 'react';
+import { CheckCircle2, Upload } from 'lucide-react';
+import { type JSX, useEffect, useMemo, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 
@@ -8,6 +8,9 @@ import { PageMeta } from '@components/layout/PageMeta';
 import { Button } from '@components/ui/Button';
 import { Card, CardContent } from '@components/ui/Card';
 import { Container } from '@components/ui/Container';
+import jazzcash from '../../assets/paymentLogo/new-Jazzcash-logo.png'
+import easypesa from '../../assets/paymentLogo/Easypaisa-logo.png'
+import meezanbank from '../../assets/paymentLogo/meezan-bank-logo.png'
 import {
   CHECKOUT_HELP_PHONE,
   CHECKOUT_PAYMENT_METHOD,
@@ -47,10 +50,23 @@ export interface CheckoutPaymentLocationState {
   prefetchedTotal?: number;
 }
 
-function methodIcon(key: ManualPaymentKey) {
-  if (key === 'MEEZAN_BANK') return <Building2 className="h-6 w-6" aria-hidden />;
-  return <Smartphone className="h-6 w-6" aria-hidden />;
-}
+const PAYMENT_BRAND_STYLES: Record<ManualPaymentKey, { initials: string; bg: string; icon: JSX.Element }> = {
+  EASYPAISA: {
+    initials: 'EP',
+    bg: 'bg-emerald-600',
+    icon: <img src={easypesa} className='w-12 h-9'/>,
+  },
+  JAZZCASH: {
+    initials: 'JC',
+    bg: 'bg-rose-600',
+    icon: <img src={jazzcash} className='w-12 h-9'/>,
+  },
+  MEEZAN_BANK: {
+    initials: 'MB',
+    bg: 'bg-indigo-600',
+    icon: <img src={meezanbank} className='w-12 h-12'/>,
+  },
+};
 
 export default function CheckoutPaymentPage() {
   const navigate = useNavigate();
@@ -87,7 +103,14 @@ export default function CheckoutPaymentPage() {
   }, [state?.mock, state?.mockTotal, state?.prefetchedTotal, summary?.totalAmount]);
 
   const codTotal = baseTotal + COD_FEE_PKR;
-  const selectedAccount = MANUAL_PAYMENT_ACCOUNTS.find((a) => a.key === manualKey) ?? MANUAL_PAYMENT_ACCOUNTS[0];
+  const selectedAccount =
+    MANUAL_PAYMENT_ACCOUNTS.find((a) => a.key === manualKey) ??
+    MANUAL_PAYMENT_ACCOUNTS[0] ?? {
+      key: 'EASYPAISA' as ManualPaymentKey,
+      label: 'Easypaisa',
+      shortLabel: 'Easypaisa',
+      lines: [],
+    };
 
   const busy = placing || uploading;
 
@@ -172,8 +195,8 @@ export default function CheckoutPaymentPage() {
           Choose how you will pay. For bank or wallet transfers, upload proof after sending the amount.
         </p>
 
-        <div className="mx-auto mt-10 max-w-lg">
-          <Card className="overflow-hidden border-border/80 shadow-sm">
+        <div className="mx-auto mt-10 max-w-2xl">
+          <Card className="overflow-hidden border-border/80 bg-gradient-to-b from-card to-muted/10 shadow-card">
             <CardContent className="space-y-6 p-6 sm:p-8">
               <div className="grid grid-cols-2 gap-3">
                 <button
@@ -205,6 +228,15 @@ export default function CheckoutPaymentPage() {
               {apiMode && summaryLoading && (
                 <p className="text-sm text-muted-foreground">Updating your total…</p>
               )}
+
+              <div className="rounded-xl border border-border/70 bg-background/60 px-4 py-3">
+                <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                  Current total
+                </p>
+                <p className="mt-1 text-xl font-bold tabular-nums text-foreground">
+                  {formatPrice(baseTotal, PKR)}
+                </p>
+              </div>
 
               {category === 'cod' ? (
                 <div className="space-y-5">
@@ -238,7 +270,7 @@ export default function CheckoutPaymentPage() {
                 </div>
               ) : (
                 <div className="space-y-6">
-                  <div>
+                  <div className="rounded-xl border border-border/70 bg-background/50 p-4">
                     <p className="text-sm font-semibold text-foreground">Step 1: Send payment</p>
                     <p className="mt-1 text-xs text-muted-foreground">
                       Send the required amount to the selected account, then upload your screenshot below.
@@ -256,13 +288,17 @@ export default function CheckoutPaymentPage() {
                           type="button"
                           onClick={() => setManualKey(acc.key)}
                           className={cn(
-                            'flex flex-col items-center gap-2 rounded-xl border-2 px-2 py-3 text-center text-xs font-semibold transition-colors',
+                            'flex flex-col items-center gap-2 rounded-xl border-2 px-2 py-3 text-center text-xs font-semibold transition-all',
                             manualKey === acc.key
-                              ? 'border-primary bg-primary/5 text-foreground'
+                              ? 'border-primary bg-primary/10 text-foreground shadow-soft'
                               : 'border-border bg-muted/30 text-muted-foreground hover:bg-muted/60',
                           )}
                         >
-                          {methodIcon(acc.key)}
+                           
+                          <span className="inline-flex items-center text-muted-foreground">
+                            {PAYMENT_BRAND_STYLES[acc.key].icon}
+                             
+                          </span>
                           <span className="leading-tight">{acc.shortLabel}</span>
                         </button>
                       ))}
@@ -285,7 +321,7 @@ export default function CheckoutPaymentPage() {
                     <p className="text-xl font-bold tabular-nums">{formatPrice(baseTotal, PKR)}</p>
                   </div>
 
-                  <div className="space-y-2 border-t border-border pt-5">
+                  <div className="space-y-2 rounded-xl border border-border/70 bg-background/50 p-4">
                     <p className="text-sm font-semibold text-foreground">Step 2: Upload screenshot</p>
                     <p className="text-xs text-muted-foreground">
                       After payment, take a clear screenshot and upload it here (JPG or PNG, max 5MB).
@@ -315,7 +351,7 @@ export default function CheckoutPaymentPage() {
                   <Button
                     fullWidth
                     size="lg"
-                    className="bg-foreground font-semibold uppercase tracking-wide text-background"
+                    className="font-semibold uppercase tracking-wide"
                     isLoading={busy}
                     onClick={() => void submitManual()}
                   >
@@ -324,6 +360,10 @@ export default function CheckoutPaymentPage() {
                 </div>
               )}
 
+              <div className="flex items-center justify-center gap-2 border-t border-border pt-4 text-xs text-muted-foreground">
+                <CheckCircle2 className="h-4 w-4 text-primary" aria-hidden />
+                <span>Secure confirmation flow</span>
+              </div>
               <p className="text-center text-xs text-muted-foreground">
                 Need help? Call{' '}
                 <a href={`tel:${CHECKOUT_HELP_PHONE}`} className="font-semibold text-primary underline-offset-2 hover:underline">

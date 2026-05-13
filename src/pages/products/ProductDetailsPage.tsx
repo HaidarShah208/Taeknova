@@ -6,7 +6,6 @@ import { toast } from 'sonner';
 import { Breadcrumb } from '@components/shared/Breadcrumb';
 import { PriceTag } from '@components/shared/PriceTag';
 import { ProductGrid } from '@components/shared/ProductGrid';
-import { QuantitySelector } from '@components/shared/QuantitySelector';
 import { RatingStars } from '@components/shared/RatingStars';
 import { PageMeta } from '@components/layout/PageMeta';
 import { Accordion, AccordionItem } from '@components/ui/Accordion';
@@ -268,13 +267,7 @@ export default function ProductDetailsPage() {
 
               <div className="flex flex-col gap-2">
                 <div className="flex flex-wrap items-center gap-3">
-                  <QuantitySelector
-                    value={quantity}
-                    onChange={setQuantity}
-                    max={Math.max(1, remainingStock)}
-                    min={1}
-                    disabled={!canAddToCart}
-                  />
+                 
                   <Button
                     size="lg"
                     onClick={() => void handleAddToCart()}

@@ -1,4 +1,4 @@
-/** Must match backend `CheckoutPaymentMethod`. */
+
 export const CHECKOUT_PAYMENT_METHOD = {
   COD: 'COD',
   EASYPAISA: 'EASYPAISA',
@@ -10,7 +10,7 @@ export type CheckoutPaymentMethodId = (typeof CHECKOUT_PAYMENT_METHOD)[keyof typ
 
 export const COD_FEE_PKR = 100;
 
-export const CHECKOUT_HELP_PHONE = '03164288921';
+export const CHECKOUT_HELP_PHONE = '0310-7580073';
 
 export type ManualPaymentKey = 'EASYPAISA' | 'JAZZCASH' | 'MEEZAN_BANK';
 
@@ -18,7 +18,6 @@ export interface ManualPaymentAccount {
   key: ManualPaymentKey;
   label: string;
   shortLabel: string;
-  /** Lines shown in the detail panel */
   lines: { label: string; value: string }[];
 }
 
@@ -28,8 +27,8 @@ export const MANUAL_PAYMENT_ACCOUNTS: ManualPaymentAccount[] = [
     label: 'Easypaisa',
     shortLabel: 'Easypaisa',
     lines: [
-      { label: 'Account number', value: '0346-7383686' },
-      { label: 'Account name', value: 'Ali Raza — Easypaisa' },
+      { label: 'Account number', value: '03107580073' },
+      { label: 'Account name', value: 'Ali Haidar — Easypaisa' },
     ],
   },
   {
@@ -37,8 +36,8 @@ export const MANUAL_PAYMENT_ACCOUNTS: ManualPaymentAccount[] = [
     label: 'JazzCash',
     shortLabel: 'JazzCash',
     lines: [
-      { label: 'Account number', value: '0300-0000000' },
-      { label: 'Account name', value: 'Ali Raza — JazzCash' },
+      { label: 'Account number', value: '0307-9732429' },
+      { label: 'Account name', value: 'Ali Haidar — JazzCash' },
     ],
   },
   {
@@ -46,10 +45,9 @@ export const MANUAL_PAYMENT_ACCOUNTS: ManualPaymentAccount[] = [
     label: 'Meezan Bank',
     shortLabel: 'Meezan Bank',
     lines: [
-      { label: 'Account holder', value: 'Ali Raza — Meezan Bank' },
-      { label: 'Branch', value: 'Meezan Bank — CHINIOT BRANCH' },
-      { label: 'Account no.', value: '48010104279973' },
-      { label: 'IBAN', value: 'PK58MEZN0048010104279973' },
+      { label: 'Account holder', value: 'Ali Haidar — Meezan Bank' },
+      { label: 'Account no.', value: '02750113164681' },
+      { label: 'IBAN', value: 'PK44MEZN0002750113164681' },
     ],
   },
 ];

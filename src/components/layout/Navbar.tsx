@@ -8,7 +8,7 @@ import { PRIMARY_NAV } from '@constants/navigation';
 import { ROUTES } from '@constants/routes';
 import env from '@lib/env';
 import { selectIsAdmin, selectIsAuthenticated } from '@redux/auth';
-import { selectCartCount } from '@redux/cart';
+import { selectCartItems } from '@redux/cart';
 import { useGetCartQuery, useGetWishlistQuery } from '@redux/customer';
 import {
   selectCartDrawerOpen,
@@ -32,7 +32,7 @@ export function Navbar() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const localCartCount = useAppSelector(selectCartCount);
+  const localCartItems = useAppSelector(selectCartItems);
   const wishlistIds = useAppSelector(selectWishlistIds);
   const isAuthenticated = useAppSelector(selectIsAuthenticated);
   const { data: serverCart } = useGetCartQuery(undefined, {
@@ -43,8 +43,12 @@ export function Navbar() {
   });
 
   const cartBadge = env.enableMockApi
-    ? localCartCount
-    : (serverCart ?? []).reduce((n, line) => n + line.quantity, 0);
+    ? new Set(localCartItems.map((item) => item.productId)).size
+    : new Set(
+        (serverCart ?? [])
+          .map((line) => line.variant?.product?.id ?? line.variant?.productId ?? '')
+          .filter(Boolean),
+      ).size;
   const wishlistCount = env.enableMockApi ? wishlistIds.length : (serverWishlist?.length ?? 0);
   const isAdmin = useAppSelector(selectIsAdmin);
   const isSearchOpen = useAppSelector(selectSearchOpen);
