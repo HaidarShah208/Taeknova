@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
@@ -5,10 +6,24 @@ import { ProductSlider } from '@components/shared/ProductSlider';
 import { SectionWrapper } from '@components/shared/SectionWrapper';
 import { Loader } from '@components/ui/Loader';
 import { ROUTES } from '@constants/routes';
+import env from '@lib/env';
+import { useListPublicFeaturedQuery } from '@redux/customer';
 import { useGetFeaturedProductsQuery } from '@redux/products';
+import { mapPublicProductToUi } from '@services/catalogMappers';
+
+const FEATURED_LIMIT = 8;
 
 export function FeaturedProductsSection() {
-  const { data, isLoading } = useGetFeaturedProductsQuery(8);
+  const useApi = !env.enableMockApi;
+  const mock = useGetFeaturedProductsQuery(FEATURED_LIMIT, { skip: useApi });
+  const api = useListPublicFeaturedQuery(FEATURED_LIMIT, { skip: !useApi });
+
+  const products = useMemo(() => {
+    if (useApi) return (api.data ?? []).map(mapPublicProductToUi);
+    return mock.data ?? [];
+  }, [useApi, api.data, mock.data]);
+
+  const isLoading = useApi ? api.isLoading : mock.isLoading;
 
   return (
     <SectionWrapper
@@ -40,7 +55,7 @@ export function FeaturedProductsSection() {
           <Loader size="lg" />
         </div>
       ) : (
-        <ProductSlider products={data ?? []} />
+        <ProductSlider products={products} />
       )}
     </SectionWrapper>
   );

@@ -3,6 +3,7 @@ import type { FetchArgs, FetchBaseQueryError } from '@reduxjs/toolkit/query';
 
 import type { User } from '@app-types/auth';
 import { STORAGE_KEYS } from '@constants/app';
+import { ROUTES } from '@constants/routes';
 import env from '@lib/env';
 import { getJwtExpiryMs } from '@lib/jwtClient';
 import { clearSession, setAccessToken, setSession } from '@redux/auth';
@@ -25,14 +26,31 @@ const rawBaseQuery = fetchBaseQuery({
 
 let refreshPromise: Promise<boolean> | null = null;
 
-function isAuthRefreshRequest(args: string | FetchArgs): boolean {
+function isPublicAuthPath(args: string | FetchArgs): boolean {
   const url = typeof args === 'string' ? args : args.url;
-  return url.includes('/auth/refresh');
+  return (
+    url.includes('/auth/refresh') ||
+    url.includes('/auth/login') ||
+    url.includes('/auth/register') ||
+    url.includes('/auth/forgot-password') ||
+    url.includes('/auth/reset-password') ||
+    url.includes('/auth/verify-email')
+  );
 }
 
-function isAuthLoginRequest(args: string | FetchArgs): boolean {
-  const url = typeof args === 'string' ? args : args.url;
-  return url.includes('/auth/login') || url.includes('/auth/register');
+function redirectToLoginAfterSessionLoss(): void {
+  if (typeof window === 'undefined') return;
+  const path = window.location.pathname;
+  if (
+    path.startsWith(ROUTES.login) ||
+    path.startsWith(ROUTES.register) ||
+    path.startsWith(ROUTES.forgotPassword) ||
+    path.startsWith(ROUTES.resetPassword) ||
+    path.startsWith(ROUTES.verifyEmail)
+  ) {
+    return;
+  }
+  window.location.assign(ROUTES.login);
 }
 
 async function trySilentRefresh(api: Parameters<BaseQueryFn>[1]): Promise<boolean> {
@@ -83,17 +101,21 @@ const baseQueryWithReauth: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQue
   let result = await rawBaseQuery(args, api, extraOptions);
 
   if (result.error?.status === 401 && !env.enableMockApi) {
-    if (isAuthRefreshRequest(args) || isAuthLoginRequest(args)) {
+    if (isPublicAuthPath(args)) {
       if (result.error && env.isDev) {
         console.error('[RTK Query]', result.error.status, result.error.data);
       }
       return result;
     }
+
     const refreshed = await trySilentRefresh(api);
     if (refreshed) {
       result = await rawBaseQuery(args, api, extraOptions);
-    } else {
+    }
+
+    if (result.error?.status === 401) {
       api.dispatch(clearSession());
+      redirectToLoginAfterSessionLoss();
     }
   }
 

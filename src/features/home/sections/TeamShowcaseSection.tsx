@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import { Badge } from '@components/ui/Badge';
 import { SectionWrapper } from '@components/shared/SectionWrapper';
 import { ROUTES } from '@constants/routes';
+import hassan from '../../../assets/team/hassan.jpeg'
 import { cn } from '@lib/cn';
 
 interface ShowcaseTeam {
@@ -17,10 +18,10 @@ interface ShowcaseTeam {
 
 const TEAMS: ShowcaseTeam[] = [
   {
-    name: 'FC Aurora United',
+    name: 'Ali Hassan Shah',
     category: 'Soccer · Premier club',
     description: 'Custom kits and training wear for a 240-player academy.',
-    image: 'https://picsum.photos/seed/tikwando-team-1/1100/1400',
+    image: hassan,
     span: 'lg:col-span-7 lg:row-span-2',
   },
   {
