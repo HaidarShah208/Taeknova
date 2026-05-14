@@ -22,13 +22,16 @@ export function useProductFiltersFromUrl(): {
     if (search) out.search = search;
 
     for (const key of ARRAY_KEYS) {
+      if (key === 'categories') continue;
       const values = params.getAll(key);
       if (values.length > 0) out[key] = values;
     }
 
     if (slugCategory) {
-      const merged = new Set([...(out.categories ?? []), slugCategory]);
-      out.categories = Array.from(merged);
+      out.categories = [slugCategory];
+    } else {
+      const catValues = params.getAll('categories');
+      if (catValues.length > 0) out.categories = [catValues[0]];
     }
 
     const priceMin = params.get('priceMin');

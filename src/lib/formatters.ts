@@ -8,12 +8,11 @@ export interface FormatPriceOptions {
 }
 
 export function formatPrice(value: number, options: FormatPriceOptions = {}): string {
-  const {
-    currency = 'USD',
-    locale = 'en-US',
-    minimumFractionDigits = 2,
-    maximumFractionDigits = 2,
-  } = options;
+  const currency = options.currency ?? 'USD';
+  const isPkr = currency === 'PKR';
+  const locale = options.locale ?? (isPkr ? 'en-PK' : 'en-US');
+  const minimumFractionDigits = options.minimumFractionDigits ?? (isPkr ? 0 : 2);
+  const maximumFractionDigits = options.maximumFractionDigits ?? (isPkr ? 0 : 2);
 
   const key = `${locale}-${currency}-${minimumFractionDigits}-${maximumFractionDigits}`;
   let formatter = currencyFormatters.get(key);

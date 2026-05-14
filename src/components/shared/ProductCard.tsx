@@ -1,8 +1,9 @@
-import { Heart, Share2, ShoppingBag } from 'lucide-react';
-import { memo, useCallback, useState } from 'react';
+import { Eye, Heart, Share2, ShoppingBag } from 'lucide-react';
+import { memo, useCallback, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import { Badge } from '@components/ui/Badge';
+import { Modal } from '@components/ui/Modal';
 import { ROUTES } from '@constants/routes';
 import { useCommerceProductActions } from '@hooks/commerce/useCommerceProductActions';
 import { cn } from '@lib/cn';
@@ -21,10 +22,17 @@ interface ProductCardProps {
 function ProductCardBase({ product, className, variant = 'default' }: ProductCardProps) {
   const { isWishlisted, toggleWishlistForProduct, addToCart } = useCommerceProductActions(product);
   const [shareOpen, setShareOpen] = useState(false);
+  const [previewOpen, setPreviewOpen] = useState(false);
 
   const primaryImage = product.images[0]?.url ?? '';
   const hoverImage = product.images[1]?.url ?? primaryImage;
   const firstVariant = product.variants[0];
+
+  const sizesLine = useMemo(() => {
+    const sizes = [...new Set(product.variants.map((v) => v.size))].filter(Boolean).sort();
+    if (!sizes.length) return null;
+    return sizes.join(' · ');
+  }, [product.variants]);
 
   const handleQuickAdd = useCallback(
     (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -114,6 +122,22 @@ function ProductCardBase({ product, className, variant = 'default' }: ProductCar
           >
             <Share2 className="h-4 w-4" aria-hidden="true" />
           </button>
+          <button
+            type="button"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              setPreviewOpen(true);
+            }}
+            aria-label="View product image"
+            className={cn(
+              'inline-flex h-9 w-9 items-center justify-center rounded-full bg-background/90 text-foreground shadow-soft backdrop-blur',
+              'transition-all duration-300 ease-out hover:bg-background',
+              'pointer-events-none -translate-x-3 opacity-0 group-hover:pointer-events-auto group-hover:translate-x-0 group-hover:opacity-100',
+            )}
+          >
+            <Eye className="h-4 w-4" aria-hidden="true" />
+          </button>
         </div>
 
         {variant === 'default' && product.inStock && firstVariant && (
@@ -143,14 +167,40 @@ function ProductCardBase({ product, className, variant = 'default' }: ProductCar
         >
           {product.title}
         </Link>
+        {sizesLine && (
+          <p className="text-xs text-muted-foreground">
+            <span className="font-medium text-foreground/80">Sizes:</span> {sizesLine}
+          </p>
+        )}
         <PriceTag
           price={product.price}
           {...(product.comparePrice !== undefined ? { comparePrice: product.comparePrice } : {})}
-          currency={product.currency}
+          currency="PKR"
           size="md"
           className="mt-auto"
         />
       </div>
+
+      <Modal
+        isOpen={previewOpen}
+        onClose={() => setPreviewOpen(false)}
+        size="lg"
+        className="max-w-2xl"
+      >
+        <div className="-mx-6 -mt-2 -mb-5">
+          {primaryImage ? (
+            <img
+              src={primaryImage}
+              alt={product.images[0]?.alt ?? product.title}
+              className="max-h-[min(75vh,640px)] w-full bg-muted object-contain"
+            />
+          ) : (
+            <div className="flex aspect-square items-center justify-center bg-muted text-sm text-muted-foreground">
+              No image
+            </div>
+          )}
+        </div>
+      </Modal>
 
       <ProductShareModal
         isOpen={shareOpen}

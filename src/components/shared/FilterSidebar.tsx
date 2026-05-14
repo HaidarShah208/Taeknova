@@ -21,10 +21,9 @@ interface FilterSidebarProps {
   /** Max value for the price slider (PKR); parent should grow this from loaded product prices */
   priceSliderMax?: number;
   className?: string;
+  /** When the page is under `/categories/:slug`, choosing "All categories" runs this (e.g. navigate to `/products`). */
+  onExitCategoryRoute?: () => void;
 }
-
-const toggleInArray = (arr: string[] = [], value: string): string[] =>
-  arr.includes(value) ? arr.filter((v) => v !== value) : [...arr, value];
 
 const snapToPriceStep = (n: number): number =>
   Math.round(Math.max(0, n) / PRICE_STEP) * PRICE_STEP;
@@ -36,6 +35,7 @@ export function FilterSidebar({
   categories,
   priceSliderMax: priceSliderMaxProp,
   className,
+  onExitCategoryRoute,
 }: FilterSidebarProps) {
   const sliderMax = Math.max(PRICE_STEP, priceSliderMaxProp ?? DEFAULT_PRICE_SLIDER_MAX);
 
@@ -56,7 +56,7 @@ export function FilterSidebar({
 
   const activeCount = useMemo(() => {
     let n = 0;
-    if (filters.categories?.length) n += filters.categories.length;
+    if (filters.categories?.length) n += 1;
     if (filters.sizes?.length) n += filters.sizes.length;
     if (filters.colors?.length) n += filters.colors.length;
     if (filters.priceMin !== undefined || filters.priceMax !== undefined) n += 1;
@@ -89,22 +89,38 @@ export function FilterSidebar({
 
       <Accordion type="multiple" defaultOpen={['categories', 'price', 'sizes']}>
         <AccordionItem value="categories" trigger="Categories">
-          <ul className="flex flex-col gap-2">
+          <ul className="flex flex-col gap-2" role="radiogroup" aria-label="Category">
+            <li>
+              <label className="flex cursor-pointer items-center gap-3 text-sm text-foreground">
+                <input
+                  type="radio"
+                  name="filter-category"
+                  checked={!filters.categories?.length}
+                  onChange={() => {
+                    onChange({ ...filters, categories: undefined });
+                    onExitCategoryRoute?.();
+                  }}
+                  className="h-4 w-4 border-input text-primary focus:ring-ring"
+                />
+                <span className="flex-1">All categories</span>
+              </label>
+            </li>
             {categories.map((category) => {
-              const checked = filters.categories?.includes(category.slug) ?? false;
+              const selected = filters.categories?.[0] === category.slug;
               return (
                 <li key={category.id}>
                   <label className="flex cursor-pointer items-center gap-3 text-sm text-foreground">
                     <input
-                      type="checkbox"
-                      checked={checked}
+                      type="radio"
+                      name="filter-category"
+                      checked={selected}
                       onChange={() =>
                         onChange({
                           ...filters,
-                          categories: toggleInArray(filters.categories, category.slug),
+                          categories: [category.slug],
                         })
                       }
-                      className="h-4 w-4 rounded border-input text-primary focus:ring-ring"
+                      className="h-4 w-4 border-input text-primary focus:ring-ring"
                     />
                     <span className="flex-1">{category.name}</span>
                     <span className="text-xs text-muted-foreground">{category.productCount}</span>

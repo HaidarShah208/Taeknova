@@ -1,5 +1,6 @@
 import { Filter } from 'lucide-react';
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 
 import { Breadcrumb } from '@components/shared/Breadcrumb';
 import { FilterSidebar } from '@components/shared/FilterSidebar';
@@ -12,6 +13,7 @@ import { EmptyState } from '@components/ui/EmptyState';
 import { ErrorState } from '@components/ui/ErrorState';
 import { Pagination } from '@components/ui/Pagination';
 import { Select } from '@components/ui/Select';
+import { ROUTES } from '@constants/routes';
 import env from '@lib/env';
 import { useGetCategoriesQuery } from '@redux/categories';
 import { useListPublicCategoriesQuery } from '@redux/customer';
@@ -32,8 +34,17 @@ const DEFAULT_PRICE_CEILING = 10_000;
 
 export default function ProductsPage() {
   const { filters, setFilters, resetFilters, setPage } = useProductFiltersFromUrl();
+  const routeParams = useParams<{ slug?: string }>();
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const [isFilterOpen, setFilterOpen] = useState(false);
   const [priceSliderCeiling, setPriceSliderCeiling] = useState(DEFAULT_PRICE_CEILING);
+
+  const exitCategoryRouteToAllProducts = useCallback(() => {
+    if (!routeParams.slug) return;
+    const q = searchParams.toString();
+    navigate({ pathname: ROUTES.products, search: q ? `?${q}` : undefined }, { replace: true });
+  }, [navigate, routeParams.slug, searchParams]);
 
   const useApiCatalog = !env.enableMockApi;
   const { data: publicCategories } = useListPublicCategoriesQuery(undefined, { skip: !useApiCatalog });
@@ -105,6 +116,7 @@ export default function ProductsPage() {
               onReset={resetFilters}
               categories={categories}
               priceSliderMax={priceSliderCeiling}
+              onExitCategoryRoute={exitCategoryRouteToAllProducts}
             />
           </div>
 
@@ -162,6 +174,7 @@ export default function ProductsPage() {
           }}
           categories={categories}
           priceSliderMax={priceSliderCeiling}
+          onExitCategoryRoute={exitCategoryRouteToAllProducts}
           className="border-0 p-0"
         />
       </Drawer>
