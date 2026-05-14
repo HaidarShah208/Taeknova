@@ -26,7 +26,7 @@ import { Logo } from './Logo';
 import { SearchOverlay } from './SearchOverlay';
 
 const NAV_LINK_CLASS =
-  'relative inline-flex items-center text-sm font-medium text-muted-foreground transition-colors hover:text-foreground';
+  'relative inline-flex items-center text-sm font-medium text-white transition-colors hover:text-ring';
 
 export function Navbar() {
   const dispatch = useAppDispatch();
@@ -69,7 +69,7 @@ export function Navbar() {
     <>
       <header
         className={cn(
-          'sticky top-0 z-40 w-full border-transparent bg-gradient-to-r from-white via-foreground/35 to-foreground/90 transition-all duration-300',
+          'sticky top-0 z-40 w-full  border-transparent bg-foreground/90 transition-all duration-300',
           scrolled &&
             'border-border/60 bg-gradient-to-r from-white/40 via-foreground/20 to-foreground/70 shadow-soft backdrop-blur-xl supports-[backdrop-filter]:from-white/30 supports-[backdrop-filter]:via-foreground/15 supports-[backdrop-filter]:to-foreground/60',
         )}
@@ -80,7 +80,7 @@ export function Navbar() {
             onClick={() => dispatch(setMobileMenuOpen(!isMobileMenuOpen))}
             aria-label="Open menu"
             aria-expanded={isMobileMenuOpen}
-            className="inline-flex h-10 w-10 items-center justify-center rounded-lg text-foreground transition-colors hover:bg-muted lg:hidden"
+            className="inline-flex h-10 w-10 items-center justify-center rounded-lg text-white hover:text-foreground transition-colors hover:bg-muted  lg:hidden"
           >
             <Menu className="h-5 w-5" aria-hidden="true" />
           </button>
@@ -96,13 +96,13 @@ export function Navbar() {
                     NAV_LINK_CLASS,
                     (item.to === ROUTES.home
                       ? location.pathname === ROUTES.home
-                      : location.pathname.startsWith(item.to)) && 'text-foreground',
+                      : location.pathname.startsWith(item.to)) && 'text-white',
                   )}
                 >
                   {item.label}
                   <span
                     className={cn(
-                      'absolute -bottom-2 left-0 h-0.5 w-full origin-left scale-x-0 bg-primary transition-transform duration-200',
+                      'absolute -bottom-2 left-0 h-0.5 bg-white w-full origin-left scale-x-0 transition-transform duration-200',
                       (item.to === ROUTES.home
                         ? location.pathname === ROUTES.home
                         : location.pathname.startsWith(item.to)) && 'scale-x-100',
@@ -118,7 +118,7 @@ export function Navbar() {
               type="button"
               onClick={() => dispatch(setSearchOpen(!isSearchOpen))}
               aria-label="Open search"
-              className="inline-flex h-10 w-10 items-center justify-center rounded-lg text-foreground transition-colors hover:bg-muted"
+              className="inline-flex h-10 w-10 items-center justify-center rounded-lg text-white transition-colors hover:bg-muted hover:text-foreground"
             >
               <Search className="h-5 w-5" aria-hidden="true" />
             </button>
@@ -126,13 +126,13 @@ export function Navbar() {
             <Link
               to={ROUTES.wishlist}
               aria-label="Wishlist"
-              className="relative inline-flex h-10 w-10 items-center justify-center rounded-lg text-foreground transition-colors hover:bg-muted"
+              className="relative inline-flex h-10 w-10 items-center justify-center rounded-lg text-white transition-colors hover:bg-muted hover:text-foreground"
             >
               <Heart className="h-5 w-5" aria-hidden="true" />
               {wishlistCount > 0 && (
                 <span
                   aria-hidden="true"
-                  className="absolute -right-0.5 -top-0.5 inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-destructive px-1 text-[10px] font-bold text-destructive-foreground"
+                  className="absolute -right-0.5 -top-0.5 inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-destructive px-1 text-[10px] font-bold text-destructive-white "
                 >
                   {wishlistCount}
                 </span>
@@ -146,7 +146,7 @@ export function Navbar() {
                   navigate(isAdmin ? ROUTES.adminDashboard : ROUTES.dashboardProfile)
                 }
                 aria-label="Account"
-                className="hidden h-10 w-10 items-center justify-center rounded-lg text-foreground transition-colors hover:bg-muted sm:inline-flex"
+                className="hidden h-10 w-10 items-center justify-center rounded-lg text-white transition-colors hover:bg-muted sm:inline-flex hover:text-foreground"
               >
                 <User className="h-5 w-5" aria-hidden="true" />
               </button>
@@ -155,7 +155,7 @@ export function Navbar() {
                 type="button"
                 size="sm"
                 variant="outline"
-                className="hidden sm:inline-flex"
+                className="hidden hover:text-foreground text-white sm:inline-flex"
                 onClick={() => navigate(ROUTES.login)}
               >
                 Login
@@ -166,7 +166,7 @@ export function Navbar() {
               type="button"
               onClick={() => dispatch(setCartDrawerOpen(!isCartDrawerOpen))}
               aria-label={`Open cart, ${cartBadge} item${cartBadge === 1 ? '' : 's'}`}
-              className="relative inline-flex h-10 w-10 items-center justify-center rounded-lg text-foreground transition-colors hover:bg-muted"
+              className="relative inline-flex h-10 w-10 items-center justify-center rounded-lg text-white transition-colors hover:bg-muted hover:text-foreground"
             >
               <ShoppingBag className="h-5 w-5" aria-hidden="true" />
               {cartBadge > 0 && (

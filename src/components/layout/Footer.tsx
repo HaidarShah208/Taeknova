@@ -5,8 +5,7 @@ import { Container } from '@components/ui/Container';
 import { Input } from '@components/ui/Input';
 import { APP_DESCRIPTION, APP_NAME } from '@constants/app';
 import { FOOTER_NAV } from '@constants/navigation';
-
-import { Logo } from './Logo';
+import footerLogo from '../../assets/brandLogoFooter.png'
 
 const SOCIAL = [
   { label: 'Instagram', href: 'https://instagram.com', icon: Instagram },
@@ -34,7 +33,7 @@ export function Footer() {
       <Container className="py-16">
         <div className="grid gap-10 lg:grid-cols-12">
           <div className="lg:col-span-5">
-            <Logo size="lg" />
+           <Link to={'/'}> <img src={footerLogo} alt="" className='w-16 rounded-sm h-16'/></Link>
             <p className="mt-4 max-w-md text-sm leading-relaxed text-white">
               {APP_DESCRIPTION}
             </p>
@@ -65,15 +64,15 @@ export function Footer() {
           <div className="grid grid-cols-2 gap-8 sm:grid-cols-4 lg:col-span-7">
             {FOOTER_NAV.map((group) => (
               <div key={group.title}>
-                <h4 className="text-sm font-extrabold uppercase tracking-wider text-white">
+                <h4 className="lg:text-lg text-base font-extrabold uppercase tracking-wider text-white">
                   {group.title}
                 </h4>
-                <ul className="mt-4 space-y-2.5">
+                <ul className="mt-4 space-y-4">
                   {group.items.map((item) => (
                     <li key={item.to}>
                       <Link
                         to={item.to}
-                        className="text-xs text-white transition-colors hover:text-slate-900"
+                        className="lg:text-sm text-xs text-white transition-colors hover:text-gray-400"
                       >
                         {item.label}
                       </Link>

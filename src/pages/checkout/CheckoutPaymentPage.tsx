@@ -330,11 +330,11 @@ export default function CheckoutPaymentPage() {
                       <span className="mb-1.5 block text-xs font-medium text-muted-foreground">
                         Payment screenshot
                       </span>
-                      <div className="relative">
+                      <div className="relative bg-white">
                         <input
                           type="file"
                           accept="image/jpeg,image/png"
-                          className="absolute inset-0 z-10 h-full min-h-[2.75rem] w-full cursor-pointer opacity-0"
+                          className="absolute  inset-0 z-10 h-full min-h-[2.75rem] w-full cursor-pointer opacity-0"
                           onChange={(e) => {
                             const f = e.target.files?.[0] ?? null;
                             setProofFile(f);
