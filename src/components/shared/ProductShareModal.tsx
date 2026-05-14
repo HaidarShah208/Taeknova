@@ -5,13 +5,13 @@ import { toast } from 'sonner';
 import { Button } from '@components/ui/Button';
 import { Modal } from '@components/ui/Modal';
 import { ROUTES } from '@constants/routes';
+import type { Product } from '@app-types/product';
 
 export interface ProductShareModalProps {
   isOpen: boolean;
   onClose: () => void;
-  title: string;
+  product: Product;
   imageUrl: string;
-  slug: string;
 }
 
 function buildProductUrl(slug: string): string {
@@ -19,18 +19,52 @@ function buildProductUrl(slug: string): string {
   return `${window.location.origin}${ROUTES.productDetails(slug)}`;
 }
 
-function buildShareText(title: string, url: string): string {
-  return `${title}\n${url}`;
+function humanizeCategorySlug(slug: string): string {
+  if (!slug.trim()) return '—';
+  return slug
+    .split('-')
+    .filter(Boolean)
+    .map((w) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
+    .join(' ');
 }
 
-export function ProductShareModal({ isOpen, onClose, title, imageUrl, slug }: ProductShareModalProps) {
-  const url = useMemo(() => buildProductUrl(slug), [slug]);
-  const shareText = useMemo(() => buildShareText(title, url), [title, url]);
+function buildFormattedShareMessage(product: Product, url: string): string {
+  const v0 = product.variants[0];
+  const moreVariants = product.variants.length > 1;
+  const sizeLine = v0
+    ? `${v0.size}${v0.color ? ` · ${v0.color}` : ''}${moreVariants ? ' (more options on product page)' : ''}`
+    : 'See product page';
+  const productNo =
+    v0?.sku?.trim() ||
+    (typeof product.id === 'string' && product.id.trim() ? product.id : '') ||
+    'Not specified';
+  const category = humanizeCategorySlug(product.categorySlug);
+  const headline = (product.title || 'Uniform order').toUpperCase();
+
+  return [
+    `🥋 *${headline}* 🥋`,
+    '',
+    `📏 *Size:* ${sizeLine}`,
+    `📁 *Category:* ${category}`,
+    `🏷 *Product No:* ${productNo}`,
+    `✨ *Brand:* ${product.brand || '—'}`,
+    '',
+    `🔗 *View full details & order:*`,
+    url,
+    '',
+    '🚚 *Fast delivery across Pakistan*',
+    '💬 *Contact for pricing & orders*',
+  ].join('\n');
+}
+
+export function ProductShareModal({ isOpen, onClose, product, imageUrl }: ProductShareModalProps) {
+  const url = useMemo(() => buildProductUrl(product.slug), [product.slug]);
+  const shareText = useMemo(() => buildFormattedShareMessage(product, url), [product, url]);
 
   const copyCombined = useCallback(async () => {
     try {
       await navigator.clipboard.writeText(shareText);
-      toast.success('Copied title and link');
+      toast.success('Copied full product details + link');
     } catch {
       toast.error('Could not copy to clipboard');
     }
@@ -63,7 +97,7 @@ export function ProductShareModal({ isOpen, onClose, title, imageUrl, slug }: Pr
       const objectUrl = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = objectUrl;
-      a.download = `${slug.replace(/[^\w-]+/g, '-') || 'product'}.${ext}`;
+      a.download = `${product.slug.replace(/[^\w-]+/g, '-') || 'product'}.${ext}`;
       a.rel = 'noopener';
       document.body.appendChild(a);
       a.click();
@@ -78,12 +112,16 @@ export function ProductShareModal({ isOpen, onClose, title, imageUrl, slug }: Pr
         toast.error('Could not download image (blocked by browser or CORS).');
       }
     }
-  }, [imageUrl, slug]);
+  }, [imageUrl, product.slug]);
 
   const quickShare = useCallback(async () => {
     if (navigator.share) {
       try {
-        await navigator.share({ title, text: shareText, url });
+        await navigator.share({
+          title: product.title,
+          text: shareText,
+          url,
+        });
         toast.success('Shared');
       } catch (e) {
         if ((e as Error).name === 'AbortError') return;
@@ -92,7 +130,7 @@ export function ProductShareModal({ isOpen, onClose, title, imageUrl, slug }: Pr
     } else {
       await copyCombined();
     }
-  }, [copyCombined, shareText, title, url]);
+  }, [copyCombined, product.title, shareText, url]);
 
   return (
     <Modal
@@ -100,13 +138,9 @@ export function ProductShareModal({ isOpen, onClose, title, imageUrl, slug }: Pr
       onClose={onClose}
       title="Share product"
       size="md"
-      footer={
-        <Button type="button" variant="ghost" onClick={onClose}>
-          Close
-        </Button>
-      }
+       
     >
-      <div className="flex flex-col items-center gap-6">
+      <div className="flex flex-col items-center gap-5">
         <div className="relative aspect-square w-full max-w-[220px] overflow-hidden rounded-2xl border border-border bg-muted shadow-soft">
           {imageUrl ? (
             <img src={imageUrl} alt="" className="h-full w-full object-cover" />
@@ -114,13 +148,21 @@ export function ProductShareModal({ isOpen, onClose, title, imageUrl, slug }: Pr
             <div className="flex h-full items-center justify-center text-sm text-muted-foreground">No image</div>
           )}
         </div>
-        <p className="line-clamp-2 text-center text-sm font-semibold text-foreground">{title}</p>
+        <p className="line-clamp-2 text-center text-sm font-semibold text-foreground">{product.title}</p>
+
+        
+
         <div className="grid w-full gap-2 sm:grid-cols-2">
-          <Button type="button" variant="outline" leftIcon={<MessageCircle className="h-4 w-4" />} onClick={openWhatsApp}>
+          <Button
+            type="button"
+            variant="outline"
+            leftIcon={<MessageCircle className="h-4 w-4" />}
+            onClick={openWhatsApp}
+          >
             WhatsApp
           </Button>
           <Button type="button" variant="outline" leftIcon={<Copy className="h-4 w-4" />} onClick={() => void copyCombined()}>
-            Copy text + link
+            Copy details + link
           </Button>
           <Button type="button" variant="outline" leftIcon={<Copy className="h-4 w-4" />} onClick={() => void copyLinkOnly()}>
             Copy link only

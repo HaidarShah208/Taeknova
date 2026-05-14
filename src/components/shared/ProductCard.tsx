@@ -155,9 +155,8 @@ function ProductCardBase({ product, className, variant = 'default' }: ProductCar
       <ProductShareModal
         isOpen={shareOpen}
         onClose={() => setShareOpen(false)}
-        title={product.title}
+        product={product}
         imageUrl={primaryImage}
-        slug={product.slug}
       />
     </article>
   );
