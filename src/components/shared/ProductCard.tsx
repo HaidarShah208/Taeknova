@@ -1,5 +1,5 @@
-import { Heart, ShoppingBag } from 'lucide-react';
-import { memo, useCallback } from 'react';
+import { Heart, Share2, ShoppingBag } from 'lucide-react';
+import { memo, useCallback, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import { Badge } from '@components/ui/Badge';
@@ -9,6 +9,7 @@ import { cn } from '@lib/cn';
 import type { Product } from '@app-types/product';
 
 import { PriceTag } from './PriceTag';
+import { ProductShareModal } from './ProductShareModal';
 import { RatingStars } from './RatingStars';
 
 interface ProductCardProps {
@@ -19,6 +20,7 @@ interface ProductCardProps {
 
 function ProductCardBase({ product, className, variant = 'default' }: ProductCardProps) {
   const { isWishlisted, toggleWishlistForProduct, addToCart } = useCommerceProductActions(product);
+  const [shareOpen, setShareOpen] = useState(false);
 
   const primaryImage = product.images[0]?.url ?? '';
   const hoverImage = product.images[1]?.url ?? primaryImage;
@@ -79,22 +81,40 @@ function ProductCardBase({ product, className, variant = 'default' }: ProductCar
           {!product.inStock && <Badge variant="destructive">Sold out</Badge>}
         </div>
 
-        <button
-          type="button"
-          onClick={handleWishlist}
-          aria-label={isWishlisted ? 'Remove from wishlist' : 'Save to wishlist'}
-          aria-pressed={isWishlisted}
-          className={cn(
-            'absolute right-3 top-3 inline-flex h-9 w-9 items-center justify-center rounded-full bg-background/90 text-foreground shadow-soft backdrop-blur transition-colors',
-            'hover:bg-background',
-            isWishlisted && 'text-destructive',
-          )}
-        >
-          <Heart
-            className={cn('h-4 w-4', isWishlisted && 'fill-destructive')}
-            aria-hidden="true"
-          />
-        </button>
+        <div className="absolute right-3 top-3 z-10 flex flex-col items-center gap-1.5">
+          <button
+            type="button"
+            onClick={handleWishlist}
+            aria-label={isWishlisted ? 'Remove from wishlist' : 'Save to wishlist'}
+            aria-pressed={isWishlisted}
+            className={cn(
+              'inline-flex h-9 w-9 items-center justify-center rounded-full bg-background/90 text-foreground shadow-soft backdrop-blur transition-colors',
+              'hover:bg-background',
+              isWishlisted && 'text-destructive',
+            )}
+          >
+            <Heart
+              className={cn('h-4 w-4', isWishlisted && 'fill-destructive')}
+              aria-hidden="true"
+            />
+          </button>
+          <button
+            type="button"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              setShareOpen(true);
+            }}
+            aria-label="Share product"
+            className={cn(
+              'inline-flex h-9 w-9 items-center justify-center rounded-full bg-background/90 text-foreground shadow-soft backdrop-blur',
+              'transition-all duration-300 ease-out hover:bg-background',
+              'pointer-events-none -translate-x-3 opacity-0 group-hover:pointer-events-auto group-hover:translate-x-0 group-hover:opacity-100',
+            )}
+          >
+            <Share2 className="h-4 w-4" aria-hidden="true" />
+          </button>
+        </div>
 
         {variant === 'default' && product.inStock && firstVariant && (
           <div className="pointer-events-none absolute inset-x-3 bottom-3 translate-y-3 opacity-0 transition-all duration-300 group-hover:pointer-events-auto group-hover:translate-y-0 group-hover:opacity-100">
@@ -131,6 +151,14 @@ function ProductCardBase({ product, className, variant = 'default' }: ProductCar
           className="mt-auto"
         />
       </div>
+
+      <ProductShareModal
+        isOpen={shareOpen}
+        onClose={() => setShareOpen(false)}
+        title={product.title}
+        imageUrl={primaryImage}
+        slug={product.slug}
+      />
     </article>
   );
 }

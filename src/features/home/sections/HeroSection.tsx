@@ -3,7 +3,7 @@ import {
   ArrowRight,
   Sparkles,
 } from 'lucide-react';
-import taekwondo from '../../../assets/home/taekwondo.jpg'
+import taekwondo from '../../../assets/home/taekwondo.png'
 import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 
