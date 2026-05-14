@@ -137,6 +137,7 @@ export default function ProductDetailsPage() {
         title={product.title}
         description={product.description}
         ogImage={product.images[0]?.url}
+        canonicalPath={ROUTES.productDetails(product.slug)}
       />
       <Container className="py-8 lg:py-12">
         <Breadcrumb

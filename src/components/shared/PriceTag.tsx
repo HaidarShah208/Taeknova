@@ -20,7 +20,7 @@ const sizeClasses: Record<NonNullable<PriceTagProps['size']>, { price: string; c
 export function PriceTag({
   price,
   comparePrice,
-  currency = 'USD',
+  currency = 'PKR',
   size = 'md',
   showDiscount = true,
   className,

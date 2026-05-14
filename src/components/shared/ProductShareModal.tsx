@@ -4,19 +4,14 @@ import { toast } from 'sonner';
 
 import { Button } from '@components/ui/Button';
 import { Modal } from '@components/ui/Modal';
-import { ROUTES } from '@constants/routes';
 import type { Product } from '@app-types/product';
+import { buildProductShareLinkUrl } from '@lib/shareUrls';
 
 export interface ProductShareModalProps {
   isOpen: boolean;
   onClose: () => void;
   product: Product;
   imageUrl: string;
-}
-
-function buildProductUrl(slug: string): string {
-  if (typeof window === 'undefined') return '';
-  return `${window.location.origin}${ROUTES.productDetails(slug)}`;
 }
 
 function humanizeCategorySlug(slug: string): string {
@@ -58,7 +53,7 @@ function buildFormattedShareMessage(product: Product, url: string): string {
 }
 
 export function ProductShareModal({ isOpen, onClose, product, imageUrl }: ProductShareModalProps) {
-  const url = useMemo(() => buildProductUrl(product.slug), [product.slug]);
+  const url = useMemo(() => buildProductShareLinkUrl(product.slug), [product.slug]);
   const shareText = useMemo(() => buildFormattedShareMessage(product, url), [product, url]);
 
   const copyCombined = useCallback(async () => {
@@ -137,7 +132,7 @@ export function ProductShareModal({ isOpen, onClose, product, imageUrl }: Produc
       isOpen={isOpen}
       onClose={onClose}
       title="Share product"
-      size="md"
+      size="lg"
        
     >
       <div className="flex flex-col items-center gap-5">

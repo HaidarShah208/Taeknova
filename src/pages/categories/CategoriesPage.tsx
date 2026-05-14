@@ -59,7 +59,7 @@ export default function CategoriesPage() {
                       <p className="text-xs font-semibold uppercase tracking-widest text-background/70">
                         {category.productCount} styles
                       </p>
-                      <h3 className="mt-1 text-2xl font-bold tracking-tight">{category.name}</h3>
+                      <h3 className="mt-1 text-2xl text-white font-bold tracking-tight">{category.name}</h3>
                       <p className="mt-1 max-w-xs text-sm text-background/80">
                         {category.description}
                       </p>
