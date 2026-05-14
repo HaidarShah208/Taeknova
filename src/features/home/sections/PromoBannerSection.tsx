@@ -10,8 +10,8 @@ import { cn } from '@lib/cn';
 
 const PROMO_HIGHLIGHTS = [
   { icon: BadgePercent, label: 'Up to 25% off team kits' },
-  { icon: Users, label: 'Free design for 10+ pieces' },
-  { icon: Truck, label: 'Free shipping over $150' },
+  { icon: Users, label: 'Free design for 5+ pieces' },
+  { icon: Truck, label: 'Free shipping over Rs. 1500' },
 ];
 
 export function PromoBannerSection() {
@@ -50,7 +50,7 @@ export function PromoBannerSection() {
               </h2>
               <p className="mt-4 max-w-xl text-sm text-primary-100 sm:text-base">
                 Outfitting a club, school, or league? Get tiered team pricing, complimentary
-                design support, and free shipping on every full kit order this season.
+                design and free shipping on every full kit order this season.
               </p>
 
               <ul className="mt-6 grid gap-2.5 sm:grid-cols-2">
@@ -81,15 +81,7 @@ export function PromoBannerSection() {
                     aria-hidden="true"
                   />
                 </Link>
-                <Link
-                  to="/contact"
-                  className={cn(
-                    buttonVariants({ variant: 'outline', size: 'lg' }),
-                    'border-background/40 bg-transparent text-background hover:bg-background/10',
-                  )}
-                >
-                  Talk to a stylist
-                </Link>
+                
               </div>
             </div>
 

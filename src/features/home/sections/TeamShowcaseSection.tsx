@@ -69,15 +69,7 @@ export function TeamShowcaseSection() {
       eyebrow="Worn by champions"
       title="Teams that win in Tiknova."
       description="A glimpse at programs, clubs, and pro outfits already running on Tiknova-built gear."
-      action={
-        <Link
-          to={ROUTES.categories}
-          className="inline-flex items-center gap-1 text-sm font-semibold text-primary hover:underline"
-        >
-          See all clients
-          <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
-        </Link>
-      }
+     
     >
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:auto-rows-[16rem] lg:grid-cols-12">
         {TEAMS.map((team, idx) => (
