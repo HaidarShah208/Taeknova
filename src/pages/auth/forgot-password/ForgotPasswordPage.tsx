@@ -9,6 +9,8 @@ import { FormField } from '@components/forms/FormField';
 import { PageMeta } from '@components/layout/PageMeta';
 import { Button } from '@components/ui/Button';
 import { ROUTES } from '@constants/routes';
+import env from '@lib/env';
+import { useForgotPasswordMutation } from '@redux/customer';
 
 const forgotPasswordSchema = z.object({
   email: z.string().email('Enter a valid email'),
@@ -17,6 +19,7 @@ const forgotPasswordSchema = z.object({
 type ForgotPasswordFormValues = z.infer<typeof forgotPasswordSchema>;
 
 export default function ForgotPasswordPage() {
+  const [forgotPassword, { isLoading: isApiForgot }] = useForgotPasswordMutation();
   const {
     register,
     handleSubmit,
@@ -27,6 +30,16 @@ export default function ForgotPasswordPage() {
   });
 
   const onSubmit = async (values: ForgotPasswordFormValues) => {
+    if (!env.enableMockApi) {
+      try {
+        const { message } = await forgotPassword({ email: values.email.trim() }).unwrap();
+        toast.success(message);
+      } catch {
+        toast.error('Could not process your request. Try again later.');
+      }
+      return;
+    }
+
     await new Promise((resolve) => setTimeout(resolve, 600));
     toast.success(`Password reset instructions sent to ${values.email}`);
   };
@@ -53,7 +66,7 @@ export default function ForgotPasswordPage() {
             register={register}
             errors={errors}
           />
-          <Button type="submit" fullWidth size="lg" isLoading={isSubmitting}>
+          <Button type="submit" fullWidth size="lg" isLoading={isSubmitting || isApiForgot}>
             Send reset link
           </Button>
         </form>

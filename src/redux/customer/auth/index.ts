@@ -1,7 +1,7 @@
 import { baseApi } from '@services/baseApi';
 import { setSession } from '@redux/auth';
 import type { RegisterApiResponse } from '@app-types/admin';
-import { unwrapBackendData } from '@services/apiEnvelope';
+import { unwrapBackendData, unwrapBackendEnvelope } from '@services/apiEnvelope';
 import { mapBackendAuthUserToUser } from '@redux/admin/mapBackendUser';
 import { getJwtExpiryMs } from '@lib/jwtClient';
 
@@ -44,8 +44,35 @@ export const customerAuthApi = baseApi.injectEndpoints({
       }),
       transformResponse: (raw: unknown) => unwrapBackendData<{ verified: boolean }>(raw),
     }),
+    forgotPassword: builder.mutation<{ message: string }, { email: string }>({
+      query: (body) => ({
+        url: '/auth/forgot-password',
+        method: 'POST',
+        body,
+      }),
+      transformResponse: (raw: unknown) => {
+        const { message } = unwrapBackendEnvelope<{ sent: boolean }>(raw);
+        return { message };
+      },
+    }),
+    resetPassword: builder.mutation<{ message: string }, { token: string; password: string }>({
+      query: (body) => ({
+        url: '/auth/reset-password',
+        method: 'POST',
+        body,
+      }),
+      transformResponse: (raw: unknown) => {
+        const { message } = unwrapBackendEnvelope<{ reset: boolean }>(raw);
+        return { message };
+      },
+    }),
   }),
   overrideExisting: true,
 });
 
-export const { useRegisterMutation, useLazyVerifyEmailQuery } = customerAuthApi;
+export const {
+  useRegisterMutation,
+  useLazyVerifyEmailQuery,
+  useForgotPasswordMutation,
+  useResetPasswordMutation,
+} = customerAuthApi;

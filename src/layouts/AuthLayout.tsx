@@ -21,16 +21,10 @@ export function AuthLayout() {
           <Logo size="lg" className="text-background [&_span:last-child]:text-background" />
         </div>
         <div className="relative z-10 max-w-md space-y-4">
-          <p className="text-sm font-semibold uppercase tracking-[0.18em] text-background/70">
+          <p className="text-4xl font-semibold uppercase tracking-[0.1em] text-background/90">
             {APP_TAGLINE}
           </p>
-          <h1 className="font-display text-white text-4xl font-bold leading-tight">
-            Performance uniforms, engineered for every team.
-          </h1>
-          <p className="text-sm leading-relaxed text-background/80">
-            Premium fabrics, customizable details, and championship-level construction —
-            trusted by thousands of teams.
-          </p>
+         
         </div>
         <div className="relative z-10 text-xs text-background/60">
           © {new Date().getFullYear()} Tiknova — Built for performance.
