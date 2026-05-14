@@ -34,11 +34,21 @@ export default function RegisterPage() {
   const onSubmit = async (values: RegisterFormValues) => {
     if (!env.enableMockApi) {
       try {
-        await registerUser({
+        const result = await registerUser({
           fullName: `${values.firstName.trim()} ${values.lastName.trim()}`.trim(),
           email: values.email.trim(),
           password: values.password,
         }).unwrap();
+
+        if (result.requiresEmailVerification) {
+          toast.success('We sent a confirmation link. Verify your email, then sign in.');
+          navigate(ROUTES.login, {
+            replace: true,
+            state: { pendingVerificationEmail: result.email },
+          });
+          return;
+        }
+
         toast.success('Account created!');
         navigate(ROUTES.dashboardProfile, { replace: true });
       } catch {

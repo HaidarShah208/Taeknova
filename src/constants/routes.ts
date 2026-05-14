@@ -12,6 +12,7 @@ export const ROUTES = {
   register: '/register',
   forgotPassword: '/forgot-password',
   resetPassword: '/reset-password',
+  verifyEmail: '/verify-email',
   dashboard: '/dashboard',
   dashboardOrders: '/dashboard/orders',
   dashboardOrderDetails: (id = ':id') => `/dashboard/orders/${id}`,

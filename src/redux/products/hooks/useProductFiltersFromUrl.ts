@@ -30,8 +30,8 @@ export function useProductFiltersFromUrl(): {
     if (slugCategory) {
       out.categories = [slugCategory];
     } else {
-      const catValues = params.getAll('categories');
-      if (catValues.length > 0) out.categories = [catValues[0]];
+      const [firstCategory] = params.getAll('categories');
+      if (firstCategory) out.categories = [firstCategory];
     }
 
     const priceMin = params.get('priceMin');

@@ -32,8 +32,8 @@ const ForgotPasswordPage = lazy(
 const ResetPasswordPage = lazy(
   () => import('@pages/auth/reset-password/ResetPasswordPage'),
 );
- 
- 
+const VerifyEmailPage = lazy(() => import('@pages/auth/verify-email/VerifyEmailPage'));
+
 const AdminDashboardPage = lazy(() => import('@pages/admin/dashboard/AdminDashboardPage'));
 const AdminAnalyticsPage = lazy(() => import('@pages/admin/analytics/AdminAnalyticsPage'));
 const AdminProductsPage = lazy(() => import('@pages/admin/products/AdminProductsPage'));
@@ -74,6 +74,7 @@ export function AppRouter() {
         </Route>
 
         <Route element={<AuthLayout />}>
+          <Route path={ROUTES.verifyEmail} element={<VerifyEmailPage />} />
           <Route
             path={ROUTES.login}
             element={

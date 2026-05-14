@@ -130,6 +130,11 @@ export interface AdminLoginResponse {
   user: BackendAuthUser;
 }
 
+/** `POST /auth/register` — either wait for email verification or receive a session (e.g. SMTP off in dev). */
+export type RegisterApiResponse =
+  | { requiresEmailVerification: true; email: string }
+  | { requiresEmailVerification: false; accessToken: string; user: BackendAuthUser };
+
 export interface AdminRefreshResponse {
   accessToken: string;
 }

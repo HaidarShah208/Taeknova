@@ -23,6 +23,8 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const redirectTo =
     (location.state as { from?: string } | null)?.from ?? ROUTES.dashboard;
+  const pendingVerificationEmail = (location.state as { pendingVerificationEmail?: string } | null)
+    ?.pendingVerificationEmail;
 
   const {
     register,
@@ -53,8 +55,9 @@ export default function LoginPage() {
           );
         }
         toast.success('Welcome back!');
-      } catch {
-        toast.error('Invalid email or password');
+      } catch (err: unknown) {
+        const data = (err as { data?: { message?: string } })?.data;
+        toast.error(typeof data?.message === 'string' ? data.message : 'Invalid email or password');
       }
       return;
     }
@@ -92,6 +95,20 @@ export default function LoginPage() {
         <p className="mt-2 text-sm text-muted-foreground">
           Sign in to manage orders, save favorites, and track team kits.
         </p>
+
+        {pendingVerificationEmail && (
+          <div
+            role="status"
+            className="mt-6 rounded-xl border border-green-600 bg-green-200 px-4 py-3 text-sm text-green-900"
+          >
+            <p className="font-medium text-green-800">Verify your email</p>
+            <p className="mt-1 text-xs text-muted-foreground">
+              We sent a confirmation link to{' '}
+              <span className="font-semibold text-green-700">{pendingVerificationEmail}</span>. Open
+              the email and click the link before signing in.
+            </p>
+          </div>
+        )}
 
         <form onSubmit={handleSubmit(onSubmit)} className="mt-8 space-y-4">
           <FormField
