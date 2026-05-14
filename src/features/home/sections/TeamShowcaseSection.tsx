@@ -1,10 +1,8 @@
 import { motion } from 'framer-motion';
 import { ArrowUpRight } from 'lucide-react';
-import { Link } from 'react-router-dom';
 
 import { Badge } from '@components/ui/Badge';
 import { SectionWrapper } from '@components/shared/SectionWrapper';
-import { ROUTES } from '@constants/routes';
 import hassan from '../../../assets/team/hassan.jpeg'
 import { cn } from '@lib/cn';
 
