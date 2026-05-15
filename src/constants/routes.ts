@@ -6,6 +6,8 @@ export const ROUTES = {
   categoryDetails: (slug = ':slug') => `/categories/${slug}`,
   cart: '/cart',
   wishlist: '/wishlist',
+  about: '/about',
+  contact: '/contact',
   checkout: '/checkout',
   checkoutPayment: '/checkout/payment',
   login: '/login',

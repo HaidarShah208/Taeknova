@@ -40,8 +40,8 @@ export const FOOTER_NAV: NavGroup[] = [
   {
     title: 'Company',
     items: [
-      { label: 'About', to: '/about' },
-      { label: 'Contact', to: '/contact' },
+      { label: 'About', to: ROUTES.about },
+      { label: 'Contact', to: ROUTES.contact },
       { label: 'Track Order', to: '/track-order' },
       { label: 'Size Guide', to: '/size-guide' },
 

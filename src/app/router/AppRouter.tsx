@@ -13,6 +13,8 @@ import { RouteFallback } from './RouteFallback';
 import { AdminRoute } from './AdminRoute';
 
 const HomePage = lazy(() => import('@pages/home/HomePage'));
+const AboutPage = lazy(() => import('@pages/about/AboutPage'));
+const ContactPage = lazy(() => import('@pages/contact/ContactPage'));
 const ProductsPage = lazy(() => import('@pages/products/ProductsPage'));
 const ProductDetailsPage = lazy(() => import('@/pages/products/ProductDetailsPage'));
 const CategoriesPage = lazy(() => import('@pages/categories/CategoriesPage'));
@@ -55,6 +57,8 @@ export function AppRouter() {
           <Route path={ROUTES.categoryDetails()} element={<ProductsPage />} />
           <Route path={ROUTES.cart} element={<CartPage />} />
           <Route path={ROUTES.wishlist} element={<WishlistPage />} />
+          <Route path={ROUTES.about} element={<AboutPage />} />
+          <Route path={ROUTES.contact} element={<ContactPage />} />
           <Route
             path={ROUTES.checkout}
             element={
