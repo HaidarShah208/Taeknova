@@ -15,7 +15,7 @@ import {
 } from '@features/size-guide/data';
 import { fadeUp, staggerContainer, viewportOnce } from '@lib/motion';
 import { cn } from '@lib/cn';
-import taekwondoHero from '../../assets/home/taekwondo.png';
+import uniform from '../../assets/uniform.png';
 
 export default function SizeGuidePage() {
   return (
@@ -37,7 +37,7 @@ export default function SizeGuidePage() {
           </>
         }
         description="Use our charts and measurement guide to order with confidence — for individual athletes or full academy squads."
-        imageSrc={taekwondoHero}
+        imageSrc={uniform}
         imageAlt="Athlete sizing guide"
         primaryCta={{ label: 'Shop uniforms', to: ROUTES.products }}
         secondaryCta={{ label: 'Contact for custom sizing', to: ROUTES.contact }}
