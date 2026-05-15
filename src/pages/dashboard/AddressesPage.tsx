@@ -54,7 +54,7 @@ export default function AddressesPage() {
   return (
     <>
       <PageMeta title="Saved addresses" />
-      <div className="mx-auto max-w-3xl py-8">
+      <div className="mx-auto max-w-5xl py-8">
         <h1 className="text-2xl font-bold tracking-tight">Saved addresses</h1>
         <p className="mt-1 text-sm text-muted-foreground">
           Addresses used at checkout. Full create/edit flows can extend this screen.

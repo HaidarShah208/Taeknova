@@ -66,7 +66,7 @@ export default function OrdersPage() {
   return (
     <>
       <PageMeta title="My orders" />
-      <div className="mx-auto max-w-3xl py-8">
+      <div className="mx-auto max-w-5xl py-8">
         <Breadcrumb items={[{ label: 'Orders' }]} />
         <h1 className="mt-4 text-2xl font-bold tracking-tight">My orders</h1>
         <p className="mt-1 text-sm text-muted-foreground">
@@ -79,7 +79,7 @@ export default function OrdersPage() {
               title="No orders yet"
               description="When you place an order, it will show up here."
               action={
-                <Link to={ROUTES.products} className={cn(buttonVariants())}>
+                <Link to={ROUTES.products} className={cn(buttonVariants(),'bg-foreground')}>
                   Browse products
                 </Link>
               }

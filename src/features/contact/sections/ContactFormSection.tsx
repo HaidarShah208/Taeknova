@@ -85,7 +85,7 @@ export function ContactFormSection() {
             <FormField
               name="fullName"
               label="Full name"
-              placeholder="Alex Rivera"
+              placeholder="Ali Hassan"
               autoComplete="name"
               register={register}
               errors={errors}
@@ -107,7 +107,7 @@ export function ContactFormSection() {
               name="phone"
               label="Phone (optional)"
               type="tel"
-              placeholder="+1 (555) 000-0000"
+              placeholder="0300-0000000"
               autoComplete="tel"
               register={register}
               errors={errors}
