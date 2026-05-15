@@ -46,7 +46,7 @@ export function Footer() {
                 placeholder="Enter your email"
                 aria-label="Email address"
                 leftIcon={<Mail className="h-4 w-4" aria-hidden="true" />}
-                className="border-slate-300/70 bg-white/80 text-white placeholder:text-slate-500 focus-visible:ring-primary/40"
+                className="border-slate-300/70 bg-white/80 text-foreground placeholder:text-slate-500 focus-visible:ring-primary/40"
                 containerClassName="flex-1"
               />
               <button

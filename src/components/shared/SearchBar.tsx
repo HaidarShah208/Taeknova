@@ -65,18 +65,9 @@ export function SearchBar({
         placeholder={placeholder}
         autoFocus={autoFocus}
         aria-label="Search"
-        className="w-full bg-transparent text-foreground placeholder:text-muted-foreground/70 focus:outline-none focus-within:ring-0"
+        className="w-full pe34 bg-transparent text-foreground placeholder:text-muted-foreground/70 focus:outline-none focus-within:ring-0"
       />
-      {value && (
-        <button
-          type="button"
-          onClick={() => handleChange('')}
-          aria-label="Clear search"
-          className="rounded-full p-1.5 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
-        >
-          <X className="h-4 w-4" aria-hidden="true" />
-        </button>
-      )}
+     
     </form>
   );
 }

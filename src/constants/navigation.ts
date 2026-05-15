@@ -15,6 +15,8 @@ export const PRIMARY_NAV: NavItem[] = [
   { label: 'Home', to: ROUTES.home },
   { label: 'Shop', to: ROUTES.products },
   { label: 'Categories', to: ROUTES.categories },
+  { label: 'About', to: ROUTES.about },
+  { label: 'Contact', to: ROUTES.contact },
   { label: 'Wishlist', to: ROUTES.wishlist },
 ];
 

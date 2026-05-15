@@ -27,7 +27,7 @@ export function SearchOverlay() {
           autoFocus
           size="lg"
           onSearch={handleSearch}
-          placeholder="Search for soccer, basketball, training kits…"
+          placeholder="Search for Uniforms, Belts, T-Shirts…"
         />
     
       </div>

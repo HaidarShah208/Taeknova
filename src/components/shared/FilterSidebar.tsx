@@ -70,7 +70,7 @@ export function FilterSidebar({
   return (
     <aside
       className={cn(
-        'flex h-full w-full flex-col rounded-2xl border border-border bg-card p-5',
+        'flex h-full w-full border-gray-300 flex-col rounded-2xl border bg-card p-5',
         className,
       )}
     >

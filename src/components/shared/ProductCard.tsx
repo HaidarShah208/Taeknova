@@ -56,7 +56,7 @@ function ProductCardBase({ product, className, variant = 'default' }: ProductCar
   return (
     <article
       className={cn(
-        'group relative flex h-full flex-col overflow-hidden rounded-2xl border border-border bg-card text-card-foreground transition-all duration-300 hover:-translate-y-1 hover:shadow-elevated',
+        'group relative flex h-full flex-col overflow-hidden rounded-2xl border border-gray-400 bg-card text-card-foreground transition-all duration-300 hover:-translate-y-1 hover:shadow-elevated',
         className,
       )}
     >

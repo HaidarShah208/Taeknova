@@ -13,14 +13,17 @@ import {
   contactFormSchema,
   type ContactFormValues,
 } from '@features/contact/contactSchema';
+import env from '@lib/env';
 import { fadeUp, viewportOnce } from '@lib/motion';
+import { useSubmitContactFormMutation } from '@redux/customer';
 
 export function ContactFormSection() {
+  const [submitContact, { isLoading: isApiSubmitting }] = useSubmitContactFormMutation();
   const {
     register,
     handleSubmit,
     reset,
-    formState: { errors, isSubmitting },
+    formState: { errors, isSubmitting: isFormSubmitting },
   } = useForm<ContactFormValues>({
     resolver: zodResolver(contactFormSchema),
     mode: 'onBlur',
@@ -33,9 +36,24 @@ export function ContactFormSection() {
     },
   });
 
+  const isSubmitting = isFormSubmitting || isApiSubmitting;
+
   const onSubmit = async (values: ContactFormValues) => {
+    const firstName = values.fullName.trim().split(' ')[0] || 'there';
+
+    if (!env.enableMockApi) {
+      try {
+        const { message } = await submitContact(values).unwrap();
+        toast.success(message);
+        reset();
+      } catch {
+        toast.error('Could not send your message. Please try again or email us directly.');
+      }
+      return;
+    }
+
     await new Promise((resolve) => setTimeout(resolve, 800));
-    toast.success(`Thanks, ${values.fullName.split(' ')[0]}! We will reply within one business day.`);
+    toast.success(`Thanks, ${firstName}! We will reply within one business day.`);
     reset();
   };
 
@@ -117,9 +135,15 @@ export function ContactFormSection() {
         </motion.div>
 
         <motion.div variants={fadeUp} className="mt-6">
-          <Button type="submit" size="lg" className="w-full flex bg-foreground sm:w-auto" disabled={isSubmitting}>
+          <Button
+            type="submit"
+            size="lg"
+            className="w-full bg-foreground sm:w-auto"
+            disabled={isSubmitting}
+            isLoading={isSubmitting}
+            rightIcon={!isSubmitting ? <Send className="h-4 w-4" aria-hidden="true" /> : undefined}
+          >
             {isSubmitting ? 'Sending...' : 'Send message'}
-            <Send className="h-4 w-4" aria-hidden="true" />
           </Button>
         </motion.div>
       </motion.form>
