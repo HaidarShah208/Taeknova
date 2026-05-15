@@ -117,7 +117,7 @@ export function ContactFormSection() {
         </motion.div>
 
         <motion.div variants={fadeUp} className="mt-6">
-          <Button type="submit" size="lg" className="w-full sm:w-auto" disabled={isSubmitting}>
+          <Button type="submit" size="lg" className="w-full flex bg-foreground sm:w-auto" disabled={isSubmitting}>
             {isSubmitting ? 'Sending...' : 'Send message'}
             <Send className="h-4 w-4" aria-hidden="true" />
           </Button>

@@ -1,12 +1,9 @@
 import { PageMeta } from '@components/layout/PageMeta';
 import { BRAND_NAME } from '@constants/company';
 import {
-  ContactFaqSection,
   ContactFormSection,
   ContactHeroSection,
   ContactInfoSection,
-  ContactMapSection,
-  ContactSocialSection,
 } from '@features/contact/sections';
 
 export default function ContactPage() {
@@ -19,9 +16,6 @@ export default function ContactPage() {
       <ContactHeroSection />
       <ContactInfoSection />
       <ContactFormSection />
-      <ContactMapSection />
-      <ContactFaqSection />
-      <ContactSocialSection />
     </>
   );
 }

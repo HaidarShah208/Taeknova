@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { Clock, Mail, MapPin, Phone } from 'lucide-react';
+import {  Mail, MapPin, Phone } from 'lucide-react';
 
 import { InfoCard } from '@components/marketing/InfoCard';
 import { SectionWrapper } from '@components/shared/SectionWrapper';
@@ -16,7 +16,7 @@ export function ContactInfoSection() {
       align="center"
     >
       <motion.div
-        className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4"
+        className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3"
         variants={staggerContainer}
         initial="hidden"
         whileInView="visible"
@@ -41,9 +41,7 @@ export function ContactInfoSection() {
         <InfoCard icon={MapPin} title="Address">
           <address className="not-italic">{COMPANY_CONTACT.address}</address>
         </InfoCard>
-        <InfoCard icon={Clock} title="Working hours">
-          <p>{COMPANY_CONTACT.hours}</p>
-        </InfoCard>
+      
       </motion.div>
     </SectionWrapper>
   );

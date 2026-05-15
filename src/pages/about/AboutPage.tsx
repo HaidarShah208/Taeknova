@@ -1,10 +1,8 @@
 import { PageMeta } from '@components/layout/PageMeta';
 import { BRAND_NAME } from '@constants/company';
 import {
-  AboutCommunitySection,
   AboutCtaSection,
   AboutHeroSection,
-  AboutStatsSection,
   AboutValuesSection,
   AboutWhyChooseSection,
   BrandStorySection,
@@ -20,8 +18,6 @@ export default function AboutPage() {
       <AboutHeroSection />
       <BrandStorySection />
       <AboutWhyChooseSection />
-      <AboutCommunitySection />
-      <AboutStatsSection />
       <AboutValuesSection />
       <AboutCtaSection />
     </>

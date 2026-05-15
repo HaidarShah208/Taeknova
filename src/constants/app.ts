@@ -3,8 +3,8 @@ export const APP_TAGLINE = 'Premium Custom Uniforms';
 export const APP_DESCRIPTION =
   'Tiknova crafts premium custom uniforms and team apparel engineered for performance, fit, and style.';
 
-export const SUPPORT_EMAIL = 'support@tikwando.com';
-export const SUPPORT_PHONE = '+1 (800) 555-0140';
+export const SUPPORT_EMAIL = 'alhi7896542@gmail.com';
+export const SUPPORT_PHONE = '0328-7675072';
 
 export const DEFAULT_CURRENCY = 'USD';
 export const DEFAULT_LOCALE = 'en-US';
