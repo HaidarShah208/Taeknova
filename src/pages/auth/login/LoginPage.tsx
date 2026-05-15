@@ -5,8 +5,10 @@ import { useForm } from 'react-hook-form';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 
+import type { AddToCartPayload } from '@app-types/cart';
 import { useAppDispatch } from '@redux';
 import { useAdminLoginMutation } from '@redux/admin/auth';
+import { startDirectCheckout } from '@redux/checkoutSession/checkoutSessionSlice';
 import { FormField } from '@components/forms/FormField';
 import { PageMeta } from '@components/layout/PageMeta';
 import { Button } from '@components/ui/Button';
@@ -21,10 +23,22 @@ export default function LoginPage() {
   const location = useLocation();
   const [adminLogin, { isLoading: isApiLogin }] = useAdminLoginMutation();
   const [showPassword, setShowPassword] = useState(false);
-  const redirectTo =
-    (location.state as { from?: string } | null)?.from ?? ROUTES.dashboard;
-  const pendingVerificationEmail = (location.state as { pendingVerificationEmail?: string } | null)
-    ?.pendingVerificationEmail;
+  const loginState = location.state as {
+    from?: string;
+    pendingBuyNow?: AddToCartPayload;
+    pendingVerificationEmail?: string;
+  } | null;
+  const redirectTo = loginState?.from ?? ROUTES.dashboard;
+  const pendingVerificationEmail = loginState?.pendingVerificationEmail;
+
+  const goAfterCustomerLogin = (target: string) => {
+    if (loginState?.pendingBuyNow) {
+      dispatch(startDirectCheckout([loginState.pendingBuyNow]));
+      navigate(ROUTES.checkout, { replace: true });
+      return;
+    }
+    navigate(target, { replace: true });
+  };
 
   const {
     register,
@@ -43,15 +57,14 @@ export default function LoginPage() {
           password: values.password,
         }).unwrap();
         const isAdminUser = data.user.role === 'ADMIN';
-        const from = (location.state as { from?: string } | null)?.from;
+        const from = loginState?.from;
         if (from?.startsWith(ROUTES.adminRoot) && isAdminUser) {
           navigate(from, { replace: true });
         } else if (isAdminUser) {
           navigate(ROUTES.adminDashboard, { replace: true });
         } else {
-          navigate(
+          goAfterCustomerLogin(
             redirectTo === ROUTES.dashboard ? ROUTES.dashboardProfile : redirectTo,
-            { replace: true },
           );
         }
         toast.success('Welcome back!');
@@ -82,7 +95,11 @@ export default function LoginPage() {
       }),
     );
     toast.success('Welcome back!');
-    navigate(nextRoute, { replace: true });
+    if (isAdmin) {
+      navigate(ROUTES.adminDashboard, { replace: true });
+    } else {
+      goAfterCustomerLogin(nextRoute);
+    }
   };
 
   return (

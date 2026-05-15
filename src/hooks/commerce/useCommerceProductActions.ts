@@ -8,6 +8,7 @@ import { ROUTES } from '@constants/routes';
 import { useAppDispatch, useAppSelector } from '@redux';
 import { selectIsAuthenticated } from '@redux/auth';
 import { addItem } from '@redux/cart';
+import { startDirectCheckout } from '@redux/checkoutSession/checkoutSessionSlice';
 import {
   useAddCartItemMutation,
   useAddWishlistItemMutation,
@@ -106,11 +107,23 @@ export function useCommerceProductActions(product: Product | null) {
 
   const buyNow = useCallback(
     async ({ product: p, variant, quantity = 1 }: QuickAddPayload): Promise<boolean> => {
-      const ok = await addToCart({ product: p, variant, quantity });
-      if (ok) navigate(ROUTES.checkout);
-      return ok;
+      if (!p) return false;
+      if (apiMode && !isAuthed) {
+        toast.info('Please sign in to complete your order');
+        navigate(ROUTES.login, {
+          state: {
+            from: ROUTES.checkout,
+            pendingBuyNow: { product: p, variant, quantity },
+          },
+          replace: false,
+        });
+        return false;
+      }
+      dispatch(startDirectCheckout([{ product: p, variant, quantity }]));
+      navigate(ROUTES.checkout);
+      return true;
     },
-    [addToCart, navigate],
+    [apiMode, dispatch, isAuthed, navigate],
   );
 
   return { apiMode, isWishlisted, toggleWishlistForProduct, addToCart, buyNow };

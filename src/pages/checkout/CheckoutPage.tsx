@@ -16,9 +16,9 @@ import { Container } from '@components/ui/Container';
 import { EmptyState } from '@components/ui/EmptyState';
 import { ROUTES } from '@constants/routes';
 import env from '@lib/env';
-import { useUnifiedCart } from '@hooks/commerce/useUnifiedCart';
+import { useCheckoutDisplay } from '@hooks/commerce/useCheckoutDisplay';
 import { useCreateAddressMutation, useGetCheckoutSummaryMutation } from '@redux/customer';
-import { selectCartItems, selectCartSubtotal } from '@redux/cart';
+import { selectDirectCheckoutLines } from '@redux/checkoutSession/checkoutSessionSlice';
 import { formatPrice, type FormatPriceOptions } from '@lib/formatters';
 import { closeAllOverlays } from '@redux/ui';
 
@@ -71,12 +71,9 @@ export default function CheckoutPage() {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const apiMode = !env.enableMockApi;
-  const { items, subtotal, isAuthenticated } = useUnifiedCart();
-  const mockItems = useAppSelector(selectCartItems);
-  const mockSubtotal = useAppSelector(selectCartSubtotal);
-
-  const displayItems = apiMode ? items : mockItems;
-  const displaySubtotal = apiMode ? subtotal : mockSubtotal;
+  const { items: displayItems, subtotal: displaySubtotal, isDirectCheckout, isAuthenticated } =
+    useCheckoutDisplay();
+  const directCheckoutLines = useAppSelector(selectDirectCheckoutLines);
 
   const [getSummary, { data: summary, isLoading: summaryLoading }] = useGetCheckoutSummaryMutation();
   const [createAddress, { isLoading: creatingAddress }] = useCreateAddressMutation();
@@ -108,8 +105,20 @@ export default function CheckoutPage() {
 
   useEffect(() => {
     if (!apiMode || !isAuthenticated || displayItems.length === 0) return;
+    if (isDirectCheckout && directCheckoutLines.length > 0) {
+      void getSummary({ lines: directCheckoutLines });
+      return;
+    }
     void getSummary({ fromCart: true });
-  }, [apiMode, cartQtySignature, displayItems.length, getSummary, isAuthenticated]);
+  }, [
+    apiMode,
+    cartQtySignature,
+    directCheckoutLines,
+    displayItems.length,
+    getSummary,
+    isAuthenticated,
+    isDirectCheckout,
+  ]);
 
   const shipping = displaySubtotal > 150 ? 0 : 12;
   const tax = Math.round(displaySubtotal * 0.07 * 100) / 100;
@@ -124,6 +133,8 @@ export default function CheckoutPage() {
         mockShipping: shipping,
         mockTax: tax,
         mockTotal: total,
+        directCheckout: isDirectCheckout,
+        directCheckoutLines: isDirectCheckout ? directCheckoutLines : undefined,
       },
     });
   };
@@ -148,6 +159,8 @@ export default function CheckoutPage() {
           addressId: addr.id,
           customerNotes: `Contact email: ${values.email}`,
           prefetchedTotal: Number(summary?.totalAmount ?? total),
+          directCheckout: isDirectCheckout,
+          directCheckoutLines: isDirectCheckout ? directCheckoutLines : undefined,
         },
       });
     } catch {
@@ -173,7 +186,13 @@ export default function CheckoutPage() {
     <>
       <PageMeta title="Checkout" />
       <Container className="py-8 lg:py-12">
-        <Breadcrumb items={[{ label: 'Cart', to: ROUTES.cart }, { label: 'Checkout' }]} />
+        <Breadcrumb
+          items={
+            isDirectCheckout
+              ? [{ label: 'Shop', to: ROUTES.products }, { label: 'Checkout' }]
+              : [{ label: 'Cart', to: ROUTES.cart }, { label: 'Checkout' }]
+          }
+        />
         <h1 className="mt-4 text-3xl font-bold tracking-tight sm:text-4xl">Checkout</h1>
 
         <form

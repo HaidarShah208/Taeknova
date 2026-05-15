@@ -9,7 +9,7 @@ interface CartState {
   items: CartItem[];
 }
 
-const buildCartItem = ({ product, variant, quantity }: AddToCartPayload): CartItem => ({
+export const cartItemFromPayload = ({ product, variant, quantity }: AddToCartPayload): CartItem => ({
   id: `${product.id}:${variant.id}`,
   productId: product.id,
   variantId: variant.id,
@@ -37,7 +37,7 @@ const cartSlice = createSlice({
   initialState,
   reducers: {
     addItem(state, action: PayloadAction<AddToCartPayload>) {
-      const incoming = buildCartItem(action.payload);
+      const incoming = cartItemFromPayload(action.payload);
       const existing = state.items.find((item) => item.id === incoming.id);
       if (existing) {
         existing.quantity = clamp(existing.quantity + incoming.quantity, 1, existing.maxStock);

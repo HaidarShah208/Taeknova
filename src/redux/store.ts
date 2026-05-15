@@ -3,6 +3,7 @@ import { setupListeners } from '@reduxjs/toolkit/query';
 
 import { authReducer } from '@redux/auth';
 import { cartReducer } from '@redux/cart';
+import { checkoutSessionReducer } from '@redux/checkoutSession/checkoutSessionSlice';
 import { wishlistReducer } from '@redux/wishlist';
 import { uiReducer } from '@redux/ui';
 import { baseApi } from '@services/baseApi';
@@ -31,6 +32,7 @@ export const store = configureStore({
     [baseApi.reducerPath]: baseApi.reducer,
     auth: authReducer,
     cart: cartReducer,
+    checkoutSession: checkoutSessionReducer,
     wishlist: wishlistReducer,
     ui: uiReducer,
   },

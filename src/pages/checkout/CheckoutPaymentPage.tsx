@@ -22,7 +22,9 @@ import { ROUTES } from '@constants/routes';
 import { useUnifiedCart } from '@hooks/commerce/useUnifiedCart';
 import { useAppDispatch } from '@redux';
 import { clearCart } from '@redux/cart';
+import { clearDirectCheckout } from '@redux/checkoutSession/checkoutSessionSlice';
 import {
+  useAddCartItemMutation,
   useCreateOrderMutation,
   useGetCheckoutSummaryMutation,
   useUploadOrderPaymentProofMutation,
@@ -48,6 +50,9 @@ export interface CheckoutPaymentLocationState {
   mockTotal?: number;
   /** Totals from checkout summary before this page refetches (avoids a brief 0 display). */
   prefetchedTotal?: number;
+  /** Buy-now flow: order only these lines (cart is synced right before place order). */
+  directCheckout?: boolean;
+  directCheckoutLines?: { variantId: string; quantity: number }[];
 }
 
 const PAYMENT_BRAND_STYLES: Record<ManualPaymentKey, { initials: string; bg: string; icon: JSX.Element }> = {
@@ -75,6 +80,7 @@ export default function CheckoutPaymentPage() {
   const dispatch = useAppDispatch();
   const apiMode = !env.enableMockApi;
   const { clearAll } = useUnifiedCart();
+  const [addCartLine] = useAddCartItemMutation();
 
   const [category, setCategory] = useState<'manual' | 'cod'>('manual');
   const [manualKey, setManualKey] = useState<ManualPaymentKey>('EASYPAISA');
@@ -90,8 +96,40 @@ export default function CheckoutPaymentPage() {
       navigate(ROUTES.checkout, { replace: true });
       return;
     }
-    if (apiMode && !state.mock) void getSummary({ fromCart: true });
+    if (apiMode && !state.mock) {
+      if (state.directCheckout && state.directCheckoutLines?.length) {
+        void getSummary({ lines: state.directCheckoutLines });
+      } else {
+        void getSummary({ fromCart: true });
+      }
+    }
   }, [apiMode, getSummary, navigate, state]);
+
+  const syncBuyNowCart = async (): Promise<boolean> => {
+    const lines = state?.directCheckoutLines;
+    if (!state?.directCheckout || !lines?.length) return true;
+    try {
+      await clearAll();
+      for (const line of lines) {
+        await addCartLine({ variantId: line.variantId, quantity: line.quantity }).unwrap();
+      }
+      return true;
+    } catch {
+      toast.error('Could not prepare your order. Try again.');
+      return false;
+    }
+  };
+
+  const finishOrder = async (): Promise<void> => {
+    if (state?.directCheckout) {
+      dispatch(clearDirectCheckout());
+    }
+    if (apiMode) {
+      await clearAll();
+    } else if (!state?.directCheckout) {
+      dispatch(clearCart());
+    }
+  };
 
   const baseTotal = useMemo(() => {
     if (state?.mock && state.mockTotal != null) return state.mockTotal;
@@ -116,12 +154,14 @@ export default function CheckoutPaymentPage() {
 
   const submitCod = async () => {
     if (!apiMode || state?.mock) {
-      dispatch(clearCart());
+      if (state?.directCheckout) dispatch(clearDirectCheckout());
+      else dispatch(clearCart());
       toast.success('Order placed!');
       navigate(ROUTES.dashboardOrders);
       return;
     }
     if (!state?.addressId) return;
+    if (!(await syncBuyNowCart())) return;
     try {
       await createOrder({
         addressId: state.addressId,
@@ -129,7 +169,7 @@ export default function CheckoutPaymentPage() {
         paymentMethod: CHECKOUT_PAYMENT_METHOD.COD,
         paymentProofUrl: null,
       }).unwrap();
-      await clearAll();
+      await finishOrder();
       toast.success('Order placed!');
       navigate(ROUTES.dashboardOrders);
     } catch {
@@ -147,12 +187,14 @@ export default function CheckoutPaymentPage() {
       return;
     }
     if (!apiMode || state?.mock) {
-      dispatch(clearCart());
+      if (state?.directCheckout) dispatch(clearDirectCheckout());
+      else dispatch(clearCart());
       toast.success('Order placed!');
       navigate(ROUTES.dashboardOrders);
       return;
     }
     if (!state?.addressId) return;
+    if (!(await syncBuyNowCart())) return;
     try {
       const { url } = await uploadProof(proofFile).unwrap();
       const paymentMethod =
@@ -167,7 +209,7 @@ export default function CheckoutPaymentPage() {
         paymentMethod,
         paymentProofUrl: url,
       }).unwrap();
-      await clearAll();
+      await finishOrder();
       toast.success('Order placed! We will verify your payment.');
       navigate(ROUTES.dashboardOrders);
     } catch {
