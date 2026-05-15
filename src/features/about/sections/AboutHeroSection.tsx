@@ -1,7 +1,7 @@
 import { PageHero } from '@components/marketing/PageHero';
 import { ROUTES } from '@constants/routes';
 import { BRAND_NAME } from '@constants/company';
-import taekwondoHero from '../../../assets/home/taekwondo.png';
+import about from '../../../assets/about/about.jpg';
 
 export function AboutHeroSection() {
   return (
@@ -17,7 +17,7 @@ export function AboutHeroSection() {
         </>
       }
       description={`${BRAND_NAME} crafts premium taekwondo uniforms, martial arts apparel, and custom team kits for athletes who demand discipline, performance, and professional presentation.`}
-      imageSrc={taekwondoHero}
+      imageSrc={about}
       imageAlt="Taekwondo athlete in premium uniform"
       primaryCta={{ label: 'Shop uniforms', to: ROUTES.products }}
       secondaryCta={{ label: 'Contact our team', to: ROUTES.contact }}

@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { SectionWrapper } from '@components/shared/SectionWrapper';
 import { BRAND_NAME } from '@constants/company';
 import { fadeUp, staggerContainer, viewportOnce } from '@lib/motion';
-import flyingImg from '../../../assets/home/flying.jpg';
+import fighting from '../../../assets/about/fighting.jpg';
 
 const PILLARS = [
   {
@@ -42,7 +42,7 @@ export function BrandStorySection() {
             transition={{ duration: 0.4 }}
           >
             <img
-              src={flyingImg}
+              src={fighting}
               alt="Martial artist in motion wearing TAEKNOVA kit"
               className="aspect-[4/5] w-full object-cover"
               loading="lazy"

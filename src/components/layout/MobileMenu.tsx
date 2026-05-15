@@ -52,7 +52,7 @@ export function MobileMenu() {
           <Link
             to={`${ROUTES.products}?sort=new`}
             onClick={close}
-            className={cn(buttonVariants({ size: 'sm', fullWidth: true }), 'mt-3')}
+            className={cn(buttonVariants({ size: 'sm', fullWidth: true }), 'mt-3 bg-foreground')}
           >
             Shop new arrivals
           </Link>
@@ -63,7 +63,7 @@ export function MobileMenu() {
             <Link
               to={isAdmin ? ROUTES.adminDashboard : ROUTES.dashboardProfile}
               onClick={close}
-              className={cn(buttonVariants({ fullWidth: true }))}
+              className={cn(buttonVariants({ fullWidth: true }),'bg-foreground')}
             >
               My account
             </Link>
