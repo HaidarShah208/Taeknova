@@ -75,7 +75,7 @@ export function CartDrawer() {
             <button
               type="button"
               onClick={handleCheckout}
-              className={cn(buttonVariants({ fullWidth: true, size: 'lg' }))}
+              className={cn(buttonVariants({ fullWidth: true, size: 'lg' }),'bg-foreground')}
             >
               Checkout
             </button>

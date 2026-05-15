@@ -14,7 +14,8 @@ export function ProtectedRoute({ children }: ProtectedRouteProps) {
   const location = useLocation();
 
   if (!isAuthenticated) {
-    return <Navigate to={ROUTES.login} state={{ from: location.pathname }} replace />;
+    const returnTo = `${location.pathname}${location.search}`;
+    return <Navigate to={ROUTES.login} state={{ from: returnTo }} replace />;
   }
 
   return <>{children}</>;

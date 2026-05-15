@@ -1,5 +1,5 @@
 import { LogOut, Mail, User } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { toast } from 'sonner';
 
 import { useAppDispatch, useAppSelector } from '@redux';
@@ -14,9 +14,17 @@ import { useAdminLogoutMutation } from '@redux/admin/auth';
 import { clearSession, selectCurrentUser } from '@redux/auth';
 import { useGetProfileQuery } from '@redux/customer';
 
+type ProfileTab = 'profile' | 'track';
+
+function tabFromParam(value: string | null): ProfileTab {
+  return value === 'track' ? 'track' : 'profile';
+}
+
 export default function ProfilePage() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const activeTab = tabFromParam(searchParams.get('tab'));
   const user = useAppSelector(selectCurrentUser);
   const apiMode = !env.enableMockApi;
   const { data: profile, isLoading } = useGetProfileQuery(undefined, {
@@ -45,7 +53,18 @@ export default function ProfilePage() {
     <>
       <PageMeta title="My Profile" />
       <div className="mx-auto max-w-5xl py-8">
-        <Tabs defaultValue="profile" className="w-full">
+        <Tabs
+          defaultValue="profile"
+          value={activeTab}
+          onValueChange={(next) => {
+            if (next === 'profile') {
+              setSearchParams({}, { replace: true });
+            } else {
+              setSearchParams({ tab: next }, { replace: true });
+            }
+          }}
+          className="w-full"
+        >
           <TabsList className="mb-6 flex w-full max-w-full flex-wrap gap-1 overflow-x-auto sm:w-auto">
             <TabsTrigger value="profile">Profile</TabsTrigger>
             <TabsTrigger value="track">Track orders</TabsTrigger>

@@ -161,7 +161,7 @@ export default function CheckoutPage() {
         <EmptyState
           title="Your cart is empty"
           description="Add some items before checking out."
-          action={<Button onClick={() => navigate(ROUTES.products)}>Browse products</Button>}
+          action={<Button className='bg-foreground' onClick={() => navigate(ROUTES.products)}>Browse products</Button>}
         />
       </Container>
     );
@@ -376,7 +376,8 @@ export default function CheckoutPage() {
                   size="lg"
                   type="submit"
                   isLoading={saving}
-                  rightIcon={<ArrowRight className="h-4 w-4" />}
+                  className='bg-foreground'
+                  rightIcon={<ArrowRight className="h-4 w-4 " />}
                 >
                   Proceed Next
                 </Button>

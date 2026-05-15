@@ -8,6 +8,10 @@ export const ROUTES = {
   wishlist: '/wishlist',
   about: '/about',
   contact: '/contact',
+  sizeGuide: '/size-guide',
+  trackOrder: '/track-order',
+  profileTab: (tab: 'profile' | 'track' = 'profile') =>
+    tab === 'track' ? '/dashboard/profile?tab=track' : '/dashboard/profile',
   checkout: '/checkout',
   checkoutPayment: '/checkout/payment',
   login: '/login',

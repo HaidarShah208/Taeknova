@@ -13,9 +13,10 @@ import { cn } from '@lib/cn';
 import { ScrollToTop } from './ScrollToTop';
 
 const DASH_LINKS = [
-  { to: ROUTES.dashboardProfile, label: 'Profile' },
-  { to: ROUTES.dashboardOrders, label: 'Orders' },
-  { to: ROUTES.dashboardAddresses, label: 'Addresses' },
+  { to: ROUTES.dashboardProfile, label: 'Profile', end: true },
+  { to: ROUTES.profileTab('track'), label: 'Track orders', end: false },
+  { to: ROUTES.dashboardOrders, label: 'Orders', end: true },
+  { to: ROUTES.dashboardAddresses, label: 'Addresses', end: true },
 ];
 
 const navClass = ({ isActive }: { isActive: boolean }) =>
@@ -48,7 +49,7 @@ export function ProfileLayout() {
             </div>
             <nav className="space-y-1 rounded-2xl border border-border bg-card p-2">
               {DASH_LINKS.map((link) => (
-                <NavLink key={link.to} to={link.to} className={navClass} end={link.to === ROUTES.dashboardProfile}>
+                <NavLink key={link.to} to={link.to} className={navClass} end={link.end}>
                   {link.label}
                 </NavLink>
               ))}

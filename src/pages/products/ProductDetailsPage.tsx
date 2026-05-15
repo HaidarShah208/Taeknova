@@ -1,4 +1,4 @@
-import { Heart, ShieldCheck, ShoppingBag, Truck } from 'lucide-react';
+import { Heart, ShieldCheck, ShoppingBag, Truck, Zap } from 'lucide-react';
 import { useMemo, useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { toast } from 'sonner';
@@ -37,9 +37,8 @@ export default function ProductDetailsPage() {
   const { slug = '' } = useParams<{ slug: string }>();
   const { product, isLoading, isError, refetch } = useUnifiedProductBySlug(slug);
   const related = useUnifiedRelatedProducts(slug, 4);
-  const { apiMode, isWishlisted, toggleWishlistForProduct, addToCart } = useCommerceProductActions(
-    product ?? null,
-  );
+  const { apiMode, isWishlisted, toggleWishlistForProduct, addToCart, buyNow } =
+    useCommerceProductActions(product ?? null);
   const isAuthed = useAppSelector(selectIsAuthenticated);
   const mockCartItems = useAppSelector(selectCartItems);
   const { data: serverCart = [] } = useGetCartQuery(undefined, {
@@ -118,17 +117,27 @@ export default function ProductDetailsPage() {
     );
   }
 
-  const handleAddToCart = async () => {
+  const validateVariantForPurchase = (): boolean => {
     if (!selectedVariant) {
       toast.error('Please choose a size and color');
-      return;
+      return false;
     }
     if (!canAddToCart) {
-      toast.error('This variant is already at max quantity in your cart');
-      return;
+      toast.error('This variant is out of stock or already at max quantity in your cart');
+      return false;
     }
+    return true;
+  };
+
+  const handleAddToCart = async () => {
+    if (!validateVariantForPurchase() || !selectedVariant) return;
     const ok = await addToCart({ product, variant: selectedVariant, quantity });
     if (ok) setQuantity(1);
+  };
+
+  const handleOrderNow = async () => {
+    if (!validateVariantForPurchase() || !selectedVariant) return;
+    await buyNow({ product, variant: selectedVariant, quantity: 1 });
   };
 
   return (
@@ -267,16 +276,25 @@ export default function ProductDetailsPage() {
               </div>
 
               <div className="flex flex-col gap-2">
-                <div className="flex flex-wrap items-center gap-3">
-                 
+                <div className="flex flex-wrap items-stretch gap-3">
                   <Button
                     size="lg"
                     onClick={() => void handleAddToCart()}
                     disabled={!canAddToCart}
-                    leftIcon={<ShoppingBag className="h-4 w-4" />}
-                    className="flex-1"
+                    leftIcon={<ShoppingBag className="h-4 w-4" aria-hidden="true" />}
+                    className="min-w-[9rem] flex-1 bg-foreground"
                   >
                     Add to cart
+                  </Button>
+                  <Button
+                    size="lg"
+                    variant="accent"
+                    onClick={() => void handleOrderNow()}
+                    disabled={!canAddToCart}
+                    leftIcon={<Zap className="h-4 w-4" aria-hidden="true" />}
+                    className="min-w-[9rem] flex-1"
+                  >
+                    Order now
                   </Button>
                   <Button
                     size="lg"
@@ -295,6 +313,7 @@ export default function ProductDetailsPage() {
                     }
                   />
                 </div>
+
                 {qtyInCartForVariant > 0 ? (
                   <p className="text-xs text-muted-foreground">
                     {remainingStock > 0

@@ -104,5 +104,14 @@ export function useCommerceProductActions(product: Product | null) {
     [addCartLine, apiMode, dispatch, isAuthed, location.pathname, navigate],
   );
 
-  return { apiMode, isWishlisted, toggleWishlistForProduct, addToCart };
+  const buyNow = useCallback(
+    async ({ product: p, variant, quantity = 1 }: QuickAddPayload): Promise<boolean> => {
+      const ok = await addToCart({ product: p, variant, quantity });
+      if (ok) navigate(ROUTES.checkout);
+      return ok;
+    },
+    [addToCart, navigate],
+  );
+
+  return { apiMode, isWishlisted, toggleWishlistForProduct, addToCart, buyNow };
 }

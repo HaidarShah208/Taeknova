@@ -351,7 +351,7 @@ export default function CheckoutPaymentPage() {
                   <Button
                     fullWidth
                     size="lg"
-                    className="font-semibold uppercase tracking-wide"
+                    className="font-semibold uppercase tracking-wide bg-foreground"
                     isLoading={busy}
                     onClick={() => void submitManual()}
                   >
