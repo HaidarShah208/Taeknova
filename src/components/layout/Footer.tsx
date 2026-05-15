@@ -61,7 +61,7 @@ export function Footer() {
             </p>
           </div>
 
-          <div className="grid grid-cols-2 gap-8 sm:grid-cols-4 lg:col-span-7">
+          <div className="grid grid-cols-2 gap-8 sm:grid-cols-3 lg:col-span-7">
             {FOOTER_NAV.map((group) => (
               <div key={group.title}>
                 <h4 className="lg:text-lg text-base font-extrabold uppercase tracking-wider text-white">

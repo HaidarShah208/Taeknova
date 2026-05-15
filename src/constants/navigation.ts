@@ -41,20 +41,14 @@ export const FOOTER_NAV: NavGroup[] = [
     title: 'Company',
     items: [
       { label: 'About', to: '/about' },
-      { label: 'Sustainability', to: '/sustainability' },
-      { label: 'Careers', to: '/careers' },
       { label: 'Contact', to: '/contact' },
-    ],
-  },
-  {
-    title: 'Support',
-    items: [
-      { label: 'Help Center', to: '/help' },
-      { label: 'Shipping & Returns', to: '/shipping-returns' },
-      { label: 'Size Guide', to: '/size-guide' },
       { label: 'Track Order', to: '/track-order' },
+      { label: 'Size Guide', to: '/size-guide' },
+
+
     ],
   },
+   
 ];
 
  

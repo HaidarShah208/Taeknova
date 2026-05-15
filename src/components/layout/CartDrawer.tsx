@@ -105,7 +105,7 @@ export function CartDrawer() {
           title="Your cart is empty"
           description="Start exploring our latest performance kits and add favorites to your bag."
           action={
-            <Link to={ROUTES.products} onClick={close} className={cn(buttonVariants())}>
+            <Link to={ROUTES.products} onClick={close} className={cn(buttonVariants(),'bg-foreground')}>
               Browse products
             </Link>
           }

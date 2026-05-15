@@ -58,7 +58,7 @@ export function TabsList({ className, ...props }: HTMLAttributes<HTMLDivElement>
     <div
       role="tablist"
       className={cn(
-        'inline-flex items-center gap-1 rounded-lg border border-border bg-muted/40 p-1',
+        'inline-flex items-center gap-1 rounded-lg border border-border bg-muted p-1',
         className,
       )}
       {...props}
@@ -82,8 +82,8 @@ export function TabsTrigger({ value, className, children, ...props }: TabsTrigge
       onClick={() => setValue(value)}
       className={cn(
         'inline-flex h-9 items-center justify-center rounded-md px-3 text-sm font-medium transition-all',
-        'text-muted-foreground hover:text-foreground',
-        isActive && 'bg-background text-foreground shadow-soft',
+        'text-muted-foreground',
+        isActive && 'bg-black/80 text-white shadow-soft',
         className,
       )}
       {...props}

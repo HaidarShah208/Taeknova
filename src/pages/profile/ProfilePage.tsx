@@ -44,7 +44,7 @@ export default function ProfilePage() {
   return (
     <>
       <PageMeta title="My Profile" />
-      <div className="mx-auto max-w-3xl py-8">
+      <div className="mx-auto max-w-5xl py-8">
         <Tabs defaultValue="profile" className="w-full">
           <TabsList className="mb-6 flex w-full max-w-full flex-wrap gap-1 overflow-x-auto sm:w-auto">
             <TabsTrigger value="profile">Profile</TabsTrigger>
