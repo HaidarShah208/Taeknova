@@ -72,7 +72,7 @@ export function PromoBannerSection() {
                   to={`${ROUTES.products}?sort=new`}
                   className={cn(
                     buttonVariants({ size: 'lg' }),
-                    'group bg-background text-gray-300 hover:bg-background/90',
+                    'group',
                   )}
                 >
                   Start a custom order

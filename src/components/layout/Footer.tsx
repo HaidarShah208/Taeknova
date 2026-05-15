@@ -51,7 +51,7 @@ export function Footer() {
               />
               <button
                 type="submit"
-                className="inline-flex h-11 items-center justify-center rounded-lg bg-primary px-5 text-sm font-semibold text-white transition-colors hover:bg-primary-600"
+                className="inline-flex h-11 items-center justify-center rounded-lg bg-white/70 hover:text-white px-5 text-sm font-semibold text-primary transition-colors hover:bg-primary-600"
               >
                 Subscribe
               </button>

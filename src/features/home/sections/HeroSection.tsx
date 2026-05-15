@@ -123,8 +123,7 @@ export function HeroSection() {
             </span>
           </h1>
           <p className="mt-6 max-w-xl text-base leading-relaxed text-background/80 sm:text-lg">
-            Performance fabrics, custom team detailing, and championship-grade construction.
-            Tiknova crafts uniforms that work as hard as your team.
+          Tiknova delivers championship-grade uniforms with high-performance fabrics and custom team detailing.
           </p>
 
           <div className="mt-8 flex flex-wrap items-center gap-3">
@@ -132,7 +131,7 @@ export function HeroSection() {
               to={ROUTES.products}
               className={cn(
                 buttonVariants({ size: 'lg' }),
-                'group bg-background text-foreground hover:bg-background/90',
+                'group text-foreground hover:bg-background/90',
               )}
             >
               Shop the collection

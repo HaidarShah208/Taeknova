@@ -16,7 +16,7 @@ export const buttonVariants = cva(
     variants: {
       variant: {
         primary:
-          'bg-gradient-to-r from-primary via-primary-500 to-primary-600 text-primary-foreground shadow-soft hover:from-primary-600 hover:to-primary-700 hover:shadow-elevated',
+          'bg-gradient-to-r from-primary-600 via-white-500 to-white/60 text-primary-foreground shadow-soft hover:from-primary-600 hover:to-primary-700 hover:text-white hover:shadow-elevated',
         secondary:
           'bg-gradient-to-r from-white to-muted text-foreground border border-border hover:from-muted hover:to-white',
         accent:

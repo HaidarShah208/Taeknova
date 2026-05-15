@@ -80,7 +80,7 @@ export default function WishlistPage() {
               title="No items in your wishlist"
               description="Tap the heart on any product to save it for later."
               action={
-                <Link to={ROUTES.products} className={cn(buttonVariants())}>
+                <Link to={ROUTES.products} className={cn(buttonVariants(),'bg-red-600')}>
                   Browse products
                 </Link>
               }
