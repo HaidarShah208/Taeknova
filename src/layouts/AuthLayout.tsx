@@ -1,8 +1,8 @@
-import { Outlet } from 'react-router-dom';
 
 import { Logo } from '@components/layout/Logo';
-import { APP_TAGLINE } from '@constants/app';
-import authImg from '../assets/auth/auth.jpg'
+import authImg from '../assets/auth/auth.jpg';
+
+import { RouteContent } from './RouteContent';
 
 export function AuthLayout() {
   return (
@@ -36,7 +36,7 @@ export function AuthLayout() {
           <Logo size="md" />
         </div>
         <div className="mt-10 w-full max-w-md lg:mt-0">
-          <Outlet />
+          <RouteContent />
         </div>
       </section>
     </div>

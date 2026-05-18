@@ -1,6 +1,4 @@
 import { motion } from 'framer-motion';
-import { ArrowUpRight } from 'lucide-react';
-
 import { Badge } from '@components/ui/Badge';
 import { SectionWrapper } from '@components/shared/SectionWrapper';
 import hassan from '../../../assets/team/hassan.jpeg'

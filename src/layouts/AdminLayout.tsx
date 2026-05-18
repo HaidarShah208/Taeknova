@@ -1,5 +1,5 @@
 import { LogOut, ShieldCheck } from 'lucide-react';
-import { NavLink, Outlet, useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 
 import { useAppSelector } from '@redux';
@@ -9,6 +9,8 @@ import { ROUTES } from '@constants/routes';
 import { selectCurrentUser } from '@redux/auth';
 import { useAdminLogoutMutation } from '@redux/admin';
 import { cn } from '@lib/cn';
+
+import { RouteContent } from './RouteContent';
 
 export function AdminLayout() {
   const navigate = useNavigate();
@@ -79,7 +81,7 @@ export function AdminLayout() {
         </aside>
 
         <main className="bg-slate-50 p-4 sm:p-6 lg:p-8">
-          <Outlet />
+          <RouteContent />
         </main>
       </div>
     </div>

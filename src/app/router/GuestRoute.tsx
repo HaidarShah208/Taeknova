@@ -12,6 +12,6 @@ interface GuestRouteProps {
 export function GuestRoute({ children }: GuestRouteProps) {
   const isAuthenticated = useAppSelector(selectIsAuthenticated);
   const isAdmin = useAppSelector(selectIsAdmin);
-  if (isAuthenticated) return <Navigate to={isAdmin ? ROUTES.adminDashboard : ROUTES.dashboard} replace />;
+  if (isAuthenticated) return <Navigate to={isAdmin ? ROUTES.adminDashboard : ROUTES.dashboardProfile} replace />;
   return <>{children}</>;
 }

@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { Outlet, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 
 import { CartDrawer } from '@components/layout/CartDrawer';
 import { Footer } from '@components/layout/Footer';
@@ -8,6 +8,7 @@ import { Navbar } from '@components/layout/Navbar';
 import { useAppDispatch } from '@redux';
 import { closeAllOverlays } from '@redux/ui';
 
+import { RouteContent } from './RouteContent';
 import { ScrollToTop } from './ScrollToTop';
 
 export function MainLayout() {
@@ -30,7 +31,7 @@ export function MainLayout() {
       <ScrollToTop />
       <Navbar />
       <main id="main-content" className="flex-1">
-        <Outlet />
+        <RouteContent />
       </main>
       <Footer />
       <MobileMenu />
