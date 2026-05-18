@@ -6,6 +6,8 @@ import { Toaster } from 'sonner';
 
 import { store } from '@redux';
 
+import { WhatsAppFab } from '@components/layout/WhatsAppFab';
+
 import { AuthBootstrap } from './AuthBootstrap';
 
 interface AppProvidersProps {
@@ -19,6 +21,7 @@ export function AppProviders({ children }: AppProvidersProps) {
       <HelmetProvider>
         <BrowserRouter>
           {children}
+          <WhatsAppFab />
           <Toaster
             position="top-right"
             richColors
