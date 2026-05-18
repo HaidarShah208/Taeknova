@@ -14,7 +14,6 @@ import { ScrollToTop } from './ScrollToTop';
 
 const DASH_LINKS = [
   { to: ROUTES.dashboardProfile, label: 'Profile', end: true },
-  { to: ROUTES.profileTab('track'), label: 'Track orders', end: false },
   { to: ROUTES.dashboardOrders, label: 'Orders', end: true },
   { to: ROUTES.dashboardAddresses, label: 'Addresses', end: true },
 ];

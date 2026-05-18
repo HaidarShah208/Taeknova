@@ -16,6 +16,7 @@ import { ROUTES } from '@constants/routes';
 import env from '@lib/env';
 import { setSession } from '@redux/auth';
 import { loginSchema, type LoginFormValues } from '@redux/auth';
+import { getApiErrorMessage } from '@services/apiEnvelope';
 
 export default function LoginPage() {
   const dispatch = useAppDispatch();
@@ -69,8 +70,7 @@ export default function LoginPage() {
         }
         toast.success('Welcome back!');
       } catch (err: unknown) {
-        const data = (err as { data?: { message?: string } })?.data;
-        toast.error(typeof data?.message === 'string' ? data.message : 'Invalid email or password');
+        toast.error(getApiErrorMessage(err, 'Invalid email or password'));
       }
       return;
     }
@@ -173,7 +173,7 @@ export default function LoginPage() {
               Forgot password?
             </Link>
           </div>
-          <Button type="submit" fullWidth size="lg" isLoading={isSubmitting || isApiLogin}>
+          <Button className='bg-foreground' type="submit" fullWidth size="lg" isLoading={isSubmitting || isApiLogin}>
             Sign in
           </Button>
         </form>

@@ -11,6 +11,7 @@ import { Button } from '@components/ui/Button';
 import { ROUTES } from '@constants/routes';
 import env from '@lib/env';
 import { useForgotPasswordMutation } from '@redux/customer';
+import { getApiErrorMessage } from '@services/apiEnvelope';
 
 const forgotPasswordSchema = z.object({
   email: z.string().email('Enter a valid email'),
@@ -34,8 +35,8 @@ export default function ForgotPasswordPage() {
       try {
         const { message } = await forgotPassword({ email: values.email.trim() }).unwrap();
         toast.success(message);
-      } catch {
-        toast.error('Could not process your request. Try again later.');
+      } catch (err: unknown) {
+        toast.error(getApiErrorMessage(err, 'Could not process your request. Try again later.'));
       }
       return;
     }
