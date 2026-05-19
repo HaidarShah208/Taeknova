@@ -4,7 +4,7 @@ import { Loader } from '@components/ui/Loader';
 export function RouteContentFallback() {
   return (
     <div className="flex w-full items-center min-h-screen justify-center py-16" role="status" aria-live="polite">
-      <Loader size="md" />
+      <Loader size="xl" />
     </div>
   );
 }
