@@ -8,11 +8,13 @@ import { Container } from '@components/ui/Container';
 import { EmptyState } from '@components/ui/EmptyState';
 import { ErrorState } from '@components/ui/ErrorState';
 import { Loader } from '@components/ui/Loader';
+import { StatusBadge } from '@components/ui/StatusBadge';
 import { ROUTES } from '@constants/routes';
 import env from '@lib/env';
 import { useListMyOrdersQuery } from '@redux/customer';
 import { cn } from '@lib/cn';
 import { formatPrice } from '@lib/formatters';
+import { orderStatusTone } from '@lib/orderStatusTone';
 
 export default function OrdersPage() {
   const useApi = !env.enableMockApi;
@@ -90,9 +92,10 @@ export default function OrdersPage() {
                 <CardHeader className="flex flex-row items-center justify-between gap-4">
                   <div>
                     <CardTitle className="text-base">Order #{order.id.slice(0, 8)}</CardTitle>
-                    <p className="mt-1 text-xs text-muted-foreground">
-                      {new Date(order.createdAt).toLocaleString()} · {order.status}
-                    </p>
+                    <div className="mt-1.5 flex items-center gap-2 text-xs text-muted-foreground">
+                      <span>{new Date(order.createdAt).toLocaleString()}</span>
+                      <StatusBadge label={order.status} tone={orderStatusTone(order.status)} />
+                    </div>
                   </div>
                   <p className="text-lg font-bold">{formatPrice(Number(order.totalAmount))}</p>
                 </CardHeader>

@@ -5,21 +5,8 @@ import { AdminCard, StatusBadge } from '@components/admin';
 import { Button } from '@components/ui/Button';
 import { ROUTES } from '@constants/routes';
 import { formatPrice } from '@lib/formatters';
+import { orderStatusTone, paymentStatusTone } from '@lib/orderStatusTone';
 import { useAdminGetOrderQuery } from '@redux/admin';
-
-function orderStatusTone(s: string): 'success' | 'warning' | 'danger' | 'neutral' {
-  if (s === 'DELIVERED' || s === 'SHIPPED' || s === 'CONFIRMED' || s === 'PROCESSING') return 'success';
-  if (s === 'CANCELLED') return 'danger';
-  if (s === 'PENDING') return 'warning';
-  return 'neutral';
-}
-
-function paymentStatusTone(s: string): 'success' | 'warning' | 'danger' | 'neutral' {
-  if (s === 'PAID') return 'success';
-  if (s === 'FAILED') return 'danger';
-  if (s === 'AWAITING') return 'warning';
-  return 'neutral';
-}
 
 function snapshotField(snapshot: Record<string, unknown> | undefined, key: string): string {
   const value = snapshot?.[key];

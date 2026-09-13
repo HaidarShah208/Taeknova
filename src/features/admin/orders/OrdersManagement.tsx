@@ -6,6 +6,7 @@ import { AdminCard, ConfirmModal, DataTable, Pagination, StatusBadge } from '@co
 import { Button } from '@components/ui/Button';
 import { ROUTES } from '@constants/routes';
 import { formatPrice } from '@lib/formatters';
+import { orderStatusTone } from '@lib/orderStatusTone';
 import type { OrderDto } from '@app-types/storeApi';
 import {
   useAdminApproveOrderMutation,
@@ -34,15 +35,6 @@ function orderDisplayName(o: OrderDto): string {
     return extra > 0 ? `${firstLine.productName} +${extra} more` : firstLine.productName;
   }
   return `Order ${o.id.slice(0, 8)}`;
-}
-
-function orderStatusTone(s: string): 'success' | 'warning' | 'danger' | 'neutral' {
-  if (s === 'DELIVERED') return 'success';
-  if (s === 'SHIPPED') return 'success';
-  if (s === 'CANCELLED') return 'danger';
-  if (s === 'PENDING') return 'warning';
-  if (s === 'CONFIRMED' || s === 'PROCESSING') return 'success';
-  return 'neutral';
 }
 
 export function OrdersManagement() {

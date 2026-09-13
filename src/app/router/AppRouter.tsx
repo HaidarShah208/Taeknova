@@ -25,6 +25,7 @@ const CartPage = lazy(() => import('@pages/cart/CartPage'));
 const WishlistPage = lazy(() => import('@pages/wishlist/WishlistPage'));
 const CheckoutPage = lazy(() => import('@pages/checkout/CheckoutPage'));
 const CheckoutPaymentPage = lazy(() => import('@pages/checkout/CheckoutPaymentPage'));
+const OrderSuccessPage = lazy(() => import('@pages/checkout/OrderSuccessPage'));
 const LoginPage = lazy(() => import('@pages/auth/login/LoginPage'));
 const RegisterPage = lazy(() => import('@pages/auth/register/RegisterPage'));
 const ProfilePage = lazy(() => import('@pages/profile/ProfilePage'));
@@ -94,6 +95,14 @@ export function AppRouter() {
             element={
               <ProtectedRoute>
                 <CheckoutPaymentPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path={ROUTES.orderSuccess}
+            element={
+              <ProtectedRoute>
+                <OrderSuccessPage />
               </ProtectedRoute>
             }
           />

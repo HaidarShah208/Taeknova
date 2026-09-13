@@ -157,13 +157,13 @@ export default function CheckoutPaymentPage() {
       if (state?.directCheckout) dispatch(clearDirectCheckout());
       else dispatch(clearCart());
       toast.success('Order placed!');
-      navigate(ROUTES.dashboardOrders);
+      navigate(ROUTES.orderSuccess, { state: { total: codTotal } });
       return;
     }
     if (!state?.addressId) return;
     if (!(await syncBuyNowCart())) return;
     try {
-      await createOrder({
+      const created = await createOrder({
         addressId: state.addressId,
         customerNotes: state.customerNotes,
         paymentMethod: CHECKOUT_PAYMENT_METHOD.COD,
@@ -171,7 +171,9 @@ export default function CheckoutPaymentPage() {
       }).unwrap();
       await finishOrder();
       toast.success('Order placed!');
-      navigate(ROUTES.dashboardOrders);
+      navigate(ROUTES.orderSuccess, {
+        state: { orderId: created.id, total: Number(created.totalAmount), currency: created.currency },
+      });
     } catch {
       toast.error('Could not place order.');
     }
@@ -190,7 +192,7 @@ export default function CheckoutPaymentPage() {
       if (state?.directCheckout) dispatch(clearDirectCheckout());
       else dispatch(clearCart());
       toast.success('Order placed!');
-      navigate(ROUTES.dashboardOrders);
+      navigate(ROUTES.orderSuccess, { state: { total: baseTotal } });
       return;
     }
     if (!state?.addressId) return;
@@ -203,7 +205,7 @@ export default function CheckoutPaymentPage() {
           : manualKey === 'JAZZCASH'
             ? CHECKOUT_PAYMENT_METHOD.JAZZCASH
             : CHECKOUT_PAYMENT_METHOD.MEEZAN_BANK;
-      await createOrder({
+      const created = await createOrder({
         addressId: state.addressId,
         customerNotes: state.customerNotes,
         paymentMethod,
@@ -211,7 +213,9 @@ export default function CheckoutPaymentPage() {
       }).unwrap();
       await finishOrder();
       toast.success('Order placed! We will verify your payment.');
-      navigate(ROUTES.dashboardOrders);
+      navigate(ROUTES.orderSuccess, {
+        state: { orderId: created.id, total: Number(created.totalAmount), currency: created.currency },
+      });
     } catch {
       toast.error('Could not complete order. Try again.');
     }

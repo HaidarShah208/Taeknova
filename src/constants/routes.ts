@@ -10,10 +10,9 @@ export const ROUTES = {
   contact: '/contact',
   sizeGuide: '/size-guide',
   trackOrder: '/track-order',
-  profileTab: (tab: 'profile' | 'track' = 'profile') =>
-    tab === 'track' ? '/dashboard/profile?tab=track' : '/dashboard/profile',
   checkout: '/checkout',
   checkoutPayment: '/checkout/payment',
+  orderSuccess: '/order-success',
   login: '/login',
   register: '/register',
   forgotPassword: '/forgot-password',
