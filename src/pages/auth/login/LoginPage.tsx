@@ -65,7 +65,7 @@ export default function LoginPage() {
           navigate(ROUTES.adminDashboard, { replace: true });
         } else {
           goAfterCustomerLogin(
-            redirectTo === ROUTES.dashboard ? ROUTES.dashboardProfile : redirectTo,
+            redirectTo === ROUTES.dashboard ? ROUTES.products : redirectTo,
           );
         }
         toast.success('Welcome back!');
@@ -77,7 +77,7 @@ export default function LoginPage() {
 
     await new Promise((resolve) => setTimeout(resolve, 500));
     const isAdmin = values.email.toLowerCase().includes('admin');
-    const fallbackRoute = isAdmin ? ROUTES.adminDashboard : ROUTES.dashboard;
+    const fallbackRoute = isAdmin ? ROUTES.adminDashboard : ROUTES.products;
     const nextRoute = redirectTo === ROUTES.dashboard ? fallbackRoute : redirectTo;
 
     dispatch(

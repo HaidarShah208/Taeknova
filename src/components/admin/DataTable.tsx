@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
 
+import { cn } from '@lib/cn';
 import {
   Table,
   TableBody,
@@ -22,6 +23,8 @@ interface DataTableProps<T> {
   emptyMessage?: string;
   /** Applied to the inner `<table>` so wide admin tables scroll horizontally. */
   tableClassName?: string;
+  /** When provided, rows become clickable (e.g. navigate to a detail page). */
+  onRowClick?: (row: T) => void;
 }
 
 export function DataTable<T>({
@@ -30,6 +33,7 @@ export function DataTable<T>({
   getRowKey,
   emptyMessage = 'No records found.',
   tableClassName = 'min-w-[700px]',
+  onRowClick,
 }: DataTableProps<T>) {
   return (
     <Table className={tableClassName}>
@@ -49,7 +53,11 @@ export function DataTable<T>({
           </TableRow>
         ) : (
           data.map((row) => (
-            <TableRow key={getRowKey(row)}>
+            <TableRow
+              key={getRowKey(row)}
+              onClick={onRowClick ? () => onRowClick(row) : undefined}
+              className={cn(onRowClick && 'cursor-pointer hover:bg-slate-50')}
+            >
               {columns.map((column) => (
                 <TableCell key={column.key}>{column.render(row)}</TableCell>
               ))}

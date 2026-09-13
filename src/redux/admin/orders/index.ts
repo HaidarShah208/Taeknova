@@ -37,6 +37,11 @@ export const adminOrdersApi = baseApi.injectEndpoints({
             ]
           : [{ type: 'AdminOrder' as const, id: 'LIST' }],
     }),
+    adminGetOrder: builder.query<OrderDto, string>({
+      query: (orderId) => ({ url: `/orders/admin/${orderId}` }),
+      transformResponse: (raw: unknown) => unwrapBackendData<OrderDto>(raw),
+      providesTags: (_r, _e, id) => [{ type: 'AdminOrder' as const, id }],
+    }),
     adminApproveOrder: builder.mutation<OrderDto, string>({
       query: (orderId) => ({ url: `/orders/admin/${orderId}/approve`, method: 'PATCH' }),
       transformResponse: (raw: unknown) => unwrapBackendData<OrderDto>(raw),
@@ -66,6 +71,7 @@ export const adminOrdersApi = baseApi.injectEndpoints({
 
 export const {
   useAdminListAllOrdersQuery,
+  useAdminGetOrderQuery,
   useAdminApproveOrderMutation,
   useAdminRejectOrderMutation,
   useAdminShipOrderMutation,

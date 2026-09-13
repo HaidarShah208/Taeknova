@@ -29,6 +29,7 @@ export const ROUTES = {
   adminAnalytics: '/admin/analytics',
   adminProducts: '/admin/products',
   adminOrders: '/admin/orders',
+  adminOrderDetails: (id = ':id') => `/admin/orders/${id}`,
   adminInventory: '/admin/inventory',
   adminUsers: '/admin/users',
   adminSettings: '/admin/settings',

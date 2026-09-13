@@ -1,8 +1,10 @@
 import { useMemo, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 
 import { AdminCard, ConfirmModal, DataTable, Pagination, StatusBadge } from '@components/admin';
 import { Button } from '@components/ui/Button';
+import { ROUTES } from '@constants/routes';
 import { formatPrice } from '@lib/formatters';
 import type { OrderDto } from '@app-types/storeApi';
 import {
@@ -44,6 +46,7 @@ function orderStatusTone(s: string): 'success' | 'warning' | 'danger' | 'neutral
 }
 
 export function OrdersManagement() {
+  const navigate = useNavigate();
   const [page, setPage] = useState(1);
   const [processingId, setProcessingId] = useState<string | null>(null);
   const [rejectId, setRejectId] = useState<string | null>(null);
@@ -105,6 +108,7 @@ export function OrdersManagement() {
               data={items}
               getRowKey={(row) => row.id}
               emptyMessage="No orders yet. Customer checkouts will appear here."
+              onRowClick={(row) => navigate(ROUTES.adminOrderDetails(row.id))}
               columns={[
                 {
                   key: 'id',
@@ -171,7 +175,10 @@ export function OrdersManagement() {
                   render: (row) => {
                     const busy = processingId === row.id;
                     return (
-                      <div className="flex min-w-[260px] flex-wrap items-center gap-1.5">
+                      <div
+                        className="flex min-w-[260px] flex-wrap items-center gap-1.5"
+                        onClick={(e) => e.stopPropagation()}
+                      >
                         {row.status === 'PENDING' ? (
                           <>
                             <Button

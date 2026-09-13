@@ -1,14 +1,18 @@
-import { Heart, Menu, Search, ShoppingBag, User } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
+import { Heart, LogOut, Menu, Search, ShoppingBag, User } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { toast } from 'sonner';
 
 import { useAppDispatch, useAppSelector } from '@redux';
 import { Container } from '@components/ui/Container';
 import { Button } from '@components/ui/Button';
 import { PRIMARY_NAV } from '@constants/navigation';
 import { ROUTES } from '@constants/routes';
+import { useOnClickOutside } from '@hooks/useOnClickOutside';
 import env from '@lib/env';
-import { selectIsAdmin, selectIsAuthenticated } from '@redux/auth';
+import { useAdminLogoutMutation } from '@redux/admin/auth';
+import { clearSession, selectIsAdmin, selectIsAuthenticated } from '@redux/auth';
 import { selectCartItems } from '@redux/cart';
 import { useGetCartQuery, useGetWishlistQuery } from '@redux/customer';
 import {
@@ -64,6 +68,26 @@ export function Navbar() {
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
+
+  const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
+  const profileMenuRef = useRef<HTMLDivElement>(null);
+  useOnClickOutside(profileMenuRef, () => setIsProfileMenuOpen(false), isProfileMenuOpen);
+  const [logoutApi, { isLoading: isLoggingOut }] = useAdminLogoutMutation();
+
+  const handleLogout = async () => {
+    setIsProfileMenuOpen(false);
+    if (!env.enableMockApi) {
+      try {
+        await logoutApi().unwrap();
+      } catch {
+        dispatch(clearSession());
+      }
+    } else {
+      dispatch(clearSession());
+    }
+    toast.success('Signed out');
+    navigate(ROUTES.home, { replace: true });
+  };
 
   return (
     <>
@@ -140,16 +164,53 @@ export function Navbar() {
             </Link>
 
             {isAuthenticated ? (
-              <button
-                type="button"
-                onClick={() =>
-                  navigate(isAdmin ? ROUTES.adminDashboard : ROUTES.dashboardProfile)
-                }
-                aria-label="Account"
-                className="hidden h-10 w-10 items-center justify-center rounded-lg text-white transition-colors hover:bg-muted sm:inline-flex hover:text-foreground"
-              >
-                <User className="h-5 w-5" aria-hidden="true" />
-              </button>
+              <div className="relative hidden sm:block" ref={profileMenuRef}>
+                <button
+                  type="button"
+                  onClick={() => setIsProfileMenuOpen((prev) => !prev)}
+                  aria-label="Account menu"
+                  aria-haspopup="menu"
+                  aria-expanded={isProfileMenuOpen}
+                  className="inline-flex h-10 w-10 items-center justify-center rounded-lg text-white transition-colors hover:bg-muted hover:text-foreground"
+                >
+                  <User className="h-5 w-5" aria-hidden="true" />
+                </button>
+                <AnimatePresence>
+                  {isProfileMenuOpen && (
+                    <motion.div
+                      role="menu"
+                      initial={{ opacity: 0, y: -4, scale: 0.98 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: -4, scale: 0.98 }}
+                      transition={{ duration: 0.15, ease: [0.16, 1, 0.3, 1] }}
+                      className="absolute right-0 top-full z-50 mt-2 w-48 overflow-hidden rounded-xl border border-border/60 bg-card text-card-foreground shadow-elevated"
+                    >
+                      <button
+                        type="button"
+                        role="menuitem"
+                        onClick={() => {
+                          setIsProfileMenuOpen(false);
+                          navigate(isAdmin ? ROUTES.adminDashboard : ROUTES.dashboardProfile);
+                        }}
+                        className="flex w-full items-center gap-2.5 px-4 py-2.5 text-sm font-medium text-foreground transition-colors hover:bg-muted"
+                      >
+                        <User className="h-4 w-4" aria-hidden="true" />
+                        Profile
+                      </button>
+                      <button
+                        type="button"
+                        role="menuitem"
+                        onClick={handleLogout}
+                        disabled={isLoggingOut}
+                        className="flex w-full items-center gap-2.5 border-t border-border/60 px-4 py-2.5 text-sm font-medium text-destructive transition-colors hover:bg-muted disabled:pointer-events-none disabled:opacity-60"
+                      >
+                        <LogOut className="h-4 w-4" aria-hidden="true" />
+                        Logout
+                      </button>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
             ) : (
               <Button
                 type="button"

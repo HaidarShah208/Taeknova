@@ -123,6 +123,8 @@ export interface OrderItemDto {
   quantity: number;
   unitPrice: string;
   lineTotal: string;
+  /** Present on the admin single-order endpoint (`GET /orders/admin/:id`). */
+  variant?: PublicProductVariantDto & { product?: PublicProductDto };
 }
 
 export interface ReviewDto {

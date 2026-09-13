@@ -43,6 +43,7 @@ const AdminDashboardPage = lazy(() => import('@pages/admin/dashboard/AdminDashbo
 const AdminAnalyticsPage = lazy(() => import('@pages/admin/analytics/AdminAnalyticsPage'));
 const AdminProductsPage = lazy(() => import('@pages/admin/products/AdminProductsPage'));
 const AdminOrdersPage = lazy(() => import('@pages/admin/orders/AdminOrdersPage'));
+const AdminOrderDetailPage = lazy(() => import('@pages/admin/orders/AdminOrderDetailPage'));
 const AdminInventoryPage = lazy(() => import('@pages/admin/inventory/AdminInventoryPage'));
 const AdminUsersPage = lazy(() => import('@pages/admin/users/AdminUsersPage'));
 const AdminSettingsPage = lazy(() => import('@pages/admin/settings/AdminSettingsPage'));
@@ -160,6 +161,7 @@ export function AppRouter() {
           <Route path="analytics" element={<AdminAnalyticsPage />} />
           <Route path="products" element={<AdminProductsPage />} />
           <Route path="orders" element={<AdminOrdersPage />} />
+          <Route path="orders/:id" element={<AdminOrderDetailPage />} />
           <Route path="inventory" element={<AdminInventoryPage />} />
           <Route path="users" element={<AdminUsersPage />} />
           <Route path="settings" element={<AdminSettingsPage />} />
