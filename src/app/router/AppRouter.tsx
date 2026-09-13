@@ -1,4 +1,4 @@
-import { lazy, Suspense } from 'react';
+import { lazy, Suspense, useEffect } from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
 
 import { ROUTES } from '@constants/routes';
@@ -9,8 +9,9 @@ import { MainLayout } from '@layouts/MainLayout';
 
 import { GuestRoute } from './GuestRoute';
 import { ProtectedRoute } from './ProtectedRoute';
-import { RouteFallback } from './RouteFallback';
+import { RouteContentFallback } from './RouteContentFallback';
 import { AdminRoute } from './AdminRoute';
+import { prefetchCommonRoutes } from './prefetchRoutes';
 
 const HomePage = lazy(() => import('@pages/home/HomePage'));
 const AboutPage = lazy(() => import('@pages/about/AboutPage'));
@@ -48,9 +49,18 @@ const AdminSettingsPage = lazy(() => import('@pages/admin/settings/AdminSettings
 const NotFoundPage = lazy(() => import('@pages/not-found/NotFoundPage'));
 
 export function AppRouter() {
+  useEffect(() => {
+    const run = () => prefetchCommonRoutes();
+    if (typeof window.requestIdleCallback === 'function') {
+      const id = window.requestIdleCallback(run);
+      return () => window.cancelIdleCallback(id);
+    }
+    const timer = setTimeout(run, 1500);
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
-    <Suspense fallback={<RouteFallback />}>
-      <Routes>
+    <Routes>
         <Route element={<MainLayout />}>
           <Route path={ROUTES.home} element={<HomePage />} />
           <Route path={ROUTES.products} element={<ProductsPage />} />
@@ -155,8 +165,14 @@ export function AppRouter() {
           <Route path="settings" element={<AdminSettingsPage />} />
         </Route>
 
-        <Route path="*" element={<NotFoundPage />} />
+        <Route
+          path="*"
+          element={
+            <Suspense fallback={<RouteContentFallback />}>
+              <NotFoundPage />
+            </Suspense>
+          }
+        />
       </Routes>
-    </Suspense>
   );
 }

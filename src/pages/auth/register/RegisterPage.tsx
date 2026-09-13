@@ -14,6 +14,7 @@ import { useRegisterMutation } from '@redux/customer';
 import { useAppDispatch } from '@redux';
 import { setSession } from '@redux/auth';
 import { registerSchema, type RegisterFormValues } from '@redux/auth';
+import { getApiErrorMessage } from '@services/apiEnvelope';
 
 export default function RegisterPage() {
   const dispatch = useAppDispatch();
@@ -51,8 +52,8 @@ export default function RegisterPage() {
 
         toast.success('Account created!');
         navigate(ROUTES.dashboardProfile, { replace: true });
-      } catch {
-        toast.error('Could not create account');
+      } catch (err: unknown) {
+        toast.error(getApiErrorMessage(err, 'Could not create account'));
       }
       return;
     }
@@ -154,7 +155,7 @@ export default function RegisterPage() {
             register={register}
             errors={errors}
           />
-          <Button type="submit" fullWidth size="lg" isLoading={isSubmitting || isApiRegister}>
+          <Button className='bg-foreground' type="submit" fullWidth size="lg" isLoading={isSubmitting || isApiRegister}>
             Create account
           </Button>
         </form>

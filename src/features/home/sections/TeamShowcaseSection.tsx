@@ -1,9 +1,11 @@
 import { motion } from 'framer-motion';
-import { ArrowUpRight } from 'lucide-react';
-
 import { Badge } from '@components/ui/Badge';
 import { SectionWrapper } from '@components/shared/SectionWrapper';
 import hassan from '../../../assets/team/hassan.jpeg'
+import abdulwahab from '../../../assets/team/abdulwahab.jpeg'
+import teamMember from '../../../assets/team/teamMember.jpeg'
+import teamNew from '../../../assets/team/teamNew.jpeg'
+import group from '../../../assets/team/group.png'
 import { cn } from '@lib/cn';
 
 interface ShowcaseTeam {
@@ -19,35 +21,35 @@ const TEAMS: ShowcaseTeam[] = [
     name: 'Ali Hassan Shah',
     category: 'Soccer · Premier club',
     description: 'Custom kits and training wear for a 240-player academy.',
-    image: hassan,
+    image: group,
     span: 'lg:col-span-7 lg:row-span-2',
   },
   {
     name: 'Cobalt Cyclones',
     category: 'Basketball · Pro league',
     description: 'Sublimated jerseys with embroidered crests.',
-    image: 'https://picsum.photos/seed/tikwando-team-2/900/700',
+    image: hassan,
     span: 'lg:col-span-5',
   },
   {
     name: 'North Ridge Athletics',
     category: 'Multi-sport · School',
     description: 'Outfitted six teams across two seasons.',
-    image: 'https://picsum.photos/seed/tikwando-team-3/900/700',
+    image:abdulwahab,
     span: 'lg:col-span-5',
   },
   {
     name: 'Apex Elite Volleyball',
     category: 'Volleyball · Club',
     description: 'Pattern-matched home and away kits.',
-    image: 'https://picsum.photos/seed/tikwando-team-4/900/600',
+    image: teamMember,
     span: 'lg:col-span-4',
   },
   {
     name: 'Kingsmen Rugby',
     category: 'Rugby · University',
     description: 'Heavy-duty jerseys built for impact.',
-    image: 'https://picsum.photos/seed/tikwando-team-5/900/600',
+    image:  teamNew,
     span: 'lg:col-span-4',
   },
   {
@@ -97,14 +99,8 @@ export function TeamShowcaseSection() {
                 <h3 className="mt-3 text-lg font-bold leading-tight tracking-tight text-background sm:text-xl">
                   {team.name}
                 </h3>
-                <p className="mt-1 text-xs text-background/70 sm:text-sm">{team.description}</p>
               </div>
-              <span
-                className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-background text-foreground transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1"
-                aria-hidden="true"
-              >
-                <ArrowUpRight className="h-4 w-4" />
-              </span>
+              
             </div>
           </motion.article>
         ))}

@@ -46,7 +46,7 @@ const TESTIMONIALS: Testimonial[] = [
     avatar: noor,
   },
   {
-    name: 'Ahmad',
+    name: 'Usama',
     title: 'Parent & booster club · Youth academy',
     rating: 4,
     body:
@@ -54,7 +54,7 @@ const TESTIMONIALS: Testimonial[] = [
     avatar: l40u4g,
   },
   {
-    name: 'Zanaib',
+    name: 'Ahmad',
     title: 'Returning customer · City league soccer',
     rating: 5,
     body:

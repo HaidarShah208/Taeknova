@@ -1,4 +1,4 @@
-import { NavLink, Outlet } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 
 import { useAppSelector } from '@redux';
 import { Container } from '@components/ui/Container';
@@ -10,11 +10,11 @@ import { getInitials } from '@utils/misc';
 
 import { cn } from '@lib/cn';
 
+import { RouteContent } from './RouteContent';
 import { ScrollToTop } from './ScrollToTop';
 
 const DASH_LINKS = [
   { to: ROUTES.dashboardProfile, label: 'Profile', end: true },
-  { to: ROUTES.profileTab('track'), label: 'Track orders', end: false },
   { to: ROUTES.dashboardOrders, label: 'Orders', end: true },
   { to: ROUTES.dashboardAddresses, label: 'Addresses', end: true },
 ];
@@ -56,7 +56,7 @@ export function ProfileLayout() {
             </nav>
           </aside>
           <section className="rounded-2xl border border-border bg-card p-6 lg:p-8">
-            <Outlet />
+            <RouteContent />
           </section>
         </div>
       </Container>
